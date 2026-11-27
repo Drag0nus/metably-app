@@ -36,6 +36,7 @@ backend built incrementally after the threat model.
 
 ## Later
 
-- [ ] Threat model and E2EE decision
+- [x] Threat model: server payloads end-to-end encrypted
+- [ ] Client-side encryption of sync envelopes (CryptoKit, Keychain)
 - [ ] Sync engine, FastAPI backend, PostgreSQL, web app
 - [ ] Bluetooth meters, CGM, CSV import

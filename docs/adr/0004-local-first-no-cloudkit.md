@@ -25,5 +25,6 @@ out iCloud/CloudKit for personal health information. A threat model must precede
 - Edited measurements keep their original values in the revision history.
 - Outbox entries accumulate (one per record) until the sync engine exists. Compaction or
   skipping the outbox in Local Only mode is to be decided with the sync engine design.
-- Whether payloads are plain JSON or end-to-end encrypted is decided in the threat model; the
-  envelope shape works for both.
+- Server payloads will be end-to-end encrypted (decided in the threat model, 2026-11-27): the
+  envelope's `payload` becomes ciphertext, and analytics, reports, deduplication and conflict
+  comparison run on the client. The envelope shape does not change.
