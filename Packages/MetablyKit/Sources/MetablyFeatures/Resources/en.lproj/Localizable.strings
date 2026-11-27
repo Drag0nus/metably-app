@@ -1,0 +1,55 @@
+/* Tabs */
+"tab.diary" = "Diary";
+"tab.settings" = "Settings";
+
+/* Common */
+"common.cancel" = "Cancel";
+"common.save" = "Save";
+
+/* Launch */
+"launch.error.title" = "Can't open your diary";
+"launch.error.message" = "The on-device database could not be opened. Your data has not been deleted. Try restarting the app.";
+
+/* Glucose log */
+"log.title" = "Glucose";
+"log.add" = "Add reading";
+"log.empty.title" = "No readings yet";
+"log.empty.message" = "Tap + to record your first glucose reading.";
+"log.synthetic" = "Synthetic data";
+
+/* Glucose entry */
+"entry.title" = "New reading";
+"entry.value" = "Glucose";
+"entry.unit" = "Unit";
+"entry.context" = "When";
+"entry.time" = "Time";
+"entry.note" = "Note";
+"entry.note.prompt" = "Optional note";
+"entry.error.empty" = "Enter a value.";
+"entry.error.notANumber" = "Enter a number, for example 6.4.";
+"entry.error.range %@ %@ %@" = "Check the value: it should be between %1$@ and %2$@ %3$@.";
+"entry.error.future" = "The time can't be in the future.";
+"entry.error.duplicate" = "This reading is already in your diary.";
+"entry.error.storage" = "The reading could not be saved. Please try again.";
+
+/* Measurement contexts */
+"context.fasting" = "Fasting";
+"context.beforeMeal" = "Before meal";
+"context.afterMeal" = "After meal";
+"context.bedtime" = "Bedtime";
+"context.night" = "Night";
+"context.random" = "Other";
+
+/* Settings */
+"settings.units" = "Units";
+"settings.glucoseUnit" = "Glucose unit";
+"settings.breadUnit" = "Bread unit (XE)";
+"settings.breadUnit.10" = "10 g carbs";
+"settings.breadUnit.12" = "12 g carbs";
+"settings.modules" = "Modules";
+"settings.usesInsulin" = "I use insulin";
+"settings.nightCheck" = "Night check (03:00)";
+"settings.debug" = "Developer";
+"settings.debug.loadSynthetic" = "Add synthetic readings (14 days)";
+"settings.debug.footer" = "Debug builds only. Adds invented values marked as synthetic.";
+"settings.disclaimer" = "Metably is a personal tracking tool. It does not diagnose, recommend treatment or replace advice from your doctor.";
