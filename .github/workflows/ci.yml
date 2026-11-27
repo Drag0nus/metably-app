@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package-tests:
+    name: MetablyKit tests (macOS)
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: xcodebuild -version && swift --version
+      - name: Test MetablyKit
+        working-directory: Packages/MetablyKit
+        run: swift test --parallel
+
+  ios-build:
+    name: iOS app build (simulator)
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Metably for iOS Simulator
+        run: |
+          xcodebuild build \
+            -project Metably.xcodeproj \
+            -scheme Metably \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO

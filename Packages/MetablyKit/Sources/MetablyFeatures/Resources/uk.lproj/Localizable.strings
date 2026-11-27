@@ -1,0 +1,55 @@
+/* Tabs */
+"tab.diary" = "Щоденник";
+"tab.settings" = "Налаштування";
+
+/* Common */
+"common.cancel" = "Скасувати";
+"common.save" = "Зберегти";
+
+/* Launch */
+"launch.error.title" = "Не вдалося відкрити щоденник";
+"launch.error.message" = "Не вдалося відкрити базу даних на пристрої. Ваші дані не видалено. Спробуйте перезапустити застосунок.";
+
+/* Glucose log */
+"log.title" = "Глюкоза";
+"log.add" = "Додати замір";
+"log.empty.title" = "Поки що немає замірів";
+"log.empty.message" = "Натисніть +, щоб записати перший замір глюкози.";
+"log.synthetic" = "Синтетичні дані";
+
+/* Glucose entry */
+"entry.title" = "Новий замір";
+"entry.value" = "Глюкоза";
+"entry.unit" = "Одиниці";
+"entry.context" = "Коли";
+"entry.time" = "Час";
+"entry.note" = "Нотатка";
+"entry.note.prompt" = "Нотатка (необов'язково)";
+"entry.error.empty" = "Введіть значення.";
+"entry.error.notANumber" = "Введіть число, наприклад 6,4.";
+"entry.error.range %@ %@ %@" = "Перевірте значення: воно має бути від %1$@ до %2$@ %3$@.";
+"entry.error.future" = "Час не може бути в майбутньому.";
+"entry.error.duplicate" = "Цей замір уже є у щоденнику.";
+"entry.error.storage" = "Не вдалося зберегти замір. Спробуйте ще раз.";
+
+/* Measurement contexts */
+"context.fasting" = "Натще";
+"context.beforeMeal" = "Перед їжею";
+"context.afterMeal" = "Після їжі";
+"context.bedtime" = "Перед сном";
+"context.night" = "Вночі";
+"context.random" = "Інше";
+
+/* Settings */
+"settings.units" = "Одиниці";
+"settings.glucoseUnit" = "Одиниці глюкози";
+"settings.breadUnit" = "Хлібна одиниця (ХО)";
+"settings.breadUnit.10" = "10 г вуглеводів";
+"settings.breadUnit.12" = "12 г вуглеводів";
+"settings.modules" = "Модулі";
+"settings.usesInsulin" = "Я використовую інсулін";
+"settings.nightCheck" = "Нічний замір (03:00)";
+"settings.debug" = "Для розробника";
+"settings.debug.loadSynthetic" = "Додати синтетичні заміри (14 днів)";
+"settings.debug.footer" = "Лише у debug-збірках. Додає вигадані значення з позначкою «синтетичні».";
+"settings.disclaimer" = "Metably — інструмент особистого обліку. Він не ставить діагнозів, не призначає лікування і не замінює пораду лікаря.";
