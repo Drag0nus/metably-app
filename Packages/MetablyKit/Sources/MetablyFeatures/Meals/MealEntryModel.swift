@@ -213,7 +213,7 @@ public final class MealEntryModel: Identifiable {
     /// True when any row's values come from the catalog, so the sheet shows the source.
     public var usesCatalog: Bool { items.contains { $0.food != nil } }
 
-    static func text(_ value: Double) -> String {
+    nonisolated static func text(_ value: Double) -> String {
         value.formatted(.number.precision(.fractionLength(0...1)).grouping(.never))
     }
 
