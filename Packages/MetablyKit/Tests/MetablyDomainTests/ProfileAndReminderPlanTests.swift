@@ -58,7 +58,8 @@ struct ReminderPlannerTests {
         ])
         #expect(plan.first?.minute == 7 * 60 + 15)
         #expect(plan.last?.minute == 22 * 60 + 15)
-        #expect(plan.allSatisfy(\.isEnabled))
+        let allEnabled = plan.allSatisfy { $0.isEnabled }
+        #expect(allEnabled)
     }
 
     @Test("Medicines are reminded at each prescribed time")
