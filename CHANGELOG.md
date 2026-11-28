@@ -5,6 +5,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Documentation
+- `docs/diary-traceability.md`: page-by-page traceability of the Ukrainian self-control diary to the
+  app (implemented, planned, gap or excluded with reason, with clinical checks against ADA 2025),
+  and a "Self-control diary coverage" section in the roadmap with 17 gaps to schedule.
+
 ### Fixed
 - The "Record reading" accessory and the tab bar no longer show on the pushed Settings screen.
 

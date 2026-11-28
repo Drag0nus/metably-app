@@ -39,6 +39,28 @@ backend built incrementally after the threat model.
 - [ ] Analytics module (share of readings in range, averages, variability)
 - [ ] Glucose Profile Day (7-point) and Medical Reports (PDF/CSV/JSON, 14 days default)
 
+## Self-control diary coverage
+
+Gaps found by [the diary traceability matrix](diary-traceability.md). IDs match that document.
+
+- [ ] GAP-06 Food database covers every food in the diary's bread unit tables, with household portions (with the food database)
+- [ ] GAP-14 Sodium and saturated fat in the food database
+- [ ] GAP-01 Insulin/tablet row under glucose in the Journal table and report (with medications)
+- [ ] GAP-03 Morning/evening blood pressure and pulse layout (with the Body screen)
+- [ ] GAP-04 Stand-alone diary note
+- [ ] GAP-07 Glucose-check reminder templates from the diary's schedules (with reminders)
+- [ ] GAP-17 Disclaimer once at first launch
+- [ ] GAP-10 Context tags: illness, stress, travel, driving, exercise, therapy change, alcohol, suspected low
+- [ ] GAP-12 Symptom logging (diary's low/high symptom lists) and "what happened?" after a low
+- [ ] GAP-05 Optional per-meal carbohydrate goal (no dosing)
+- [ ] GAP-08 Preventive care: tests and visits checklist with reminders
+- [ ] GAP-09 Offline reference section (education), clinician-reviewed
+- [ ] GAP-11 Estimated average glucose next to a lab HbA1c
+- [ ] GAP-13 Ketone records
+- [ ] GAP-02 Optional paper-layout bands on the profile chart
+- [ ] GAP-15 Water intake
+- [ ] GAP-16 Optional daily foot check
+
 ## 0.4 Apple Watch and widgets
 
 - [ ] watchOS app: latest reading with freshness, quick entry, medication confirmation
