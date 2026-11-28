@@ -44,7 +44,8 @@ enum GlucoseRecordMapping {
             flagsRaw: reading.flags.rawValue,
             minutesAfterMeal: reading.minutesAfterMeal,
             deviceName: reading.provenance.deviceName,
-            deviceSerialHash: reading.provenance.deviceSerialHash
+            deviceSerialHash: reading.provenance.deviceSerialHash,
+            activityLevel: reading.activityLevel?.rawValue
         )
         return (event, detail)
     }
@@ -66,6 +67,8 @@ enum GlucoseRecordMapping {
         detail.specimenRaw = reading.specimen.rawValue
         detail.flagsRaw = reading.flags.rawValue
         detail.minutesAfterMeal = reading.minutesAfterMeal
+        detail.activityLevel = reading.activityLevel?.rawValue
+        event.schemaVersion = SyncEnvelope.currentSchemaVersion
     }
 
     static func makeReading(from event: TimelineEventRecord) throws(RepositoryError) -> GlucoseReading {
@@ -85,6 +88,7 @@ enum GlucoseRecordMapping {
             specimen: specimen,
             flags: GlucoseReadingFlags(rawValue: detail.flagsRaw),
             minutesAfterMeal: detail.minutesAfterMeal,
+            activityLevel: detail.activityLevel.flatMap(ActivityLevel.init(rawValue:)),
             measuredAt: event.startDate,
             timeZone: timeZone,
             timeZoneIsInferred: event.timeZoneIsInferred,

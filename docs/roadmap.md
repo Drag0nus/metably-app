@@ -15,8 +15,9 @@ backend built incrementally after the threat model.
 
 - [x] Navigation shell: 5 tabs, Record reading accessory, iPad sidebar
 - [x] Today screen: latest reading, 7-point strip, timeline
-- [ ] Journal: paper-diary table view, filters, entry detail
-- [ ] Activity level 1–5 on every reading (needs schema V2)
+- [x] Journal: paper-diary table view
+- [ ] Journal: filters (Glucose, Meals, Medications, Body, Notes) and entry detail
+- [x] Activity level 1–5 on every reading (schema V2)
 - [ ] Body screen (weight, waist, blood pressure, pulse) from Today and Journal
 - [ ] Meals: entry, items, carbs in grams, bread units display
 - [ ] Reading-to-meal link suggestions with user confirmation (`MealLinkSuggester` exists)

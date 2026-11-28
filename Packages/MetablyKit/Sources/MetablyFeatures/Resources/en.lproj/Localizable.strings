@@ -141,3 +141,15 @@
 "settings.targets.postMealUpper" = "After meals, up to";
 "settings.targets.reset" = "Restore defaults";
 "settings.targets.footer" = "Defaults follow the ADA Standards of Care for adults. Agree your own targets with your doctor. Bedtime and night readings have no default target.";
+
+/* Journal */
+"journal.layout" = "View";
+"journal.layout.list" = "List";
+"journal.layout.table" = "Diary table";
+"journal.table.footer %@" = "Values in %@. Bold values with ↑ or ↓ are outside your target. +1 means more readings in that slot; see the list view.";
+"journal.table.more %lld" = "%lld more";
+
+/* Activity */
+"entry.activity" = "Activity level";
+"entry.activity.footer" = "1 minimal … 5 high, as in the paper diary. Remembers your last choice. Tap again to clear.";
+"entry.activity.level %lld" = "Activity %lld of 5";

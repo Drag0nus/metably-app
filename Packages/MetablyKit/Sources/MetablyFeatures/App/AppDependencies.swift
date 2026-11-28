@@ -38,6 +38,7 @@ public final class AppDependencies {
             targets: preferences.glucoseTargets,
             schedule: preferences.dailySchedule,
             nightCheckEnabled: preferences.nightCheckEnabled,
+            activityLevel: preferences.lastActivityLevel,
             reminders: reminders
         )
     }

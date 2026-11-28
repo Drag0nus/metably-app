@@ -31,6 +31,15 @@ struct GlucoseEntryView: View {
                 }
 
                 Section {
+                    ActivityLevelPicker(selection: $model.activityLevel)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                } header: {
+                    Text("entry.activity", bundle: .module)
+                } footer: {
+                    Text("entry.activity.footer", bundle: .module)
+                }
+
+                Section {
                     DatePicker(selection: $model.measuredAt, in: ...model.latestAllowedDate) {
                         Text("entry.time", bundle: .module)
                     }
@@ -241,6 +250,35 @@ struct SlotChips: View {
                         )
                 }
                 .buttonStyle(.plain)
+                .accessibilityAddTraits(isSelected ? .isSelected : [])
+            }
+        }
+    }
+}
+
+/// The paper diary's 1–5 activity scale as five equal buttons. Tapping the selected level
+/// clears it, because the level is optional.
+struct ActivityLevelPicker: View {
+    @Binding var selection: ActivityLevel?
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(ActivityLevel.all) { level in
+                let isSelected = level == selection
+                Button {
+                    selection = isSelected ? nil : level
+                } label: {
+                    Text(level.rawValue, format: .number)
+                        .font(.headline.monospacedDigit())
+                        .frame(maxWidth: .infinity, minHeight: 40)
+                        .foregroundStyle(isSelected ? Color.white : Color.primary)
+                        .background(
+                            isSelected ? Color.accentColor : Color.secondary.opacity(0.12),
+                            in: RoundedRectangle(cornerRadius: 10)
+                        )
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("entry.activity.level \(level.rawValue)", bundle: .module))
                 .accessibilityAddTraits(isSelected ? .isSelected : [])
             }
         }

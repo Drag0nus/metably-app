@@ -162,3 +162,34 @@ struct DuplicateReadingDetectorTests {
         #expect(detector.likelyDuplicate(of: GlucoseConcentration(value: 117, unit: .milligramsPerDeciliter), at: base, among: existing) != nil)
     }
 }
+
+@Suite("Activity level")
+struct ActivityLevelTests {
+    @Test("Only 1...5 are valid")
+    func range() {
+        #expect(ActivityLevel.all.map(\.rawValue) == [1, 2, 3, 4, 5])
+        #expect(ActivityLevel(rawValue: 0) == nil)
+        #expect(ActivityLevel(rawValue: 6) == nil)
+    }
+
+    @Test("Encodes as a bare number and rejects out-of-range values")
+    func coding() throws {
+        let data = try JSONEncoder().encode(ActivityLevel(rawValue: 3))
+        #expect(String(decoding: data, as: UTF8.self) == "3")
+        #expect(try JSONDecoder().decode(ActivityLevel.self, from: Data("5".utf8)) == ActivityLevel(rawValue: 5))
+        #expect(throws: DecodingError.self) {
+            try JSONDecoder().decode(ActivityLevel.self, from: Data("9".utf8))
+        }
+    }
+
+    @Test("Readings without an activity level still decode (payloads from before V2)")
+    func legacyPayload() throws {
+        let date = Date(timeIntervalSince1970: 1_800_000_000)
+        let reading = GlucoseReading(enteredValue: 6, enteredUnit: .millimolesPerLiter, context: .random,
+                                     measuredAt: date, timeZone: .gmt, provenance: .manual, createdAt: date)
+        var json = try JSONSerialization.jsonObject(with: JSONEncoder().encode(reading)) as! [String: Any]
+        json.removeValue(forKey: "activityLevel")
+        let legacy = try JSONSerialization.data(withJSONObject: json)
+        #expect(try JSONDecoder().decode(GlucoseReading.self, from: legacy).activityLevel == nil)
+    }
+}

@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- SwiftData schema V2 with a lightweight migration from V1: optional `activityLevel` on glucose
+  readings (ADR 0007). Sync payload schema version 2.
+- Activity level 1–5 on the entry sheet, preset to the last choice; shown in the Journal list.
+- Journal "Diary table" view: one row per day, one column per diary slot, out-of-target values bold
+  with an arrow, a count when a slot has several readings.
+- Synthetic readings now include an activity level.
 - MVP navigation shell: five tabs (Today, Journal, Meals, Medications, Reports), iPad sidebar, and an
   always visible "Record reading" button in the iOS 26 tab bar accessory (ADR 0005).
 - Today screen: latest reading with its age, source and target status (marked as old after 8 hours),

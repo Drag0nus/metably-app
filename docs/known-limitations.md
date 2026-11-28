@@ -5,7 +5,7 @@
 - Targets default to the ADA values; bedtime and night readings have no default target.
 - Meal and bed times used to suggest diary slots are fixed defaults (08:00, 13:00, 19:00, 22:30)
   until the schedule settings screen exists.
-- Activity level 1–5 is not recorded yet (needs schema V2).
+- The diary table shows glucose only and cannot be tapped yet; entry detail and edit come next.
 - Meals, Medications and Reports tabs are placeholders.
 - Meter "LO"/"HI" values are supported by the model but cannot be entered in the UI yet.
 - HealthKit, Apple Watch, widgets, reports and sync are not implemented. The only reminder is the

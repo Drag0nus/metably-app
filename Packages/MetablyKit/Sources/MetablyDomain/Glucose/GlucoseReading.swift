@@ -14,6 +14,8 @@ public struct GlucoseReading: Sendable, Hashable, Identifiable, Codable {
     public var flags: GlucoseReadingFlags
     /// Minutes after the start of the linked meal, when known.
     public var minutesAfterMeal: Int?
+    /// Self-reported activity 1–5 at the time of the check, when recorded.
+    public var activityLevel: ActivityLevel?
     /// When the blood was measured (absolute instant).
     public var measuredAt: Date
     /// IANA identifier of the zone the reading was taken in, e.g. "Europe/Kyiv".
@@ -40,6 +42,7 @@ public struct GlucoseReading: Sendable, Hashable, Identifiable, Codable {
         specimen: GlucoseSpecimen = .capillary,
         flags: GlucoseReadingFlags = [],
         minutesAfterMeal: Int? = nil,
+        activityLevel: ActivityLevel? = nil,
         measuredAt: Date,
         timeZone: TimeZone,
         timeZoneIsInferred: Bool = false,
@@ -59,6 +62,7 @@ public struct GlucoseReading: Sendable, Hashable, Identifiable, Codable {
         self.specimen = specimen
         self.flags = flags
         self.minutesAfterMeal = minutesAfterMeal
+        self.activityLevel = activityLevel
         self.measuredAt = measuredAt
         self.timeZoneID = timeZone.identifier
         self.timeZoneIsInferred = timeZoneIsInferred

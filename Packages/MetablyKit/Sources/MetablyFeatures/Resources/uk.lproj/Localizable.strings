@@ -141,3 +141,15 @@
 "settings.targets.postMealUpper" = "Після їжі, до";
 "settings.targets.reset" = "Відновити типові";
 "settings.targets.footer" = "Типові значення за ADA Standards of Care для дорослих. Узгодьте власні цілі з лікарем. Для замірів перед сном і вночі типової цілі немає.";
+
+/* Journal */
+"journal.layout" = "Вигляд";
+"journal.layout.list" = "Список";
+"journal.layout.table" = "Таблиця щоденника";
+"journal.table.footer %@" = "Значення в %@. Жирні зі стрілкою ↑ або ↓ поза вашою ціллю. +1 означає ще заміри в цьому пункті; їх видно у списку.";
+"journal.table.more %lld" = "ще %lld";
+
+/* Activity */
+"entry.activity" = "Рівень активності";
+"entry.activity.footer" = "1 незначна … 5 висока, як у щоденнику. Запам'ятовує останній вибір. Натисніть ще раз, щоб прибрати.";
+"entry.activity.level %lld" = "Активність %lld з 5";

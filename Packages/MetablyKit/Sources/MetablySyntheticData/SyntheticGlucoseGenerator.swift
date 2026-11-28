@@ -63,12 +63,14 @@ public struct SyntheticGlucoseGenerator: Sendable {
                 guard let base = day.instant(hour: slot.hour, minute: slot.minute, in: timeZone) else { continue }
                 let measuredAt = base.addingTimeInterval(TimeInterval(jitter * 60))
                 let value = (Double.random(in: slot.range, using: &rng) * 10).rounded() / 10
+                let activity = ActivityLevel(rawValue: Int.random(in: ActivityLevel.range, using: &rng))
                 readings.append(GlucoseReading(
                     id: Self.makeUUID(using: &rng),
                     enteredValue: value,
                     enteredUnit: .millimolesPerLiter,
                     context: slot.context,
                     minutesAfterMeal: slot.minutesAfterMeal.map { $0 + jitter },
+                    activityLevel: activity,
                     measuredAt: measuredAt,
                     timeZone: timeZone,
                     provenance: Provenance(
