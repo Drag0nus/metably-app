@@ -16,8 +16,10 @@
 - Medications and Reports tabs are placeholders.
 - The build shows version, build number and build time, but not the git commit.
 - "LO"/"HI" prefill typical meter limits (0.6 / 33.3 mmol/L); per-meter limits are not configurable yet.
-- HealthKit, Apple Watch, widgets, reports and sync are not implemented. The only reminder is the
-  optional recheck after a low reading.
+- HealthKit, Apple Watch, widgets, reports and sync are not implemented.
+- Reminders are local notifications only. They have no "taken" / "snooze" actions yet and do not
+  record whether a medicine was taken; that comes with the medications screen.
+- Reminder times follow the device clock; there is no per-reminder time zone.
 - The outbox fills but is never drained; one entry per record accumulates.
 - The store is not yet in an App Group container, so widgets cannot read it.
 - File protection uses the iOS default; the final level is open.

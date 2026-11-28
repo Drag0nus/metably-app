@@ -18,6 +18,8 @@ public final class UserPreferencesStore {
         static let lastActivityLevel = "prefs.lastActivityLevel"
         static let dailyCarbohydrateGoalGrams = "prefs.dailyCarbohydrateGoalGrams"
         static let nutrientGoals = "prefs.nutrientGoals"
+        static let dayRoutine = "prefs.dayRoutine"
+        static let reminderSettings = "prefs.reminderSettings"
     }
 
     @ObservationIgnored private let defaults: UserDefaults
@@ -91,8 +93,18 @@ public final class UserPreferencesStore {
     /// Allowed range for the carbohydrate goal setting (catches typos only).
     public static let carbohydrateGoalRange: ClosedRange<Double> = 20...500
 
-    /// Usual meal and bed times. Not editable yet; see `DailySchedule`.
-    public var dailySchedule: DailySchedule { .default }
+    /// When the user usually gets up, eats and goes to bed. Times of day, not health data.
+    public var dayRoutine: DayRoutine {
+        didSet { defaults.set(try? JSONEncoder().encode(dayRoutine), forKey: Keys.dayRoutine) }
+    }
+
+    /// Which reminders the user wants. Not health data.
+    public var reminderSettings: ReminderSettings {
+        didSet { defaults.set(try? JSONEncoder().encode(reminderSettings), forKey: Keys.reminderSettings) }
+    }
+
+    /// Usual meal and bed times, used to suggest diary slots.
+    public var dailySchedule: DailySchedule { dayRoutine.schedule }
 
     public init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -114,6 +126,10 @@ public final class UserPreferencesStore {
         }
         nutrientGoals = goals
         lastActivityLevel = ActivityLevel(rawValue: defaults.integer(forKey: Keys.lastActivityLevel))
+        dayRoutine = defaults.data(forKey: Keys.dayRoutine)
+            .flatMap { try? JSONDecoder().decode(DayRoutine.self, from: $0) } ?? .default
+        reminderSettings = defaults.data(forKey: Keys.reminderSettings)
+            .flatMap { try? JSONDecoder().decode(ReminderSettings.self, from: $0) } ?? .default
         glucoseTargets = defaults.data(forKey: Keys.glucoseTargets)
             .flatMap { try? JSONDecoder().decode(GlucoseTargets.self, from: $0) }
             .flatMap { $0.isValid ? $0 : nil } ?? .adaDefaults

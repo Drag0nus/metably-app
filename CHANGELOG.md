@@ -5,6 +5,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- Profile: diabetes type, medicines and insulin with your own dose text and times, height and
+  weight with BMI as a plain number. Kept on the device in a protected file (ADR 0011).
+- "My day": wake and bed times, which main meals you eat and when, up to three snacks.
+- Reminders built from the profile and day: morning, pre-meal and bedtime glucose checks, meals,
+  medicines and optional water. Each group and each reminder can be switched off. A check after a
+  meal is scheduled when an eaten meal is logged (60, 90 or 120 min). Notification texts never show
+  values, doses or medicine names; permission is asked only on tap.
+- First launch walks through Profile and Reminders (everything optional, can be skipped); both are
+  in Settings › Me. Version 0.10.0 (10).
+
 ### Fixed
 - The "Record reading" button no longer stays on screen over Settings. Hiding the tab bar does not
   hide the tab view's bottom accessory, so the accessory is now switched off while Settings is open

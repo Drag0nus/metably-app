@@ -133,6 +133,10 @@ public final class MealEntryModel: Identifiable {
     /// The offline food list used for name suggestions.
     public let catalog: FoodCatalog
 
+    /// Called after a successful save or delete, e.g. to schedule the post-meal check reminder.
+    @ObservationIgnored public var didSave: ((Meal) -> Void)?
+    @ObservationIgnored public var didDelete: ((UUID) -> Void)?
+
     @ObservationIgnored private let repository: any MealRepository
     @ObservationIgnored private let dateProvider: any DateProvider
     @ObservationIgnored private let timeZone: TimeZone
@@ -332,12 +336,16 @@ public final class MealEntryModel: Identifiable {
             return nil
         }
         do {
+            let saved: Meal
             if isEditing {
                 try repository.update(meal)
-                return try repository.meal(id: meal.id) ?? meal
+                saved = try repository.meal(id: meal.id) ?? meal
+            } else {
+                try repository.insert(meal)
+                saved = meal
             }
-            try repository.insert(meal)
-            return meal
+            didSave?(saved)
+            return saved
         } catch {
             saveError = .storage
             return nil
@@ -349,6 +357,7 @@ public final class MealEntryModel: Identifiable {
         guard let meal = editing else { return false }
         do {
             try repository.softDelete(id: meal.id)
+            didDelete?(meal.id)
             return true
         } catch {
             saveError = .storage

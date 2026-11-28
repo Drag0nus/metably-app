@@ -27,14 +27,15 @@ backend built incrementally after the threat model.
 - [x] Individual dietary sugars per food and a daily sugars card
 - [ ] Sodium and saturated fat from USDA
 - [ ] Open Food Facts barcode lookup (optional, online)
-- [ ] User profile (diabetes type, medicines, meals per day, height, weight, BMI) that proposes a
-      reminder plan
+- [x] User profile (diabetes type, medicines, meals per day, height, weight, BMI) that proposes a
+      reminder plan (PR 10)
+- [x] Local reminders: glucose checks, meals, medicines, water, check after a meal (PR 10)
 - [x] Version, build number and build time in Settings
 - [x] Reading-to-meal link suggestions with user confirmation (schema V4)
 - [ ] Medications: tablets, schedules, reminders, history (taken / missed / postponed)
 - [ ] Manual basal/bolus insulin record, hidden unless enabled (no calculator, no IOB)
 - [x] User-configured glucose targets (ADA defaults, editable)
-- [ ] Editable meal and bed times (`DailySchedule`)
+- [x] Editable meal, wake and bed times (PR 10)
 - [x] Meter "LO"/"HI" entry
 - [x] Edit reading screen
 
@@ -55,7 +56,7 @@ Gaps found by [the diary traceability matrix](diary-traceability.md). IDs match 
 - [ ] GAP-01 Insulin/tablet row under glucose in the Journal table and report (with medications)
 - [ ] GAP-03 Morning/evening blood pressure and pulse layout (with the Body screen)
 - [ ] GAP-04 Stand-alone diary note
-- [ ] GAP-07 Glucose-check reminder templates from the diary's schedules (with reminders)
+- [ ] GAP-07 Glucose-check reminder templates from the diary's schedules (daily plan in PR 10; diary templates still to do)
 - [ ] GAP-17 Disclaimer once at first launch
 - [ ] GAP-10 Context tags: illness, stress, travel, driving, exercise, therapy change, alcohol, suspected low
 - [ ] GAP-12 Symptom logging (diary's low/high symptom lists) and "what happened?" after a low

@@ -10,6 +10,8 @@ struct TodayView: View {
     var onRecordReading: () -> Void
     /// Passed on to Settings, which hides the "Record reading" accessory while it is shown.
     var recordAccessoryHidden: Binding<Bool> = .constant(false)
+    var profileStore: ProfileStore?
+    var reminderCoordinator: ReminderCoordinator?
 
     @State private var editModel: GlucoseEntryModel?
 
@@ -67,7 +69,13 @@ struct TodayView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 NavigationLink {
-                    SettingsView(preferences: preferences, logModel: logModel, recordAccessoryHidden: recordAccessoryHidden)
+                    SettingsView(
+                        preferences: preferences,
+                        logModel: logModel,
+                        recordAccessoryHidden: recordAccessoryHidden,
+                        profileStore: profileStore,
+                        reminderCoordinator: reminderCoordinator
+                    )
                 } label: {
                     Label {
                         Text("tab.settings", bundle: .module)
@@ -77,7 +85,11 @@ struct TodayView: View {
                 }
             }
         }
-        .onAppear { model.reload() }
+        .onAppear {
+            model.reload()
+            // Back from Settings and the screens under it: show "Record reading" again.
+            recordAccessoryHidden.wrappedValue = false
+        }
         .sheet(item: $editModel) { entry in
             GlucoseEntryView(model: entry) {
                 model.reload()
