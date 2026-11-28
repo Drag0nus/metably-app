@@ -1,4 +1,4 @@
-# Data dictionary (schema V4)
+# Data dictionary (schema V5)
 
 Implemented entities only. The full model, including planned entities, is in the
 [data model document](https://claude.ai/artifact/6aKcmbXqPNhsDwwVPnbyfR).
@@ -58,7 +58,7 @@ Indexes: startDate, localDay, kindRaw, externalID.
 
 The event's `startDate` is when the meal starts (or is planned to). Bread units are not stored.
 
-## MealItemRecord (V3)
+## MealItemRecord (V3, extended in V5)
 
 | Field | Type | Notes |
 |---|---|---|
@@ -69,6 +69,8 @@ The event's `startDate` is when the meal starts (or is planned to). Bread units 
 | carbohydrateGrams | Double | Required; 0–500 per food |
 | sugarsGrams, fiberGrams, proteinGrams, fatGrams | Double? | Optional; dietary sugars, never blood glucose |
 | energyKilocalories | Double? | Optional |
+| foodID | String? | V5. Catalog food id, e.g. `usda-sr-173424`; nil when typed by hand |
+| sucroseGrams, glucoseGrams, fructoseGrams, lactoseGrams, maltoseGrams, galactoseGrams | Double? | V5. Individual dietary sugars in food, never blood glucose; nil means unknown |
 
 ## EventLinkRecord (V4)
 

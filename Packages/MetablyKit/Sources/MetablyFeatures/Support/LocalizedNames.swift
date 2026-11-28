@@ -149,6 +149,8 @@ extension MealEntryModel.SaveError {
         case .invalid(.amountOutOfRange): String(localized: "meal.error.amount", bundle: .module)
         case .invalid(.nutrientOutOfRange(let nutrient)):
             String(localized: "meal.error.nutrient \(nutrient.localizedName)", bundle: .module)
+        case .invalid(.sugarOutOfRange(let sugar)):
+            String(localized: "meal.error.nutrient \(sugar.localizedName)", bundle: .module)
         case .unreadableNumber: String(localized: "meal.error.number", bundle: .module)
         case .storage: String(localized: "meal.error.storage", bundle: .module)
         }
@@ -159,6 +161,11 @@ extension MealEntryModel.SaveError {
 enum NutritionFormat {
     static func grams(_ value: Double) -> String {
         value.formatted(.number.precision(.fractionLength(0)))
+    }
+
+    /// Small amounts such as individual sugars, with one decimal.
+    static func tenths(_ value: Double) -> String {
+        value.formatted(.number.precision(.fractionLength(0...1)))
     }
 
     /// "g" / "г".
@@ -206,4 +213,32 @@ extension Nutrient {
     public var unitSymbol: String {
         isEnergy ? String(localized: "unit.kcal", bundle: .module) : String(localized: "unit.grams", bundle: .module)
     }
+}
+
+extension DietarySugar {
+    public var localizedName: String {
+        switch self {
+        case .sucrose: String(localized: "sugar.sucrose", bundle: .module)
+        case .glucose: String(localized: "sugar.glucose", bundle: .module)
+        case .fructose: String(localized: "sugar.fructose", bundle: .module)
+        case .lactose: String(localized: "sugar.lactose", bundle: .module)
+        case .maltose: String(localized: "sugar.maltose", bundle: .module)
+        case .galactose: String(localized: "sugar.galactose", bundle: .module)
+        }
+    }
+}
+
+/// The catalog has Ukrainian and English names; the app's own language picks one.
+enum CatalogLanguage {
+    static var isUkrainian: Bool {
+        Bundle.module.preferredLocalizations.first?.hasPrefix("uk") ?? false
+    }
+}
+
+extension Food {
+    var localizedName: String { CatalogLanguage.isUkrainian ? nameUK : nameEN }
+}
+
+extension Food.Portion {
+    var localizedName: String { CatalogLanguage.isUkrainian ? nameUK : nameEN }
 }

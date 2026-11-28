@@ -27,6 +27,13 @@ public struct SyntheticMealGenerator: Sendable {
         ]),
     ]
 
+    /// Invented sugar breakdown per 100 g for a few foods, so the sugars card has something to
+    /// show; other foods stay unknown on purpose.
+    static let sugarsPer100g: [String: [DietarySugar: Double]] = [
+        "Apple": [.fructose: 6, .glucose: 2.5, .sucrose: 2],
+        "Kefir": [.lactose: 4, .galactose: 0.2],
+    ]
+
     public let seed: UInt64
 
     public init(seed: UInt64 = 11) { self.seed = seed }
@@ -44,7 +51,7 @@ public struct SyntheticMealGenerator: Sendable {
                 let startedAt = start.addingTimeInterval(jitter)
                 let scale = Double.random(in: 0.8...1.2, using: &rng)
                 let items = template.items.map { food in
-                    MealItem(
+                    var item = MealItem(
                         id: SyntheticGlucoseGenerator.makeUUID(using: &rng),
                         name: food.name,
                         amountGrams: (food.grams * scale).rounded(),
@@ -53,6 +60,13 @@ public struct SyntheticMealGenerator: Sendable {
                         fatGrams: (food.fat * scale).rounded(),
                         energyKilocalories: (food.kcal * scale).rounded()
                     )
+                    if let sugars = Self.sugarsPer100g[food.name], let grams = item.amountGrams {
+                        for (sugar, per100g) in sugars {
+                            item[keyPath: sugar.keyPath] = (per100g * grams / 10).rounded() / 10
+                        }
+                        item.sugarsGrams = (sugars.values.reduce(0, +) * grams / 10).rounded() / 10
+                    }
+                    return item
                 }
                 meals.append(Meal(
                     id: SyntheticGlucoseGenerator.makeUUID(using: &rng),

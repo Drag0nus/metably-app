@@ -14,20 +14,93 @@ public final class MealEntryModel: Identifiable {
         public var carbsText: String
         /// Typed values of the nutrients the user tracks (see `trackedNutrients`).
         public var nutrientTexts: [Nutrient: String]
+        /// The catalog food the values come from; nil for a food typed by hand.
+        public private(set) var food: Food?
+        /// A household measure of `food`; nil means the amount is typed in grams.
+        public private(set) var portion: Food.Portion?
+        /// How many portions, e.g. "2" eggs. Used only with a portion.
+        public private(set) var quantityText: String
+        /// The user unlinked the catalog food, so its stored values must not stay.
+        public private(set) var didClearFood = false
 
         public init(
             id: UUID = UUID(),
             name: String = "",
             amountText: String = "",
             carbsText: String = "",
-            nutrientTexts: [Nutrient: String] = [:]
+            nutrientTexts: [Nutrient: String] = [:],
+            food: Food? = nil
         ) {
             self.id = id
             self.name = name
             self.amountText = amountText
             self.carbsText = carbsText
             self.nutrientTexts = nutrientTexts
+            self.food = food
+            self.portion = nil
+            self.quantityText = "1"
         }
+
+        // MARK: Catalog food
+
+        /// Fills the row from a catalog food: its name, its first household measure (or 100 g),
+        /// and every value computed from that amount.
+        public mutating func select(_ food: Food, trackedNutrients: [Nutrient]) {
+            self.food = food
+            didClearFood = true
+            name = food.localizedName
+            portion = food.portions.first
+            quantityText = "1"
+            if portion == nil { amountText = MealEntryModel.text(100) }
+            recalculate(trackedNutrients: trackedNutrients)
+        }
+
+        /// Back to a food typed by hand; the typed values stay as they are.
+        public mutating func clearFood() {
+            didClearFood = true
+            food = nil
+            portion = nil
+            quantityText = "1"
+        }
+
+        /// nil switches to grams, keeping the current weight.
+        public mutating func setPortion(_ portion: Food.Portion?, trackedNutrients: [Nutrient]) {
+            self.portion = portion
+            if portion != nil { quantityText = "1" }
+            recalculate(trackedNutrients: trackedNutrients)
+        }
+
+        public mutating func setQuantityText(_ text: String, trackedNutrients: [Nutrient]) {
+            quantityText = text
+            recalculate(trackedNutrients: trackedNutrients)
+        }
+
+        /// The weight typed in grams; with a catalog food the values follow it.
+        public mutating func setAmountText(_ text: String, trackedNutrients: [Nutrient]) {
+            amountText = text
+            if food != nil, portion == nil { recalculate(trackedNutrients: trackedNutrients) }
+        }
+
+        /// Carbohydrates and tracked nutrients from the catalog for the current amount.
+        /// Typed carbs are overwritten only here, when the amount or food changes.
+        mutating func recalculate(trackedNutrients: [Nutrient]) {
+            guard let food else { return }
+            if let portion {
+                guard let quantity = DecimalInputParser.parse(quantityText.trimmingCharacters(in: .whitespaces)),
+                      quantity > 0
+                else { return }
+                amountText = MealEntryModel.text(Food.round(quantity * portion.grams))
+            }
+            guard let grams = DecimalInputParser.parse(amountText.trimmingCharacters(in: .whitespaces)) else { return }
+            let item = food.mealItem(grams: grams, name: name, id: id)
+            carbsText = MealEntryModel.text(item.carbohydrateGrams)
+            for nutrient in trackedNutrients {
+                nutrientTexts[nutrient] = item[keyPath: nutrient.keyPath].map(MealEntryModel.text) ?? ""
+            }
+        }
+
+        /// Grams per portion for display, e.g. "= 100 g".
+        public var computedGrams: Double? { DecimalInputParser.parse(amountText.trimmingCharacters(in: .whitespaces)) }
 
         var isBlank: Bool {
             name.trimmingCharacters(in: .whitespaces).isEmpty && amountText.isEmpty && carbsText.isEmpty
@@ -57,6 +130,8 @@ public final class MealEntryModel: Identifiable {
     public let breadUnits: BreadUnitConverter
     /// Nutrients with a daily goal: the sheet shows a field for each, per food.
     public let trackedNutrients: [Nutrient]
+    /// The offline food list used for name suggestions.
+    public let catalog: FoodCatalog
 
     @ObservationIgnored private let repository: any MealRepository
     @ObservationIgnored private let dateProvider: any DateProvider
@@ -70,9 +145,11 @@ public final class MealEntryModel: Identifiable {
         schedule: DailySchedule = .default,
         breadUnits: BreadUnitConverter = .standard,
         trackedNutrients: [Nutrient] = [],
+        catalog: FoodCatalog = .empty,
         status: MealStatus = .eaten,
         editing: Meal? = nil
     ) {
+        self.catalog = catalog
         self.repository = repository
         self.dateProvider = dateProvider
         self.timeZone = timeZone
@@ -94,7 +171,8 @@ public final class MealEntryModel: Identifiable {
                     name: item.name,
                     amountText: item.amountGrams.map(Self.text) ?? "",
                     carbsText: Self.text(item.carbohydrateGrams),
-                    nutrientTexts: texts
+                    nutrientTexts: texts,
+                    food: item.foodID.flatMap(catalog.food(id:))
                 )
             }
             portionSize = meal.portionSize
@@ -119,7 +197,23 @@ public final class MealEntryModel: Identifiable {
         return nearest.0
     }
 
-    static func text(_ value: Double) -> String {
+    /// Catalog foods matching a row's name while it is not linked to one yet.
+    public func suggestions(for item: ItemDraft) -> [Food] {
+        guard item.food == nil else { return [] }
+        let query = item.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard query.count >= 2 else { return [] }
+        return catalog.search(query, limit: 5)
+    }
+
+    public func select(_ food: Food, forItem id: UUID) {
+        guard let index = items.firstIndex(where: { $0.id == id }) else { return }
+        items[index].select(food, trackedNutrients: trackedNutrients)
+    }
+
+    /// True when any row's values come from the catalog, so the sheet shows the source.
+    public var usesCatalog: Bool { items.contains { $0.food != nil } }
+
+    nonisolated static func text(_ value: Double) -> String {
         value.formatted(.number.precision(.fractionLength(0...1)).grouping(.never))
     }
 
@@ -148,9 +242,17 @@ public final class MealEntryModel: Identifiable {
                 guard let parsed = DecimalInputParser.parse(amountText) else { return nil }
                 amount = parsed
             }
-            // Start from the stored food so values of untracked nutrients are kept.
-            var item = editing?.items.first { $0.id == draft.id }
-                ?? MealItem(id: draft.id, name: "", carbohydrateGrams: 0)
+            var item: MealItem
+            if let food = draft.food, let amount {
+                // Every value the catalog knows for this weight, including the individual sugars.
+                item = food.mealItem(grams: amount, name: "", id: draft.id)
+            } else if let stored = editing?.items.first(where: { $0.id == draft.id }), !draft.didClearFood {
+                // Start from the stored food so values of untracked nutrients are kept.
+                item = stored
+            } else {
+                // A new row, or one unlinked from its catalog food: nothing from the catalog stays.
+                item = MealItem(id: draft.id, name: "", carbohydrateGrams: 0)
+            }
             item.name = draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
             item.amountGrams = amount
             item.carbohydrateGrams = carbs

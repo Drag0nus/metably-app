@@ -37,6 +37,9 @@ public final class MealsModel {
         }
     }
 
+    /// Dietary sugars eaten today, from foods that know them. Never blood glucose.
+    public var sugarBreakdown: DietarySugarBreakdown { DietarySugarBreakdown(meals: eaten) }
+
     public func reload() {
         guard let start = day.startInstant(in: timeZone),
               let end = day.adding(days: 1).startInstant(in: timeZone)

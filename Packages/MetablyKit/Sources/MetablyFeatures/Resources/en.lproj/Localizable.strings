@@ -262,3 +262,26 @@
 "meals.nutrients" = "Other nutrients eaten";
 "meals.nutrients.missing %lld" = "Not recorded for %lld foods";
 "settings.goals.nutrient %@" = "%@ goal";
+
+/* Food catalog */
+"meal.catalog.source" = "Values of foods picked from the list: USDA FoodData Central (reference averages). Check the label when you have one.";
+"meal.catalog.carbsPer100g %@" = "%@ g carbs / 100 g";
+"meal.catalog.unlink" = "From the food list";
+"meal.catalog.unlink.hint" = "Unlinks the food from the list so you can type all values yourself.";
+"meal.item.quantity" = "Quantity";
+"meal.item.portion" = "Measure";
+"meal.item.portion.grams" = "In grams";
+"settings.about.foodData" = "Food data";
+"settings.about.foodData.detail" = "Nutrients: USDA FoodData Central, SR Legacy (April 2018), public domain (CC0 1.0). Some household measures follow the Ukrainian self-control diary.";
+
+/* Dietary sugars */
+"sugar.sucrose" = "Sucrose";
+"sugar.glucose" = "Glucose (in food)";
+"sugar.fructose" = "Fructose";
+"sugar.lactose" = "Lactose";
+"sugar.maltose" = "Maltose";
+"sugar.galactose" = "Galactose";
+"meals.sugars" = "Sugars eaten";
+"meals.sugars.subtitle" = "Grams of sugar in food, not blood glucose.";
+"meals.sugars.total" = "Total sugars";
+"meals.sugars.missing %lld" = "No data for %lld foods";

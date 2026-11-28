@@ -262,3 +262,26 @@
 "meals.nutrients" = "Інше з'їдене";
 "meals.nutrients.missing %lld" = "Не вказано для продуктів: %lld";
 "settings.goals.nutrient %@" = "Ціль: %@";
+
+/* Food catalog */
+"meal.catalog.source" = "Значення продуктів зі списку: USDA FoodData Central (усереднені довідкові дані). Якщо є етикетка, звіртеся з нею.";
+"meal.catalog.carbsPer100g %@" = "%@ г вуглеводів / 100 г";
+"meal.catalog.unlink" = "Зі списку продуктів";
+"meal.catalog.unlink.hint" = "Відв'язує продукт від списку, щоб ви могли ввести всі значення самі.";
+"meal.item.quantity" = "Кількість";
+"meal.item.portion" = "Міра";
+"meal.item.portion.grams" = "У грамах";
+"settings.about.foodData" = "Дані про продукти";
+"settings.about.foodData.detail" = "Поживні речовини: USDA FoodData Central, SR Legacy (квітень 2018), суспільне надбання (CC0 1.0). Частина побутових мір — за «Щоденником самоконтролю».";
+
+/* Dietary sugars */
+"sugar.sucrose" = "Сахароза";
+"sugar.glucose" = "Глюкоза (у їжі)";
+"sugar.fructose" = "Фруктоза";
+"sugar.lactose" = "Лактоза";
+"sugar.maltose" = "Мальтоза";
+"sugar.galactose" = "Галактоза";
+"meals.sugars" = "Цукри з їжі";
+"meals.sugars.subtitle" = "Грами цукру в їжі, не глюкоза крові.";
+"meals.sugars.total" = "Цукри загалом";
+"meals.sugars.missing %lld" = "Немає даних для продуктів: %lld";

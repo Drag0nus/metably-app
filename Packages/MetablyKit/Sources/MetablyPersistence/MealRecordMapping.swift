@@ -51,7 +51,14 @@ enum MealRecordMapping {
                 fiberGrams: item.fiberGrams,
                 proteinGrams: item.proteinGrams,
                 fatGrams: item.fatGrams,
-                energyKilocalories: item.energyKilocalories
+                energyKilocalories: item.energyKilocalories,
+                foodID: item.foodID,
+                sucroseGrams: item.sucroseGrams,
+                glucoseGrams: item.glucoseGrams,
+                fructoseGrams: item.fructoseGrams,
+                lactoseGrams: item.lactoseGrams,
+                maltoseGrams: item.maltoseGrams,
+                galactoseGrams: item.galactoseGrams
             )
         }
     }
@@ -89,7 +96,14 @@ enum MealRecordMapping {
                     fiberGrams: $0.fiberGrams,
                     proteinGrams: $0.proteinGrams,
                     fatGrams: $0.fatGrams,
-                    energyKilocalories: $0.energyKilocalories
+                    energyKilocalories: $0.energyKilocalories,
+                    foodID: $0.foodID,
+                    sucroseGrams: $0.sucroseGrams,
+                    glucoseGrams: $0.glucoseGrams,
+                    fructoseGrams: $0.fructoseGrams,
+                    lactoseGrams: $0.lactoseGrams,
+                    maltoseGrams: $0.maltoseGrams,
+                    galactoseGrams: $0.galactoseGrams
                 )
             }
         return Meal(

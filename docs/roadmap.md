@@ -22,7 +22,13 @@ backend built incrementally after the threat model.
 - [x] Meals: entry, items, carbs in grams, bread units display, planned/eaten, portion М/С/В (schema V3)
 - [x] Daily carbohydrate goal (off until set)
 - [x] Other nutrient goals (protein, fat, energy, fibre) and carbs card on Today
-- [ ] Built-in offline food database (USDA FoodData Central, uk/en names, household portions)
+- [x] Built-in offline food database (USDA FoodData Central, uk/en names, household portions,
+      diary foods and measures with page references; schema V5)
+- [x] Individual dietary sugars per food and a daily sugars card
+- [ ] Sodium and saturated fat from USDA
+- [ ] Open Food Facts barcode lookup (optional, online)
+- [ ] User profile (diabetes type, medicines, meals per day, height, weight, BMI) that proposes a
+      reminder plan
 - [x] Version, build number and build time in Settings
 - [x] Reading-to-meal link suggestions with user confirmation (schema V4)
 - [ ] Medications: tablets, schedules, reminders, history (taken / missed / postponed)
