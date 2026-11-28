@@ -9,7 +9,7 @@ Metably is a phone version of this diary. This document maps every section, fiel
 education topic of the diary to the app, so that nothing is lost by accident and every deliberate
 difference has a written reason.
 
-Reviewed against `main` at version 0.6.0 (6), PRs 1–6, on 2026-11-28.
+Reviewed against `main` at version 0.8.0 (8), PRs 1–6 and 8, on 2026-11-28.
 
 ## How to read this
 
@@ -38,7 +38,7 @@ shown in the app still needs review by a clinician before release.
 | How often to measure | 5–6 (PDF 6–7) | Education + schedules | 🟡 |
 | Hypoglycaemia, hyperglycaemia | 6–8 (PDF 7–9) | Education + emergency steps | 🟡 |
 | Nutrition rules | 8–9 (PDF 9–10) | Education | ❗ |
-| Bread units and exchange tables | 10–15 (PDF 11–16) | Reference tables | 🟡 |
+| Bread units and exchange tables | 10–15 (PDF 11–16) | Reference tables | 🟡 (PR 8) |
 | Food pyramid | 16 (PDF 17) | Education | ⛔ / ❗ |
 | Foot care | 17–18 (PDF 18–19) | Education | ❗ |
 | Tests and specialist visits (type 2) | 18 (PDF 19) | Schedule table | ❗ |
@@ -115,7 +115,7 @@ Instructions page (p. 43) plus 6 sheets of 3 days each (18 profile days).
 | # | Content | Status | Where / note |
 |---|---|---|---|
 | X1 | 1 bread unit (ХО) = 10–12 g carbohydrate | ✅ | `BreadUnitConverter`, default 12 g, configurable; grams stored, ХО derived (PR 5). |
-| X2 | ХО measured in pieces, spoons, glasses, cups | 🟡 | Portion grams typed by hand today. Household portions are planned with the food database (roadmap 0.2, PR 7) — see X5. |
+| X2 | ХО measured in pieces, spoons, glasses, cups | ✅ | Household measures in the bundled food catalog; picking "2 × шт." computes grams and carbs (PR 8, ADR 0010). |
 | X3 | 1 uncovered ХО raises glucose by 1.7–3.0 mmol/L | ⛔ | Used in the diary to predict glucose and choose an insulin dose. The app does not predict glucose or dose (CLAUDE.md, project instructions §13). |
 | X4 | ≤ 7 ХО per meal per injection; 1 ХО snack without insulin; 1 ХО needs 1.5–4 U insulin | ⛔ | Dosing and insulin-to-carb guidance. Excluded: no dose calculation or recommendations. A user may set their **own** per-meal carb goal with their doctor; the daily carb goal exists (PR 5). Per-meal goals: **GAP-05**. |
 
@@ -127,26 +127,27 @@ implied (10–12 g), protein/fat/fibre are not given.
 
 | # | Table / page | Rows (approx.) | Status |
 |---|---|---|---|
-| F1 | Fruits and berries, p. 10 (table) + p. 11 (photos with weights) | ~37 | ❗ GAP-06 |
-| F2 | Cereals and flour products, p. 12 (table) + p. 13 (photos) | ~27 | ❗ GAP-06 |
-| F3 | Potato products, p. 12 | 7 | ❗ GAP-06 |
-| F4 | Bread and bakery, p. 12 + p. 13 (photos) | 18 | ❗ GAP-06 |
-| F5 | Side dishes / pasta, p. 12 + p. 13 | 10 | ❗ GAP-06 |
-| F6 | Starches, p. 12 | 4 | ❗ GAP-06 |
-| F7 | Vegetables (large portions = 1 ХО), milk/kefir/yoghurt per 250 ml, tomato juice, diabetic chocolate, nuts, p. 14 | ~14 | ❗ GAP-06 |
-| F8 | Legumes, honey, caramel, dark chocolate, nuts and seeds, p. 15 | ~17 | ❗ GAP-06 |
+| F1 | Fruits and berries, p. 10 (table) + p. 11 (photos with weights) | ~37 | 🟡 PR 8 |
+| F2 | Cereals and flour products, p. 12 (table) + p. 13 (photos) | ~27 | 🟡 PR 8 |
+| F3 | Potato products, p. 12 | 7 | 🟡 PR 8 |
+| F4 | Bread and bakery, p. 12 + p. 13 (photos) | 18 | 🟡 PR 8 |
+| F5 | Side dishes / pasta, p. 12 + p. 13 | 10 | 🟡 PR 8 |
+| F6 | Starches, p. 12 | 4 | 🟡 PR 8 |
+| F7 | Vegetables (large portions = 1 ХО), milk/kefir/yoghurt per 250 ml, tomato juice, diabetic chocolate, nuts, p. 14 | ~14 | 🟡 PR 8 |
+| F8 | Legumes, honey, caramel, dark chocolate, nuts and seeds, p. 15 | ~17 | 🟡 PR 8 |
 
-**How the app should use them (GAP-06).** The planned food database (USDA FoodData Central subset,
-roadmap 0.2 / PR 7) gives nutrients per 100 g. The diary's tables should be the **checklist of
-foods and household portions** for that database: every food in F1–F8 must exist in the bundled
-database with a Ukrainian name and the diary's household measure (e.g. "1 small apple, 90 g",
-"½ slice rye bread 1 cm, 25 g", "2 heaped tbsp cooked rice, 50 g"). Nutrient values come from
-USDA (CC0, traceable source); the diary's gram amount is used as the portion, and a unit test checks
-that each diary portion gives 10–12 g carbohydrate from the USDA values, flagging rows that differ.
-Diary-specific items with no USDA match (e.g. "діабетичний шоколад", Swabian dumplings) are listed
-as unmatched rather than invented. The diary's kcal figures are not copied: they are rounded to 5 kcal and
-the USDA values are the single nutrient source. Where the diary gives a weight with and without
-peel or stone (e.g. tangerine 120 g peeled, 150 g with peel), both become portions.
+**How the app uses them (GAP-06, mostly done in PR 8).** The bundled food catalog
+(`Resources/Foods/foods.json`, USDA FoodData Central SR Legacy, ADR 0010) uses the diary's tables as
+the checklist of foods and household measures: the diary's foods were added with Ukrainian names, and
+58 diary measures are stored as portions marked `"source": "diary p. N"` (e.g. "1 small apple, 100 g",
+"2 heaped tbsp cooked rice, 50 g"). Nutrient values always come from USDA; bread units are computed
+from carbohydrate grams and the user's factor, never copied from the diary. Where the diary
+contradicts itself the measure is left out. `tools/food-catalog/diary-check.md` compares every diary
+amount with USDA carbohydrates (with and without fibre) and shows which fall outside 10–12 g.
+
+Still open under GAP-06: a list of the diary's foods and measures that are **not** in the catalog
+(no USDA match, e.g. "діабетичний шоколад", Swabian dumplings, or measures dropped as contradictory),
+so that every row of F1–F8 is accounted for.
 
 ### 3.3 Tests and specialist visits, type 2 diabetes — p. 18 (PDF 19)
 
@@ -220,8 +221,8 @@ copied, because parts of it are dated (see the clinical checks).
 
 | # | Topic | Status | Note |
 |---|---|---|---|
-| N1 | Which foods contain carbohydrates (bread, potato, cereals, fruit, milk, sugar) | 🟡 | Carbs are recorded per food (PR 5); the food database will supply them (PR 7). Education text: GAP-09. |
-| N2 | "Exclude sugar and sweets except for hypoglycaemia or before heavy exercise" | ⛔ as a rule | Clinical check: ADA 5 advises minimising added sugars and sugar-sweetened drinks, not a ban. The app tracks dietary sugars (planned with PR 7) without judging foods. |
+| N1 | Which foods contain carbohydrates (bread, potato, cereals, fruit, milk, sugar) | 🟡 | Carbs recorded per food (PR 5) and supplied by the food catalog (PR 8). Education text: GAP-09. |
+| N2 | "Exclude sugar and sweets except for hypoglycaemia or before heavy exercise" | ⛔ as a rule | Clinical check: ADA 5 advises minimising added sugars and sugar-sweetened drinks, not a ban. The app shows dietary sugars (PR 8) without judging foods. |
 | N3 | "Carbohydrates should be at least half of the diet" | ⛔ | Outdated. ADA 5 (and the 2019 ADA nutrition consensus): there is no ideal percentage of carbohydrate, protein and fat; eating plans are individualised. The app has user-set goals only (PR 5, PR 6). |
 | N4 | Prefer high-fibre carbs; small, evenly spread portions | 🟡 | Fibre is recorded and has an optional goal (PR 6). Carbs per meal are visible in the Meals tab. Education: GAP-09. |
 | N5 | Calories and overweight; high-calorie foods; caution with "diabetic" products | 🟡 | Energy recorded with optional goal (PR 6); weight planned. Education: GAP-09. |
@@ -278,7 +279,7 @@ the order.
 | GAP-03 | Body records: morning/evening BP and pulse table layout | p. 50 | With Body screen (0.2) |
 | GAP-04 | Stand-alone diary note screen | p. 51 | 0.2, Journal filters |
 | GAP-05 | Optional per-meal carbohydrate goal (user/doctor-set, no dosing) | p. 10 | After food DB (0.2) |
-| GAP-06 | Food database covers every food in the diary's ХО tables with uk names and the diary's household portions; test checks 10–12 g carbs per diary portion; unmatched items listed | pp. 10–15 | **PR 7 (food DB), now** |
+| GAP-06 | Food database covers the diary's ХО tables with uk names and household portions (done in PR 8, 58 diary measures, `diary-check.md`); **still open**: list of diary foods/measures not in the catalog | pp. 10–15 | Small follow-up to PR 8 |
 | GAP-07 | Glucose-check reminder templates from the diary's schedules (until stable / stable / profile day / pregnancy excluded) | pp. 5–6 | With reminders (0.2 beta) |
 | GAP-08 | Preventive care module: tests and visits checklist from the diary's type 2 table, editable frequencies, reminders | p. 18 | 0.3, with labs |
 | GAP-09 | Offline "Довідка" education section, topics from the diary, rewritten, sourced, clinician-reviewed | pp. 3–9, 16–18 | 0.3 |
@@ -286,7 +287,7 @@ the order.
 | GAP-11 | Estimated average glucose next to a lab HbA1c, labelled as an estimate | p. 5 | With labs (0.3) |
 | GAP-12 | Symptom logging with the diary's hypo/hyper symptom lists; "what happened?" after a low reading | pp. 6–7 | 0.2/0.3 |
 | GAP-13 | Ketone records (blood or urine) | p. 7 | With body/labs (0.3) |
-| GAP-14 | Sodium and saturated fat from the food database, optional goals | p. 9 | PR 7 data, goals later |
+| GAP-14 | Sodium and saturated fat from the food database, optional goals | p. 9 | Next food catalog update |
 | GAP-15 | Water intake | p. 16 | 0.3 |
 | GAP-16 | Optional daily foot check item | p. 17 | 0.3 |
 | GAP-17 | Disclaimer shown once at first launch | pp. 1–2 | 0.2 beta |

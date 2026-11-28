@@ -49,7 +49,8 @@ backend built incrementally after the threat model.
 
 Gaps found by [the diary traceability matrix](diary-traceability.md). IDs match that document.
 
-- [ ] GAP-06 Food database covers every food in the diary's bread unit tables, with household portions (with the food database)
+- [x] GAP-06 Food database covers the diary's bread unit tables with household measures (PR 8)
+- [ ] GAP-06 follow-up: list diary foods and measures that are not in the catalog
 - [ ] GAP-14 Sodium and saturated fat in the food database
 - [ ] GAP-01 Insulin/tablet row under glucose in the Journal table and report (with medications)
 - [ ] GAP-03 Morning/evening blood pressure and pulse layout (with the Body screen)
