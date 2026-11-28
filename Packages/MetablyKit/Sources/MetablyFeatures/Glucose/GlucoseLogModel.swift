@@ -69,15 +69,23 @@ public final class GlucoseLogModel {
     }
 
     #if DEBUG
-    /// Development helper: inserts synthetic readings (never real data). Debug builds only.
+    /// Development helper: inserts synthetic readings and meals (never real data). Debug builds only.
     public func loadSyntheticData(days: Int = 14) {
         let timeZone = TimeZone.current
         let now = dependencies.dateProvider.now()
-        let readings = SyntheticGlucoseGenerator(seed: UInt64(now.timeIntervalSince1970))
-            .makeReadings(days: days, endingOn: LocalDay(instant: now, timeZone: timeZone), timeZone: timeZone)
+        let today = LocalDay(instant: now, timeZone: timeZone)
+        let seed = UInt64(now.timeIntervalSince1970)
+        let readings = SyntheticGlucoseGenerator(seed: seed)
+            .makeReadings(days: days, endingOn: today, timeZone: timeZone)
             .filter { $0.measuredAt <= now }
         for reading in readings {
             try? dependencies.glucoseRepository.insert(reading)
+        }
+        // A different seed so meal ids never repeat reading ids (both live in the event table).
+        let meals = SyntheticMealGenerator(seed: seed ^ 0x6D65_616C)
+            .makeMeals(days: days, endingOn: today, timeZone: timeZone, now: now)
+        for meal in meals {
+            try? dependencies.mealRepository.insert(meal)
         }
         reload()
     }

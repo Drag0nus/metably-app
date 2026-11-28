@@ -72,4 +72,54 @@ struct SchemaMigrationTests {
         try repository.insert(reading)
         #expect(try repository.reading(id: reading.id) == reading)
     }
+
+    @Test("A V2 store opens as V3; readings survive and meals can be added")
+    func v2ToV3() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appending(path: "metably-migration-\(UUID().uuidString)", directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let url = directory.appending(path: "Metably.store")
+        let id = UUID()
+
+        do {
+            let schema = Schema(versionedSchema: MetablySchemaV2.self)
+            let configuration = ModelConfiguration("Metably", schema: schema, url: url, cloudKitDatabase: .none)
+            let container = try ModelContainer(for: schema, configurations: [configuration])
+            let context = ModelContext(container)
+            let event = MetablySchemaV2.TimelineEventRecord(
+                id: id, kindRaw: EventKind.glucose.rawValue, startDate: now, endDate: now,
+                timeZoneID: "Europe/Kyiv", timeZoneIsInferred: false, localDay: "2027-01-15",
+                sourceRaw: EventSource.manual.rawValue, providerID: "manual", sourceDetail: nil,
+                externalID: nil, isUserVerified: true, note: nil, createdAt: now, modifiedAt: now,
+                deletedAt: nil, version: 1, serverVersion: nil, originDeviceID: UUID(),
+                lastModifiedDeviceID: UUID(), syncCategoryRaw: SyncCategory.glucose.rawValue,
+                isHealthKitDerived: false, schemaVersion: 2
+            )
+            let detail = MetablySchemaV2.GlucoseReadingRecord(
+                valueMmolL: 8.1, enteredValue: 8.1, enteredUnitRaw: GlucoseUnit.millimolesPerLiter.rawValue,
+                contextRaw: GlucoseMeasurementContext.afterMeal.rawValue,
+                specimenRaw: GlucoseSpecimen.capillary.rawValue, flagsRaw: 0, minutesAfterMeal: nil,
+                deviceName: nil, deviceSerialHash: nil, activityLevel: 3
+            )
+            context.insert(event)
+            context.insert(detail)
+            event.glucose = detail
+            try context.save()
+        }
+
+        let container = try MetablyModelContainer.make(url: url)
+        let readings = SwiftDataGlucoseRepository(context: container.mainContext, deviceID: UUID())
+        let reading = try #require(try readings.reading(id: id))
+        #expect(reading.enteredValue == 8.1)
+        #expect(reading.activityLevel == ActivityLevel(rawValue: 3))
+
+        let meals = SwiftDataMealRepository(context: container.mainContext, deviceID: UUID(), dateProvider: FixedDateProvider(now))
+        let meal = Meal(
+            slot: .dinner, status: .eaten, startedAt: now, timeZone: .gmt,
+            items: [MealItem(name: "Rice", amountGrams: 100, carbohydrateGrams: 28)], createdAt: now
+        )
+        try meals.insert(meal)
+        #expect(try meals.meal(id: meal.id)?.totalCarbohydrateGrams == 28)
+    }
 }

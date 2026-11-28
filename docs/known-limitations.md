@@ -1,12 +1,16 @@
 # Known limitations (0.2 in progress)
 
-- Only glucose readings exist; other domains are modelled in the design doc but not implemented.
+- Glucose readings and meals exist; other domains are modelled in the design doc but not implemented.
+- Meals have no food database yet: names and carbohydrate grams are typed. Only the carbohydrate
+  goal can be set; other nutrient goals come later.
+- Readings are not yet linked to meals, and Today has no carbs card yet.
 - The revision history of an edited reading is stored but not shown in the app yet.
 - Targets default to the ADA values; bedtime and night readings have no default target.
 - Meal and bed times used to suggest diary slots are fixed defaults (08:00, 13:00, 19:00, 22:30)
   until the schedule settings screen exists.
 - The Journal shows glucose only; filters arrive with meals, medications and body records.
-- Meals, Medications and Reports tabs are placeholders.
+- Medications and Reports tabs are placeholders.
+- The build shows version, build number and build time, but not the git commit.
 - "LO"/"HI" prefill typical meter limits (0.6 / 33.3 mmol/L); per-meter limits are not configurable yet.
 - HealthKit, Apple Watch, widgets, reports and sync are not implemented. The only reminder is the
   optional recheck after a low reading.

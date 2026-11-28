@@ -9,6 +9,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The "Record reading" accessory and the tab bar no longer show on the pushed Settings screen.
 
 ### Added
+- Meals tab: one diary day with previous/next, carbohydrates eaten (grams and bread units) against the
+  user's own daily goal, eaten and planned meals apart, "Eaten as planned" in one tap, tap to edit.
+- Meal entry: breakfast/lunch/dinner/snack suggested from the time, eaten or planned, foods with
+  portion grams and carbohydrate grams, live total in g and bread units, optional portion size
+  М/С/В, note, delete.
+- SwiftData schema V3 with a lightweight migration from V2: `MealRecord` and `MealItemRecord`
+  (ADR 0008). Sync payload schema version 3.
+- Daily carbohydrate goal in Settings, off until the user sets one.
+- Settings shows the app version, build number and build time. Version 0.5.0 (5).
+- The Debug synthetic data loader also adds two weeks of synthetic meals.
 - Edit reading: tap a reading on Today, in the Journal list or in the diary table to view its source and
   history dates, change it (previous values stay in the revision history) or delete it (soft delete).
 - Meter "LO"/"HI" entry: prefilled with typical meter limits (editable), stored with meter flags,

@@ -100,3 +100,66 @@ extension EventSource {
         }
     }
 }
+
+extension MealSlot {
+    public var localizedName: String {
+        switch self {
+        case .breakfast: String(localized: "meal.slot.breakfast", bundle: .module)
+        case .lunch: String(localized: "meal.slot.lunch", bundle: .module)
+        case .dinner: String(localized: "meal.slot.dinner", bundle: .module)
+        case .snack: String(localized: "meal.slot.snack", bundle: .module)
+        }
+    }
+
+    public var symbolName: String {
+        switch self {
+        case .breakfast: "sunrise"
+        case .lunch: "sun.max"
+        case .dinner: "sunset"
+        case .snack: "carrot"
+        }
+    }
+}
+
+extension PortionSize {
+    /// The paper diary's letters: М / С / В in Ukrainian, S / M / L in English.
+    public var shortName: String {
+        switch self {
+        case .small: String(localized: "meal.portion.short.small", bundle: .module)
+        case .medium: String(localized: "meal.portion.short.medium", bundle: .module)
+        case .large: String(localized: "meal.portion.short.large", bundle: .module)
+        }
+    }
+
+    public var localizedName: String {
+        switch self {
+        case .small: String(localized: "meal.portion.small", bundle: .module)
+        case .medium: String(localized: "meal.portion.medium", bundle: .module)
+        case .large: String(localized: "meal.portion.large", bundle: .module)
+        }
+    }
+}
+
+extension MealEntryModel.SaveError {
+    public var localizedMessage: String {
+        switch self {
+        case .invalid(.noItems): String(localized: "meal.error.noItems", bundle: .module)
+        case .invalid(.emptyName): String(localized: "meal.error.emptyName", bundle: .module)
+        case .invalid(.carbohydratesOutOfRange): String(localized: "meal.error.carbs", bundle: .module)
+        case .invalid(.amountOutOfRange): String(localized: "meal.error.amount", bundle: .module)
+        case .unreadableNumber: String(localized: "meal.error.number", bundle: .module)
+        case .storage: String(localized: "meal.error.storage", bundle: .module)
+        }
+    }
+}
+
+/// Shared number formats for nutrition: grams without decimals, bread units with one.
+enum NutritionFormat {
+    static func grams(_ value: Double) -> String {
+        value.formatted(.number.precision(.fractionLength(0)))
+    }
+
+    static func breadUnits(_ value: Double) -> String {
+        value.formatted(.number.precision(.fractionLength(1)))
+    }
+}

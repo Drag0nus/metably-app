@@ -28,6 +28,8 @@ struct SettingsView: View {
 
             GlucoseTargetsSection(preferences: preferences)
 
+            NutritionGoalsSection(preferences: preferences)
+
             Section {
                 Toggle(isOn: $preferences.usesInsulin) {
                     Text("settings.usesInsulin", bundle: .module)
@@ -44,7 +46,7 @@ struct SettingsView: View {
                 Button {
                     logModel.loadSyntheticData()
                 } label: {
-                    Text("settings.debug.loadSynthetic", bundle: .module)
+                    Text("settings.debug.loadSyntheticAll", bundle: .module)
                 }
             } header: {
                 Text("settings.debug", bundle: .module)
@@ -52,6 +54,8 @@ struct SettingsView: View {
                 Text("settings.debug.footer", bundle: .module)
             }
             #endif
+
+            AboutSection(version: .current)
 
             Section {
                 Text("settings.disclaimer", bundle: .module)
@@ -123,5 +127,78 @@ private struct GlucoseTargetsSection: View {
             }
         }
         .accessibilityValue(Text(verbatim: "\(displayed) \(unit.symbol)"))
+    }
+}
+
+/// Daily nutrient goals. Only carbohydrates for now; the goal is off until the user sets one.
+private struct NutritionGoalsSection: View {
+    @Bindable var preferences: UserPreferencesStore
+
+    /// A first value when the goal is switched on; the user adjusts it to their own plan.
+    private static let initialGoalGrams: Double = 150
+
+    var body: some View {
+        Section {
+            Toggle(isOn: isOn) {
+                Text("settings.goals.carbs", bundle: .module)
+            }
+            if let goal = preferences.dailyCarbohydrateGoalGrams {
+                Stepper(value: goalBinding, in: UserPreferencesStore.carbohydrateGoalRange, step: 5) {
+                    HStack {
+                        Text("settings.goals.carbs.value", bundle: .module)
+                        Spacer()
+                        Text(verbatim: "\(NutritionFormat.grams(goal)) g")
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .accessibilityValue(Text(verbatim: "\(NutritionFormat.grams(goal)) g"))
+            }
+        } header: {
+            Text("settings.goals", bundle: .module)
+        } footer: {
+            Text("settings.goals.footer", bundle: .module)
+        }
+    }
+
+    private var isOn: Binding<Bool> {
+        Binding(
+            get: { preferences.dailyCarbohydrateGoalGrams != nil },
+            set: { preferences.dailyCarbohydrateGoalGrams = $0 ? Self.initialGoalGrams : nil }
+        )
+    }
+
+    private var goalBinding: Binding<Double> {
+        Binding(
+            get: { preferences.dailyCarbohydrateGoalGrams ?? Self.initialGoalGrams },
+            set: { preferences.dailyCarbohydrateGoalGrams = $0 }
+        )
+    }
+}
+
+/// Version, build and build time, so a tester always knows which build is installed.
+private struct AboutSection: View {
+    let version: AppVersion
+
+    var body: some View {
+        Section {
+            LabeledContent {
+                Text(verbatim: version.versionAndBuild)
+                    .monospacedDigit()
+                    .textSelection(.enabled)
+            } label: {
+                Text("settings.about.version", bundle: .module)
+            }
+            if let builtAt = version.builtAt {
+                LabeledContent {
+                    Text(builtAt.formatted(date: .abbreviated, time: .shortened))
+                        .monospacedDigit()
+                } label: {
+                    Text("settings.about.built", bundle: .module)
+                }
+            }
+        } header: {
+            Text("settings.about", bundle: .module)
+        }
     }
 }

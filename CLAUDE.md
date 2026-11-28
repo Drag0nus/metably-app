@@ -10,3 +10,4 @@
 - Fingerstick statistics are "share of readings in range", never "Time in Range".
 - Docs, code and comments in English. UI strings in `Resources/{en,uk}.lproj`.
 - Record significant decisions as ADRs in `docs/adr/` and keep `CHANGELOG.md` and `docs/roadmap.md` current.
+- Raise `CURRENT_PROJECT_VERSION` (and `MARKETING_VERSION` 0.<PR number>.0 for now) in `Metably.xcodeproj` with every pull request, so the build in Settings tells testers what they run.

@@ -19,7 +19,10 @@ backend built incrementally after the threat model.
 - [ ] Journal: filters (Glucose, Meals, Medications, Body, Notes) and entry detail
 - [x] Activity level 1–5 on every reading (schema V2)
 - [ ] Body screen (weight, waist, blood pressure, pulse) from Today and Journal
-- [ ] Meals: entry, items, carbs in grams, bread units display
+- [x] Meals: entry, items, carbs in grams, bread units display, planned/eaten, portion М/С/В (schema V3)
+- [x] Daily carbohydrate goal (off until set)
+- [ ] Other nutrient goals (protein, fat, energy, fibre) and carbs card on Today
+- [x] Version, build number and build time in Settings
 - [ ] Reading-to-meal link suggestions with user confirmation (`MealLinkSuggester` exists)
 - [ ] Medications: tablets, schedules, reminders, history (taken / missed / postponed)
 - [ ] Manual basal/bolus insulin record, hidden unless enabled (no calculator, no IOB)
