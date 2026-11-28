@@ -252,3 +252,101 @@ struct ActivityAndTableTests {
         #expect(rows[1].cells[.bedtime]?.first?.enteredValue == 7.0)
     }
 }
+
+@MainActor
+@Suite("Edit reading and meter LO/HI")
+struct EditReadingTests {
+    let kyiv = TimeZone(identifier: "Europe/Kyiv")!
+    let day = LocalDay(year: 2026, month: 11, day: 27)
+
+    func instant(_ hour: Int, _ minute: Int = 0) -> Date { day.instant(hour: hour, minute: minute, in: kyiv)! }
+
+    func model(_ repository: InMemoryGlucoseRepository, at date: Date, editing: GlucoseReading? = nil) -> GlucoseEntryModel {
+        GlucoseEntryModel(
+            repository: repository, unit: .millimolesPerLiter,
+            dateProvider: FixedDateProvider(date), timeZone: kyiv, editing: editing
+        )
+    }
+
+    func saved(_ repository: InMemoryGlucoseRepository, text: String = "6,5", at date: Date) throws -> GlucoseReading {
+        let entry = model(repository, at: date)
+        entry.valueText = text
+        entry.activityLevel = ActivityLevel(rawValue: 2)
+        return try #require(entry.save())
+    }
+
+    @Test("Editing prefills the form from the reading")
+    func prefill() throws {
+        let repository = InMemoryGlucoseRepository()
+        let original = try saved(repository, at: instant(13, 5))
+        let edit = model(repository, at: instant(14), editing: original)
+        #expect(edit.isEditing)
+        #expect(GlucoseValueParser.parse(edit.valueText) == 6.5)
+        #expect(edit.slot == .beforeLunch)
+        #expect(edit.measuredAt == original.measuredAt)
+        #expect(edit.activityLevel == ActivityLevel(rawValue: 2))
+    }
+
+    @Test("Saving an edit updates the same reading and bumps its version")
+    func update() throws {
+        let repository = InMemoryGlucoseRepository()
+        let original = try saved(repository, at: instant(13, 5))
+        let edit = model(repository, at: instant(14), editing: original)
+        edit.valueText = "7,2"
+        edit.slot = .afterLunch
+        let updated = try #require(edit.save())
+        #expect(updated.id == original.id)
+        #expect(updated.enteredValue == 7.2)
+        #expect(updated.context == .afterMeal)
+        #expect(updated.version == original.version + 1)
+        #expect(try repository.allReadings().count == 1)
+    }
+
+    @Test("An unchanged value does not warn about itself as a duplicate")
+    func noSelfDuplicate() throws {
+        let repository = InMemoryGlucoseRepository()
+        let original = try saved(repository, at: instant(13, 5))
+        let edit = model(repository, at: instant(14), editing: original)
+        edit.note = "synthetic note"
+        #expect(edit.save() != nil)
+        #expect(edit.likelyDuplicate == nil)
+    }
+
+    @Test("Deleting from the edit sheet soft-deletes the reading")
+    func delete() throws {
+        let repository = InMemoryGlucoseRepository()
+        let original = try saved(repository, at: instant(13, 5))
+        let edit = model(repository, at: instant(14), editing: original)
+        #expect(edit.deleteEditedReading())
+        #expect(try repository.allReadings().isEmpty)
+        #expect(try repository.reading(id: original.id)?.isDeleted == true)
+    }
+
+    @Test("HI prefills the meter limit, skips plausibility bounds and is above target")
+    func meterHigh() throws {
+        let repository = InMemoryGlucoseRepository()
+        let entry = model(repository, at: instant(13, 5))
+        entry.meterDisplay = .high
+        #expect(GlucoseValueParser.parse(entry.valueText) == 33.3)
+        entry.valueText = "40"   // above the 35 mmol/L typo bound, allowed for HI
+        #expect(entry.canSave)
+        #expect(entry.previewStatus == .above)
+        let reading = try #require(entry.save())
+        #expect(reading.flags.contains(.meterHigh))
+    }
+
+    @Test("LO shows the low guidance and is stored with its flag")
+    func meterLow() throws {
+        let repository = InMemoryGlucoseRepository()
+        let entry = model(repository, at: instant(13, 5))
+        entry.meterDisplay = .low
+        #expect(entry.showsLowGlucoseGuidance)
+        let reading = try #require(entry.save())
+        #expect(reading.flags.contains(.meterLow))
+        #expect(reading.isLow)
+
+        let edit = model(repository, at: instant(14), editing: reading)
+        #expect(edit.meterDisplay == .low)
+        #expect(GlucoseValueParser.parse(edit.valueText) == 0.6)
+    }
+}

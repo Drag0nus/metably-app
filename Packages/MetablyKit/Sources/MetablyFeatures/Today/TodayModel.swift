@@ -55,8 +55,8 @@ public final class TodayModel {
         }
     }
 
-    public func makeEntryModel() -> GlucoseEntryModel {
-        dependencies.makeGlucoseEntryModel()
+    public func makeEntryModel(editing: GlucoseReading? = nil) -> GlucoseEntryModel {
+        dependencies.makeGlucoseEntryModel(editing: editing)
     }
 
     /// Places readings (newest first) into the profile slots; the newest reading wins a slot.

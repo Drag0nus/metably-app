@@ -51,10 +51,10 @@ struct GlucoseLogView: View {
                     }
                 }
             }
+            #endif
             .sheet(item: $entryModel) { entry in
                 GlucoseEntryView(model: entry) { model.reload() }
             }
-            #endif
             .onAppear { model.reload() }
     }
 
@@ -68,7 +68,8 @@ struct GlucoseLogView: View {
                 rows: model.diaryRows,
                 slots: model.tableSlots,
                 displayUnit: preferences.displayGlucoseUnit,
-                targets: preferences.glucoseTargets
+                targets: preferences.glucoseTargets,
+                onSelect: edit
             )
         }
     }
@@ -78,11 +79,17 @@ struct GlucoseLogView: View {
             ForEach(model.sections) { section in
                 Section {
                     ForEach(section.readings) { reading in
-                        GlucoseRowView(
-                            reading: reading,
-                            displayUnit: preferences.displayGlucoseUnit,
-                            targets: preferences.glucoseTargets
-                        )
+                        Button {
+                            edit(reading)
+                        } label: {
+                            GlucoseRowView(
+                                reading: reading,
+                                displayUnit: preferences.displayGlucoseUnit,
+                                targets: preferences.glucoseTargets
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityHint(Text("journal.row.hint", bundle: .module))
                     }
                     .onDelete { offsets in
                         for index in offsets {
@@ -94,6 +101,10 @@ struct GlucoseLogView: View {
                 }
             }
         }
+    }
+
+    private func edit(_ reading: GlucoseReading) {
+        entryModel = model.makeEntryModel(editing: reading)
     }
 
     /// Diary days are calendar dates; format them without shifting through the device zone.
@@ -155,6 +166,7 @@ struct GlucoseRowView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }
 

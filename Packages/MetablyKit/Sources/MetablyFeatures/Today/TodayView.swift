@@ -9,6 +9,8 @@ struct TodayView: View {
     /// Opens the glucose entry sheet (owned by the tab view, shared with the accessory button).
     var onRecordReading: () -> Void
 
+    @State private var editModel: GlucoseEntryModel?
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -29,7 +31,8 @@ struct TodayView: View {
                     TodayTimelineCard(
                         readings: model.todayReadings,
                         targets: model.targets,
-                        displayUnit: model.displayUnit
+                        displayUnit: model.displayUnit,
+                        onSelect: { editModel = model.makeEntryModel(editing: $0) }
                     )
                 }
 
@@ -63,6 +66,12 @@ struct TodayView: View {
             }
         }
         .onAppear { model.reload() }
+        .sheet(item: $editModel) { entry in
+            GlucoseEntryView(model: entry) {
+                model.reload()
+                logModel.reload()
+            }
+        }
     }
 
     /// Diary days are calendar dates; format them without shifting through the device zone.
@@ -311,6 +320,7 @@ struct TodayTimelineCard: View {
     let readings: [GlucoseReading]
     let targets: GlucoseTargets
     let displayUnit: GlucoseUnit
+    var onSelect: (GlucoseReading) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -318,7 +328,14 @@ struct TodayTimelineCard: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.secondary)
             ForEach(readings) { reading in
-                GlucoseRowView(reading: reading, displayUnit: displayUnit, targets: targets)
+                Button {
+                    onSelect(reading)
+                } label: {
+                    GlucoseRowView(reading: reading, displayUnit: displayUnit, targets: targets)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint(Text("journal.row.hint", bundle: .module))
                 if reading.id != readings.last?.id {
                     Divider()
                 }

@@ -25,8 +25,8 @@ backend built incrementally after the threat model.
 - [ ] Manual basal/bolus insulin record, hidden unless enabled (no calculator, no IOB)
 - [x] User-configured glucose targets (ADA defaults, editable)
 - [ ] Editable meal and bed times (`DailySchedule`)
-- [ ] Meter "LO"/"HI" entry
-- [ ] Edit reading screen (repository `update` exists)
+- [x] Meter "LO"/"HI" entry
+- [x] Edit reading screen
 
 ## 0.3 Health and reports
 

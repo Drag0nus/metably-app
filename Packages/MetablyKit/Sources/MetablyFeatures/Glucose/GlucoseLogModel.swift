@@ -64,8 +64,8 @@ public final class GlucoseLogModel {
         reload()
     }
 
-    public func makeEntryModel() -> GlucoseEntryModel {
-        dependencies.makeGlucoseEntryModel()
+    public func makeEntryModel(editing: GlucoseReading? = nil) -> GlucoseEntryModel {
+        dependencies.makeGlucoseEntryModel(editing: editing)
     }
 
     #if DEBUG

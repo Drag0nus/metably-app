@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Edit reading: tap a reading on Today, in the Journal list or in the diary table to view its source and
+  history dates, change it (previous values stay in the revision history) or delete it (soft delete).
+- Meter "LO"/"HI" entry: prefilled with typical meter limits (editable), stored with meter flags,
+  exempt from the typo bounds, shown as below/above target; LO shows the low-glucose guidance.
 - SwiftData schema V2 with a lightweight migration from V1: optional `activityLevel` on glucose
   readings (ADR 0007). Sync payload schema version 2.
 - Activity level 1–5 on the entry sheet, preset to the last choice; shown in the Journal list.
