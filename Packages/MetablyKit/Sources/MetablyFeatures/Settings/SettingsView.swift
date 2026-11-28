@@ -60,6 +60,11 @@ struct SettingsView: View {
             }
         }
         .navigationTitle(Text("tab.settings", bundle: .module))
+        #if os(iOS)
+        // A pushed secondary screen: hide the tab bar and its "Record reading" accessory,
+        // like `hidesBottomBarWhenPushed` in UIKit. They return on the tab's root screen.
+        .toolbarVisibility(.hidden, for: .tabBar)
+        #endif
     }
 }
 

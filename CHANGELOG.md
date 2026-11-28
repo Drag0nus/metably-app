@@ -5,6 +5,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+- The "Record reading" accessory and the tab bar no longer show on the pushed Settings screen.
+
 ### Added
 - Edit reading: tap a reading on Today, in the Journal list or in the diary table to view its source and
   history dates, change it (previous values stay in the revision history) or delete it (soft delete).
