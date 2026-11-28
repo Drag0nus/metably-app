@@ -14,14 +14,16 @@ Milestone 0.2, MVP screens, in progress. **Implemented:**
 - Modular Swift package `MetablyKit` (domain, persistence, HealthKit contracts, synthetic data, features).
 - Domain model for glucose readings with lossless units, local diary day and provenance.
 - Vendor-neutral `GlucoseDataProvider` abstraction with the manual provider.
-- SwiftData schema V4 with migrations from earlier versions (timeline header + glucose and meal details, confirmed event links, revision history, sync outbox), CloudKit off.
+- SwiftData schema V5 with migrations from earlier versions (timeline header + glucose and meal details with individual dietary sugars, confirmed event links, revision history, sync outbox), CloudKit off.
 - Five-tab shell with Today, the Journal (list and paper-diary table) and Meals, in English and Ukrainian.
 - Manual glucose entry and editing, targets, diary slots and activity level.
 - Meals with foods, carbohydrate grams and bread units, planned or eaten, daily nutrient goals, and
   confirmed links between readings and meals.
+- Built-in offline food list (USDA FoodData Central, public domain) with Ukrainian names and
+  household measures from the self-control diary, and a daily dietary sugars breakdown.
 - Synthetic data generator (Debug only) and unit tests with Swift Testing.
 
-**Planned** (not implemented yet): food database, medications, body measurements, labs,
+**Planned** (not implemented yet): barcode lookup, profile and reminders, medications, body measurements, labs,
 HealthKit import/export, Apple Watch app, widgets, reports, backend and web. See
 [docs/roadmap.md](docs/roadmap.md).
 
@@ -76,3 +78,9 @@ docs/                      Architecture, ADRs, data dictionary, roadmap, limitat
 - [Roadmap](docs/roadmap.md)
 - [Known limitations](docs/known-limitations.md)
 - [Changelog](CHANGELOG.md)
+
+## Data sources
+
+Food nutrient values: U.S. Department of Agriculture, Agricultural Research Service, FoodData
+Central, SR Legacy (April 2018), https://fdc.nal.usda.gov/, public domain (CC0 1.0). Some household
+measures follow the Ukrainian "Щоденник самоконтролю" (self-control diary); see `tools/food-catalog`.

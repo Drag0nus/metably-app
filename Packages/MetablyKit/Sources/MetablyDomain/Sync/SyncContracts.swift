@@ -22,7 +22,7 @@ public enum RevisionChangeKind: String, Sendable, Hashable, Codable {
 /// end-to-end without changing this shape.
 public struct SyncEnvelope: Sendable, Hashable, Codable {
     /// Payload schema version. 2 adds the optional glucose `activityLevel`; 3 adds meals; 4 adds event links.
-    public static let currentSchemaVersion = 4
+    public static let currentSchemaVersion = 5
 
     public var recordID: UUID
     public var entityType: String

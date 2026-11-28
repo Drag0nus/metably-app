@@ -40,7 +40,11 @@ struct MealEntryView: View {
 
                 Section {
                     ForEach($model.items) { $item in
-                        MealItemRow(item: $item, trackedNutrients: model.trackedNutrients)
+                        MealItemRow(
+                            item: $item,
+                            trackedNutrients: model.trackedNutrients,
+                            suggestions: model.suggestions(for: item)
+                        )
                     }
                     .onDelete { model.removeItems(at: $0) }
 
@@ -63,7 +67,12 @@ struct MealEntryView: View {
                             Image(systemName: "exclamationmark.circle")
                         }
                     } else {
-                        Text("meal.items.footer", bundle: .module)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("meal.items.footer", bundle: .module)
+                            if model.usesCatalog {
+                                Text("meal.catalog.source", bundle: .module)
+                            }
+                        }
                     }
                 }
 
@@ -180,20 +189,104 @@ struct MealEntryView: View {
     }
 }
 
-/// One food: name on its own line, then portion and carbohydrate grams side by side.
+/// One food: name on its own line (with catalog suggestions while typing), then the amount
+/// and carbohydrate grams side by side.
+///
+/// A food picked from the catalog shows its household measures ("шт.", "ст. ложка") and a
+/// quantity; carbs and the other values are computed from it and stay editable.
 private struct MealItemRow: View {
     @Binding var item: MealEntryModel.ItemDraft
     let trackedNutrients: [Nutrient]
+    let suggestions: [Food]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            TextField(text: $item.name, prompt: Text("meal.item.name.prompt", bundle: .module)) {
-                Text("meal.item.name", bundle: .module)
+            HStack {
+                TextField(text: $item.name, prompt: Text("meal.item.name.prompt", bundle: .module)) {
+                    Text("meal.item.name", bundle: .module)
+                }
+                .font(.body.weight(.medium))
+                if item.food != nil {
+                    Button {
+                        item.clearFood()
+                    } label: {
+                        Label {
+                            Text("meal.catalog.unlink", bundle: .module)
+                        } icon: {
+                            Image(systemName: "books.vertical.fill")
+                        }
+                        .labelStyle(.iconOnly)
+                        .foregroundStyle(Color.accentColor)
+                    }
+                    .buttonStyle(.borderless)
+                    .accessibilityHint(Text("meal.catalog.unlink.hint", bundle: .module))
+                }
             }
-            .font(.body.weight(.medium))
+
+            if !suggestions.isEmpty {
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(suggestions) { food in
+                        Button {
+                            item.select(food, trackedNutrients: trackedNutrients)
+                        } label: {
+                            HStack {
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundStyle(.secondary)
+                                    .accessibilityHidden(true)
+                                Text(verbatim: food.localizedName)
+                                    .foregroundStyle(Color.primary)
+                                Spacer()
+                                Text(verbatim: carbsPer100g(food))
+                                    .font(.caption.monospacedDigit())
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 6)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.borderless)
+                    }
+                }
+            }
+
+            if let food = item.food, !food.portions.isEmpty {
+                HStack(spacing: 12) {
+                    if item.portion != nil {
+                        NumberField(
+                            text: Binding(
+                                get: { item.quantityText },
+                                set: { item.setQuantityText($0, trackedNutrients: trackedNutrients) }
+                            ),
+                            label: Text("meal.item.quantity", bundle: .module),
+                            prompt: Text(verbatim: "1"),
+                            unit: "×"
+                        )
+                    }
+                    portionMenu(food)
+                }
+            }
 
             HStack(spacing: 12) {
-                gramsField(text: $item.amountText, label: "meal.item.amount", prompt: "meal.item.amount.prompt")
+                if item.portion == nil {
+                    gramsField(
+                        text: Binding(
+                            get: { item.amountText },
+                            set: { item.setAmountText($0, trackedNutrients: trackedNutrients) }
+                        ),
+                        label: "meal.item.amount",
+                        prompt: "meal.item.amount.prompt"
+                    )
+                } else {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("meal.item.amount", bundle: .module)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Text(verbatim: "\(item.amountText) \(NutritionFormat.gramsUnit)")
+                            .monospacedDigit()
+                            .padding(.vertical, 6)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityElement(children: .combine)
+                }
                 gramsField(text: $item.carbsText, label: "meal.item.carbs", prompt: "meal.item.carbs.prompt")
             }
             if !trackedNutrients.isEmpty {
@@ -211,6 +304,48 @@ private struct MealItemRow: View {
             }
         }
         .padding(.vertical, 4)
+    }
+
+    private func portionMenu(_ food: Food) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text("meal.item.portion", bundle: .module)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Menu {
+                ForEach(Array(food.portions.enumerated()), id: \.offset) { _, portion in
+                    Button {
+                        item.setPortion(portion, trackedNutrients: trackedNutrients)
+                    } label: {
+                        Text(verbatim: "\(portion.localizedName) · \(NutritionFormat.grams(portion.grams)) \(NutritionFormat.gramsUnit)")
+                    }
+                }
+                Button {
+                    item.setPortion(nil, trackedNutrients: trackedNutrients)
+                } label: {
+                    Text("meal.item.portion.grams", bundle: .module)
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Text(verbatim: item.portion?.localizedName ?? NutritionFormat.gramsUnit)
+                        .lineLimit(1)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption)
+                        .accessibilityHidden(true)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.secondary.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+            }
+            .accessibilityLabel(Text("meal.item.portion", bundle: .module))
+            .accessibilityValue(Text(verbatim: item.portion?.localizedName ?? NutritionFormat.gramsUnit))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func carbsPer100g(_ food: Food) -> String {
+        let carbs = NutritionFormat.grams(food.per100g.carbohydrate ?? 0)
+        return String(localized: "meal.catalog.carbsPer100g \(carbs)", bundle: .module)
     }
 
     private func gramsField(text: Binding<String>, label: LocalizedStringKey, prompt: LocalizedStringKey) -> some View {
@@ -295,5 +430,8 @@ struct PortionPicker: View {
 }
 
 #Preview("New meal") {
-    MealEntryView(model: MealEntryModel(repository: InMemoryMealRepository()), onSaved: {})
+    MealEntryView(
+        model: MealEntryModel(repository: InMemoryMealRepository(), catalog: BundledFoodCatalog.shared),
+        onSaved: {}
+    )
 }

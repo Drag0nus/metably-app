@@ -168,4 +168,56 @@ struct SchemaMigrationTests {
         try links.insert(EventLink(fromID: readingID, toID: mealID, relation: .postMeal, minutesFromMealStart: 120, createdAt: now))
         #expect(try links.links(fromIDs: [readingID]).map(\.toID) == [mealID])
     }
+
+    @Test("A V4 store opens as V5; old meal items have no catalog link and unknown sugars")
+    func v4ToV5() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appending(path: "metably-migration-\(UUID().uuidString)", directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let url = directory.appending(path: "Metably.store")
+        let mealID = UUID()
+
+        do {
+            let schema = Schema(versionedSchema: MetablySchemaV4.self)
+            let configuration = ModelConfiguration("Metably", schema: schema, url: url, cloudKitDatabase: .none)
+            let container = try ModelContainer(for: schema, configurations: [configuration])
+            let context = ModelContext(container)
+            let event = MetablySchemaV4.TimelineEventRecord(
+                id: mealID, kindRaw: EventKind.meal.rawValue, startDate: now, endDate: now,
+                timeZoneID: "Europe/Kyiv", timeZoneIsInferred: false, localDay: "2027-01-15",
+                sourceRaw: EventSource.manual.rawValue, providerID: "manual", sourceDetail: nil,
+                externalID: nil, isUserVerified: true, note: nil, createdAt: now, modifiedAt: now,
+                deletedAt: nil, version: 1, serverVersion: nil, originDeviceID: UUID(),
+                lastModifiedDeviceID: UUID(), syncCategoryRaw: SyncCategory.nutrition.rawValue,
+                isHealthKitDerived: false, schemaVersion: 4
+            )
+            let detail = MetablySchemaV4.MealRecord(slotRaw: MealSlot.breakfast.rawValue, statusRaw: MealStatus.eaten.rawValue, portionSizeRaw: nil)
+            let item = MetablySchemaV4.MealItemRecord(
+                id: UUID(), position: 0, name: "Milk", amountGrams: 250, carbohydrateGrams: 12,
+                sugarsGrams: 12.6, fiberGrams: nil, proteinGrams: nil, fatGrams: nil, energyKilocalories: nil
+            )
+            context.insert(event)
+            context.insert(detail)
+            context.insert(item)
+            detail.items = [item]
+            event.meal = detail
+            try context.save()
+        }
+
+        let container = try MetablyModelContainer.make(url: url)
+        let meals = SwiftDataMealRepository(context: container.mainContext, deviceID: UUID(), dateProvider: FixedDateProvider(now))
+        let migrated = try #require(try meals.meal(id: mealID)?.items.first)
+        #expect(migrated.sugarsGrams == 12.6)
+        #expect(migrated.foodID == nil)
+        #expect(migrated.lactoseGrams == nil)
+
+        // The migrated store accepts the new fields.
+        var meal = try #require(try meals.meal(id: mealID))
+        meal.items[0].foodID = "usda-sr-171265"
+        meal.items[0].lactoseGrams = 12.6
+        try meals.update(meal)
+        #expect(try meals.meal(id: mealID)?.items.first?.lactoseGrams == 12.6)
+        #expect(try meals.meal(id: mealID)?.items.first?.foodID == "usda-sr-171265")
+    }
 }

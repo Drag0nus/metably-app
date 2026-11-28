@@ -1,9 +1,12 @@
 # Known limitations (0.2 in progress)
 
 - Glucose readings and meals exist; other domains are modelled in the design doc but not implemented.
-- Meals have no food database yet: names and nutrients are typed (planned next).
-- Nutrient fields other than carbohydrates appear only for nutrients with a goal; sugars are stored
-  but not editable yet.
+- The built-in food list has about 250 foods with reference averages from USDA; dishes such as
+  borscht or varenyky are approximations. There are no barcodes yet, and foods cannot be added to
+  the list yet.
+- Individual sugars are known for only about half of the foods, and come only from the food list:
+  they cannot be typed by hand. Sodium and saturated fat are not imported.
+- Nutrient fields other than carbohydrates appear only for nutrients with a goal.
 - One meal link per reading; the meal screen does not list its linked readings yet.
 - The revision history of an edited reading is stored but not shown in the app yet.
 - Targets default to the ADA values; bedtime and night readings have no default target.

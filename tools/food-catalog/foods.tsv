@@ -1,0 +1,251 @@
+Egg, whole, cooked, hard-boiled	Egg, hard-boiled	Яйце варене	eggsDairy
+Egg, whole, raw, fresh	Egg, raw	Яйце сире	eggsDairy
+Egg, whole, cooked, fried	Egg, fried	Яйце смажене	eggsDairy
+Egg, white, raw, fresh	Egg white	Яєчний білок	eggsDairy
+Egg, yolk, raw, fresh	Egg yolk	Яєчний жовток	eggsDairy
+Milk, whole, 3.25% milkfat, with added vitamin D	Milk, whole 3.25%	Молоко 3,2%	eggsDairy
+Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D	Milk 2%	Молоко 2%	eggsDairy
+Milk, lowfat, fluid, 1% milkfat, with added vitamin A and vitamin D	Milk 1%	Молоко 1%	eggsDairy
+Milk, nonfat, fluid, with added vitamin A and vitamin D (fat free or skim)	Milk, skim	Молоко знежирене	eggsDairy
+Kefir, lowfat, plain, LIFEWAY	Kefir, low-fat	Кефір нежирний	eggsDairy
+Milk, buttermilk, fluid, cultured, lowfat	Buttermilk	Сколотини (маслянка)	eggsDairy
+Yogurt, plain, whole milk	Yogurt, plain	Йогурт натуральний	eggsDairy
+Yogurt, plain, low fat	Yogurt, plain, low-fat	Йогурт натуральний нежирний	eggsDairy
+Yogurt, Greek, plain, whole milk	Greek yogurt	Грецький йогурт	eggsDairy
+Yogurt, fruit, low fat, 10 grams protein per 8 ounce	Fruit yogurt	Йогурт фруктовий	eggsDairy
+Cheese, cottage, creamed, large or small curd	Cottage cheese	Сир кисломолочний	eggsDairy
+Cheese, cottage, lowfat, 2% milkfat	Cottage cheese 2%	Сир кисломолочний 2%	eggsDairy
+Cheese, cottage, lowfat, 1% milkfat	Cottage cheese 1%	Сир кисломолочний 1%	eggsDairy
+Cheese, ricotta, whole milk	Ricotta	Рикота	eggsDairy
+Cream, sour, cultured	Sour cream	Сметана	eggsDairy
+Cream, sour, reduced fat, cultured	Sour cream, reduced fat	Сметана нежирна	eggsDairy
+Cream, fluid, heavy whipping	Cream, heavy	Вершки жирні	eggsDairy
+Cream, fluid, half and half	Cream, light	Вершки 10%	eggsDairy
+Cheese, cheddar (Includes foods for USDA's Food Distribution Program)	Cheddar	Сир чедер	eggsDairy
+Cheese, gouda	Gouda	Сир гауда	eggsDairy
+Cheese, swiss	Swiss cheese	Сир швейцарський	eggsDairy
+Cheese, mozzarella, whole milk	Mozzarella	Моцарела	eggsDairy
+Cheese, feta	Feta	Фета (бринза)	eggsDairy
+Cheese, parmesan, hard	Parmesan	Пармезан	eggsDairy
+Cheese, cream	Cream cheese	Вершковий сир	eggsDairy
+Butter, salted	Butter, salted	Масло вершкове солоне	fats
+Butter, without salt	Butter	Масло вершкове	fats
+Oil, sunflower, linoleic (less than 60%)	Sunflower oil	Олія соняшникова	fats
+Oil, olive, salad or cooking	Olive oil	Олія оливкова	fats
+Salad dressing, mayonnaise, regular	Mayonnaise	Майонез	fats
+Buckwheat groats, roasted, cooked	Buckwheat, cooked	Гречка варена	grains
+Buckwheat groats, roasted, dry	Buckwheat, dry	Гречка суха	grains
+Rice, white, long-grain, regular, enriched, cooked	Rice, white, cooked	Рис білий варений	grains
+Rice, white, long-grain, regular, raw, enriched	Rice, white, dry	Рис білий сухий	grains
+Rice, white, short-grain, enriched, cooked	Rice, short-grain, cooked	Рис круглий варений	grains
+Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program)	Brown rice, cooked	Рис бурий варений	grains
+Cereals, oats, regular and quick, not fortified, dry	Rolled oats, dry	Вівсяні пластівці сухі	grains
+Cereals, oats, regular and quick, unenriched, cooked with water (includes boiling and microwaving), without salt	Oatmeal, cooked with water	Вівсянка на воді	grains
+Millet, cooked	Millet, cooked	Пшоно варене	grains
+Barley, pearled, cooked	Pearl barley, cooked	Перловка варена	grains
+Bulgur, cooked	Bulgur, cooked	Булгур варений	grains
+Couscous, cooked	Couscous, cooked	Кускус варений	grains
+Quinoa, cooked	Quinoa, cooked	Кіноа варена	grains
+Semolina, enriched	Semolina, dry	Манна крупа суха	grains
+Cereals, CREAM OF WHEAT, regular (10 minute), cooked with water, without salt	Semolina porridge, with water	Манна каша на воді	grains
+Cereals, corn grits, white, regular and quick, enriched, cooked with water, without salt	Corn grits, cooked	Кукурудзяна каша	grains
+Pasta, cooked, enriched, without added salt	Pasta, cooked	Макарони варені	grains
+Pasta, dry, enriched	Pasta, dry	Макарони сухі	grains
+Pasta, whole-wheat, cooked (Includes foods for USDA's Food Distribution Program)	Whole-wheat pasta, cooked	Макарони цільнозернові варені	grains
+Noodles, egg, cooked, enriched, with added salt	Egg noodles, cooked	Локшина яєчна варена	grains
+Wheat flour, white, all-purpose, enriched, bleached	Wheat flour	Борошно пшеничне	grains
+Wheat flour, whole-grain (Includes foods for USDA's Food Distribution Program)	Whole-wheat flour	Борошно цільнозернове	grains
+Rye flour, medium	Rye flour	Борошно житнє	grains
+Buckwheat flour, whole-groat	Buckwheat flour	Борошно гречане	grains
+Oat bran, raw	Oat bran	Висівки вівсяні	grains
+Wheat bran, crude	Wheat bran	Висівки пшеничні	grains
+Cereals ready-to-eat, granola, homemade	Granola	Гранола	grains
+Cereals ready-to-eat, RALSTON Corn Flakes	Corn flakes	Кукурудзяні пластівці	grains
+Bread, white, commercially prepared (includes soft bread crumbs)	White bread	Хліб білий	bread
+Bread, wheat	Wheat bread	Хліб пшеничний	bread
+Bread, whole-wheat, commercially prepared	Whole-wheat bread	Хліб цільнозерновий	bread
+Bread, rye	Rye bread	Хліб житній	bread
+Rolls, hamburger or hotdog, plain	Bun	Булочка	bread
+Bagels, wheat	Bagel	Бублик	bread
+Croissants, butter	Croissant	Круасан	bread
+Tortillas, ready-to-bake or -fry, flour, shelf stable	Tortilla, wheat	Тортилья пшенична	bread
+Crackers, saltines (includes oyster, soda, soup)	Crackers	Крекери	bread
+Pancakes, plain, dry mix, complete, prepared	Pancakes	Млинці (оладки)	bread
+Dumpling, potato- or cheese-filled, frozen	Dumplings, potato or cheese	Вареники з картоплею чи сиром	dishes
+Potatoes, boiled, cooked without skin, flesh, without salt	Potatoes, boiled	Картопля варена	vegetables
+Potatoes, baked, flesh and skin, without salt	Potatoes, baked	Картопля печена	vegetables
+Potatoes, mashed, home-prepared, whole milk and butter added	Mashed potatoes	Картопляне пюре	vegetables
+Sweet potato, cooked, baked in skin, flesh, without salt	Sweet potato, baked	Батат печений	vegetables
+Tomatoes, red, ripe, raw, year round average	Tomato	Помідор	vegetables
+Cucumber, with peel, raw	Cucumber	Огірок	vegetables
+Pickles, cucumber, dill or kosher dill	Pickled cucumber	Огірок солоний	vegetables
+Cabbage, raw	Cabbage	Капуста білокачанна	vegetables
+Cabbage, cooked, boiled, drained, without salt	Cabbage, boiled	Капуста тушкована	vegetables
+Sauerkraut, canned, solids and liquids	Sauerkraut	Капуста квашена	vegetables
+Cauliflower, raw	Cauliflower	Цвітна капуста	vegetables
+Broccoli, raw	Broccoli	Броколі	vegetables
+Kohlrabi, raw	Kohlrabi	Кольрабі	vegetables
+Carrots, raw	Carrot	Морква	vegetables
+Beets, raw	Beetroot	Буряк	vegetables
+Beets, cooked, boiled, drained	Beetroot, boiled	Буряк варений	vegetables
+Onions, raw	Onion	Цибуля	vegetables
+Onions, spring or scallions (includes tops and bulb), raw	Spring onion	Зелена цибуля	vegetables
+Leeks, (bulb and lower leaf-portion), raw	Leek	Цибуля-порей	vegetables
+Garlic, raw	Garlic	Часник	vegetables
+Peppers, sweet, red, raw	Bell pepper, red	Перець солодкий червоний	vegetables
+Peppers, sweet, green, raw	Bell pepper, green	Перець солодкий зелений	vegetables
+Squash, summer, zucchini, includes skin, raw	Zucchini	Кабачок	vegetables
+Eggplant, raw	Eggplant	Баклажан	vegetables
+Pumpkin, raw	Pumpkin	Гарбуз	vegetables
+Radishes, raw	Radish	Редиска	vegetables
+Celery, raw	Celery	Селера	vegetables
+Lettuce, cos or romaine, raw	Lettuce	Салат листовий	vegetables
+Spinach, raw	Spinach	Шпинат	vegetables
+Dill weed, fresh	Dill	Кріп	vegetables
+Parsley, fresh	Parsley	Петрушка	vegetables
+Mushrooms, white, raw	Mushrooms	Печериці	vegetables
+Peas, green, raw	Green peas	Горошок зелений	vegetables
+Peas, green (includes baby and lesuer types), canned, drained solids, unprepared	Green peas, canned	Горошок консервований	vegetables
+Corn, sweet, yellow, canned, whole kernel, drained solids	Sweet corn, canned	Кукурудза консервована	vegetables
+Beans, snap, green, raw	Green beans	Стручкова квасоля	vegetables
+Asparagus, raw	Asparagus	Спаржа	vegetables
+Olives, ripe, canned (small-extra large)	Olives	Маслини	vegetables
+Tomato products, canned, paste, without salt added (Includes foods for USDA's Food Distribution Program)	Tomato paste	Томатна паста	vegetables
+Catsup	Ketchup	Кетчуп	vegetables
+Avocados, raw, all commercial varieties	Avocado	Авокадо	fruits
+Apples, raw, with skin (Includes foods for USDA's Food Distribution Program)	Apple	Яблуко	fruits
+Pears, raw	Pear	Груша	fruits
+Bananas, raw	Banana	Банан	fruits
+Oranges, raw, all commercial varieties	Orange	Апельсин	fruits
+Tangerines, (mandarin oranges), raw	Mandarin	Мандарин	fruits
+Grapefruit, raw, pink and red and white, all areas	Grapefruit	Грейпфрут	fruits
+Lemons, raw, without peel	Lemon	Лимон	fruits
+Grapes, red or green (European type, such as Thompson seedless), raw	Grapes	Виноград	fruits
+Peaches, yellow, raw	Peach	Персик	fruits
+Apricots, raw	Apricot	Абрикос	fruits
+Plums, raw	Plum	Слива	fruits
+Cherries, sweet, raw	Sweet cherries	Черешня	fruits
+Cherries, sour, red, raw	Sour cherries	Вишня	fruits
+Strawberries, raw	Strawberries	Полуниця	fruits
+Raspberries, raw	Raspberries	Малина	fruits
+Blueberries, raw	Blueberries	Чорниця	fruits
+Currants, european black, raw	Blackcurrants	Смородина чорна	fruits
+Gooseberries, raw	Gooseberries	Аґрус	fruits
+Cranberries, raw	Cranberries	Журавлина	fruits
+Watermelon, raw	Watermelon	Кавун	fruits
+Melons, cantaloupe, raw	Melon	Диня	fruits
+Kiwifruit, green, raw	Kiwi	Ківі	fruits
+Pineapple, raw, all varieties	Pineapple	Ананас	fruits
+Mangos, raw	Mango	Манго	fruits
+Pomegranates, raw	Pomegranate	Гранат	fruits
+Persimmons, japanese, raw	Persimmon	Хурма	fruits
+Quinces, raw	Quince	Айва	fruits
+Raisins, dark, seedless (Includes foods for USDA's Food Distribution Program)	Raisins	Родзинки	fruits
+Prunes, dehydrated (low-moisture), uncooked	Prunes	Чорнослив	fruits
+Apricots, dried, sulfured, uncooked	Dried apricots	Курага	fruits
+Dates, deglet noor	Dates	Фініки	fruits
+Figs, dried, uncooked	Dried figs	Інжир сушений	fruits
+Chicken, broilers or fryers, breast, meat only, cooked, roasted	Chicken breast, roasted	Куряче філе запечене	meat
+Chicken, broilers or fryers, breast, meat only, cooked, stewed	Chicken breast, boiled	Куряче філе варене	meat
+Chicken, broilers or fryers, thigh, meat only, cooked, roasted	Chicken thigh, roasted	Куряче стегно запечене	meat
+Chicken, broilers or fryers, drumstick, meat only, cooked, stewed	Chicken drumstick, boiled	Куряча гомілка варена	meat
+Chicken, ground, crumbles, cooked, pan-browned	Chicken mince, cooked	Курячий фарш смажений	meat
+Chicken, liver, all classes, cooked, simmered	Chicken liver, cooked	Куряча печінка	meat
+Turkey, whole, breast, meat only, cooked, roasted	Turkey breast, roasted	Індиче філе запечене	meat
+Pork, fresh, loin, whole, separable lean and fat, cooked, roasted	Pork loin, roasted	Свинина корейка запечена	meat
+Pork, fresh, shoulder, whole, separable lean and fat, cooked, roasted	Pork shoulder, roasted	Свинина лопатка запечена	meat
+Pork, fresh, ground, cooked	Pork mince, cooked	Свинячий фарш смажений	meat
+Pork, fresh, belly, raw	Pork belly, raw	Свиняча грудинка сира	meat
+Pork, cured, bacon, cooked, baked	Bacon, cooked	Бекон смажений	meat
+Beef, ground, 85% lean meat / 15% fat, patty, cooked, broiled	Beef mince, cooked	Яловичий фарш смажений	meat
+Beef, round, top round steak, boneless, separable lean only, trimmed to 0" fat, all grades, cooked, grilled	Beef steak, lean	Яловичина пісна	meat
+Beef, variety meats and by-products, liver, cooked, braised	Beef liver, cooked	Яловича печінка	meat
+Game meat, rabbit, domesticated, composite of cuts, cooked, stewed	Rabbit, stewed	Кролятина тушкована	meat
+Frankfurter, chicken	Sausages, chicken	Сосиски курячі	meat
+Bologna, beef and pork, low fat	Boiled sausage	Ковбаса варена	meat
+Salami, cooked, beef and pork	Salami	Салямі	meat
+Ham, sliced, pre-packaged, deli meat (96%fat free, water added)	Ham	Шинка	meat
+Fish, herring, Atlantic, pickled	Herring, pickled	Оселедець маринований	fish
+Fish, salmon, Atlantic, farmed, cooked, dry heat	Salmon, cooked	Лосось запечений	fish
+Fish, cod, Atlantic, cooked, dry heat	Cod, cooked	Тріска запечена	fish
+Fish, pollock, Alaska, cooked	Pollock, cooked	Минтай	fish
+Fish, mackerel, Atlantic, cooked, dry heat	Mackerel, cooked	Скумбрія	fish
+Fish, carp, cooked, dry heat	Carp, cooked	Короп	fish
+Fish, pike, northern, cooked, dry heat	Pike, cooked	Щука	fish
+Fish, trout, rainbow, farmed, cooked, dry heat	Trout, cooked	Форель	fish
+Fish, tuna, light, canned in water, drained solids (Includes foods for USDA's Food Distribution Program)	Tuna, canned in water	Тунець консервований	fish
+Beans, kidney, all types, mature seeds, cooked, boiled, without salt	Kidney beans, cooked	Квасоля червона варена	legumes
+Beans, white, mature seeds, cooked, boiled, without salt	White beans, cooked	Квасоля біла варена	legumes
+Chickpeas (garbanzo beans, bengal gram), mature seeds, cooked, boiled, without salt	Chickpeas, cooked	Нут варений	legumes
+Lentils, mature seeds, cooked, boiled, without salt	Lentils, cooked	Сочевиця варена	legumes
+Peas, split, mature seeds, cooked, boiled, without salt	Split peas, cooked	Горох варений	legumes
+Hummus, commercial	Hummus	Хумус	legumes
+Tofu, firm, prepared with calcium sulfate and magnesium chloride (nigari)	Tofu	Тофу	legumes
+Soymilk, original and vanilla, unfortified	Soy milk	Соєве молоко	legumes
+Seeds, sunflower seed kernels, dried	Sunflower seeds	Насіння соняшнику	nuts
+Seeds, pumpkin and squash seed kernels, dried	Pumpkin seeds	Гарбузове насіння	nuts
+Seeds, flaxseed	Flaxseed	Насіння льону	nuts
+Seeds, chia seeds, dried	Chia seeds	Насіння чіа	nuts
+Nuts, walnuts, english	Walnuts	Волоські горіхи	nuts
+Nuts, hazelnuts or filberts	Hazelnuts	Фундук	nuts
+Nuts, almonds	Almonds	Мигдаль	nuts
+Nuts, cashew nuts, raw	Cashews	Кеш'ю	nuts
+Nuts, pistachio nuts, raw	Pistachios	Фісташки	nuts
+Peanuts, all types, dry-roasted, without salt	Peanuts, roasted	Арахіс смажений	nuts
+Sugars, granulated	Sugar	Цукор	sweets
+Sugars, brown	Brown sugar	Цукор коричневий	sweets
+Sugars, powdered	Powdered sugar	Цукрова пудра	sweets
+Honey	Honey	Мед	sweets
+Jams and preserves	Jam	Варення (джем)	sweets
+Syrups, maple	Maple syrup	Кленовий сироп	sweets
+Sweeteners, tabletop, fructose, dry, powder	Fructose	Фруктоза	sweets
+Chocolate, dark, 70-85% cacao solids	Dark chocolate 70–85%	Чорний шоколад 70–85%	sweets
+Chocolate, dark, 45- 59% cacao solids	Dark chocolate 45–59%	Чорний шоколад 45–59%	sweets
+Candies, milk chocolate	Milk chocolate	Молочний шоколад	sweets
+Candies, caramels	Caramels	Карамель	sweets
+Candies, marshmallows	Marshmallows	Маршмелоу (зефір)	sweets
+Cocoa, dry powder, unsweetened	Cocoa powder	Какао-порошок	sweets
+Cookies, animal crackers (includes arrowroot, tea biscuits)	Biscuits	Печиво	sweets
+Cake, sponge, commercially prepared	Sponge cake	Бісквіт	sweets
+Cake, cheesecake, commercially prepared	Cheesecake	Чизкейк	sweets
+Pie, apple, commercially prepared, enriched flour	Apple pie	Яблучний пиріг	sweets
+Doughnuts, yeast-leavened, glazed, enriched (includes honey buns)	Doughnut, glazed	Пончик глазурований	sweets
+Ice creams, vanilla	Ice cream, vanilla	Морозиво пломбір	sweets
+Snacks, popcorn, air-popped	Popcorn	Попкорн	sweets
+Snacks, potato chips, plain, salted	Potato chips	Чипси	sweets
+Orange juice, raw (Includes foods for USDA's Food Distribution Program)	Orange juice	Апельсиновий сік	drinks
+Apple juice, canned or bottled, unsweetened, with added ascorbic acid	Apple juice	Яблучний сік	drinks
+Tomato juice, canned, without salt added	Tomato juice	Томатний сік	drinks
+Beverages, carbonated, cola, regular	Cola	Кола	drinks
+Beverages, coffee, brewed, prepared with tap water	Coffee, black	Кава чорна	drinks
+Beverages, tea, black, brewed, prepared with tap water	Tea, black	Чай чорний	drinks
+Milk, chocolate, fluid, commercial, whole, with added vitamin A and vitamin D	Chocolate milk	Шоколадне молоко	drinks
+Alcoholic beverage, beer, regular, all	Beer	Пиво	drinks
+Alcoholic beverage, wine, table, red	Red wine	Вино червоне	drinks
+Soup, chicken noodle, canned, condensed	Chicken noodle soup (condensed)	Курячий суп з локшиною (концентрат)	dishes
+Pizza, cheese topping, regular crust, frozen, cooked	Pizza, cheese	Піца сирна	dishes
+Blackberries, raw	Blackberries	Ожина	fruits
+Currants, red and white, raw	Red currants	Смородина червона	fruits
+Elderberries, raw	Elderberries	Бузина	fruits
+Nectarines, raw	Nectarine	Нектарин	fruits
+Figs, raw	Figs, fresh	Інжир свіжий	fruits
+Guavas, common, raw	Guava	Гуава	fruits
+Cornstarch	Corn starch	Крохмаль кукурудзяний	grains
+Crackers, rye, wafers, plain	Rye crispbread	Хлібці житні	bread
+Bread, crumbs, dry, grated, plain	Breadcrumbs	Панірувальні сухарі	bread
+Zwieback	Rusks	Сухарі	bread
+Puff pastry, frozen, ready-to-bake, baked	Puff pastry, baked	Листкове тісто випечене	bread
+Barley, pearled, raw	Pearl barley, dry	Перловка суха	grains
+Spelt, cooked	Spelt, cooked	Полба варена	grains
+Wheat, sprouted	Sprouted wheat	Пророщена пшениця	grains
+Cornmeal, whole-grain, yellow	Cornmeal	Кукурудзяне борошно	grains
+Soy flour, low-fat	Soy flour, low-fat	Борошно соєве знежирене	legumes
+Potatoes, french fried, all types, salt not added in processing, frozen, oven-heated	French fries, oven-baked	Картопля фрі (у духовці)	vegetables
+Corn, sweet, yellow, cooked, boiled, drained, without salt	Sweet corn, boiled	Кукурудза варена	vegetables
+Nuts, pine nuts, dried	Pine nuts	Кедрові горіхи	nuts
+Spices, poppy seed	Poppy seeds	Мак	nuts
+Nuts, coconut meat, dried (desiccated), not sweetened	Desiccated coconut	Кокосова стружка	nuts
+Nuts, coconut meat, raw	Coconut, fresh	Кокос свіжий	nuts
+Nuts, pecans	Pecans	Пекан	nuts
+Soybeans, mature cooked, boiled, without salt	Soybeans, cooked	Соєві боби варені	legumes
+Lentils, raw	Lentils, dry	Сочевиця суха	legumes

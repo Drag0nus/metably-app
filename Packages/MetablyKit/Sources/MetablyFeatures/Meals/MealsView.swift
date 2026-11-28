@@ -26,6 +26,11 @@ struct MealsView: View {
                     })
                 }
 
+                let sugars = model.sugarBreakdown
+                if sugars.totalSugars.foodsWithValue > 0 || sugars.hasBreakdown {
+                    SugarsCard(breakdown: sugars)
+                }
+
                 if model.eaten.isEmpty && model.planned.isEmpty {
                     EmptyMealsCard { entryModel = model.makeEntryModel(status: .eaten) }
                 }
@@ -238,6 +243,59 @@ struct NutrientsCard: View {
             }
         }
         .card()
+    }
+}
+
+/// Dietary sugars eaten today, by type. Grams of sugar in food, never blood glucose.
+/// A sugar is listed only when at least one food knows it, and gaps are said out loud.
+struct SugarsCard: View {
+    let breakdown: DietarySugarBreakdown
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("meals.sugars", bundle: .module)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Text("meals.sugars.subtitle", bundle: .module)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            if breakdown.totalSugars.foodsWithValue > 0 {
+                row(name: Text("meals.sugars.total", bundle: .module), value: breakdown.totalSugars.value, bold: true)
+                if breakdown.totalSugars.foodsWithoutValue > 0 {
+                    missing(breakdown.totalSugars.foodsWithoutValue)
+                }
+            }
+            if breakdown.hasBreakdown {
+                Divider()
+                ForEach(breakdown.sugars) { entry in
+                    row(name: Text(verbatim: entry.sugar.localizedName), value: entry.total.value, bold: false)
+                }
+                if breakdown.foodsWithoutBreakdown > 0 {
+                    missing(breakdown.foodsWithoutBreakdown)
+                }
+            }
+        }
+        .card()
+    }
+
+    private func row(name: Text, value: Double, bold: Bool) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            name
+            Spacer()
+            Text(verbatim: "\(NutritionFormat.tenths(value)) \(NutritionFormat.gramsUnit)")
+                .monospacedDigit()
+                .foregroundStyle(bold ? Color.primary : Color.secondary)
+        }
+        .font(bold ? .body.weight(.semibold) : .body)
+        .accessibilityElement(children: .combine)
+    }
+
+    private func missing(_ count: Int) -> some View {
+        Text("meals.sugars.missing \(count)", bundle: .module)
+            .font(.caption)
+            .foregroundStyle(.secondary)
     }
 }
 

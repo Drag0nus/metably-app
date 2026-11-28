@@ -28,6 +28,15 @@ public struct MealItem: Sendable, Hashable, Codable, Identifiable {
     public var proteinGrams: Double?
     public var fatGrams: Double?
     public var energyKilocalories: Double?
+    /// The catalog food this item was filled from, if any (e.g. "usda-sr-171287").
+    public var foodID: String?
+    /// Individual dietary sugars, when the source knows them. Nil means unknown, never zero.
+    public var sucroseGrams: Double?
+    public var glucoseGrams: Double?
+    public var fructoseGrams: Double?
+    public var lactoseGrams: Double?
+    public var maltoseGrams: Double?
+    public var galactoseGrams: Double?
 
     public init(
         id: UUID = UUID(),
@@ -38,7 +47,14 @@ public struct MealItem: Sendable, Hashable, Codable, Identifiable {
         fiberGrams: Double? = nil,
         proteinGrams: Double? = nil,
         fatGrams: Double? = nil,
-        energyKilocalories: Double? = nil
+        energyKilocalories: Double? = nil,
+        foodID: String? = nil,
+        sucroseGrams: Double? = nil,
+        glucoseGrams: Double? = nil,
+        fructoseGrams: Double? = nil,
+        lactoseGrams: Double? = nil,
+        maltoseGrams: Double? = nil,
+        galactoseGrams: Double? = nil
     ) {
         self.id = id
         self.name = name
@@ -49,6 +65,13 @@ public struct MealItem: Sendable, Hashable, Codable, Identifiable {
         self.proteinGrams = proteinGrams
         self.fatGrams = fatGrams
         self.energyKilocalories = energyKilocalories
+        self.foodID = foodID
+        self.sucroseGrams = sucroseGrams
+        self.glucoseGrams = glucoseGrams
+        self.fructoseGrams = fructoseGrams
+        self.lactoseGrams = lactoseGrams
+        self.maltoseGrams = maltoseGrams
+        self.galactoseGrams = galactoseGrams
     }
 }
 
@@ -127,6 +150,7 @@ public enum MealValidationError: Error, Sendable, Hashable {
     case carbohydratesOutOfRange
     case amountOutOfRange
     case nutrientOutOfRange(Nutrient)
+    case sugarOutOfRange(DietarySugar)
 }
 
 /// Plausibility checks to catch typos, not dietary advice.
@@ -147,6 +171,11 @@ public struct MealValidator: Sendable {
         for nutrient in Nutrient.allCases {
             if let value = item[keyPath: nutrient.keyPath], !value.isFinite || !nutrient.itemRange.contains(value) {
                 return .nutrientOutOfRange(nutrient)
+            }
+        }
+        for sugar in DietarySugar.allCases {
+            if let value = item[keyPath: sugar.keyPath], !value.isFinite || !DietarySugar.itemRange.contains(value) {
+                return .sugarOutOfRange(sugar)
             }
         }
         return nil
