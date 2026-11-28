@@ -5,6 +5,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+- The "Record reading" button no longer stays on screen over Settings. Hiding the tab bar does not
+  hide the tab view's bottom accessory, so the accessory is now switched off while Settings is open
+  (iOS 26.1 and later). Version 0.9.0 (9).
+
 ### Added
 - Built-in offline food list of about 250 foods (USDA FoodData Central SR Legacy, public domain) with
   Ukrainian and English names and household measures; 58 measures follow the Ukrainian
