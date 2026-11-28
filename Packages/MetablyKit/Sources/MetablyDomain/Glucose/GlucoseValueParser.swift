@@ -6,6 +6,14 @@ import Foundation
 /// because users switch keyboards. Only ASCII digits and a single separator are accepted.
 public enum GlucoseValueParser {
     public static func parse(_ text: String) -> Double? {
+        DecimalInputParser.parse(text)
+    }
+}
+
+/// Parses a non-negative decimal typed by the user (grams, glucose, weight).
+/// Accepts "6,4" and "6.4"; ASCII digits and one separator only.
+public enum DecimalInputParser {
+    public static func parse(_ text: String) -> Double? {
         let normalized = text
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .replacingOccurrences(of: ",", with: ".")

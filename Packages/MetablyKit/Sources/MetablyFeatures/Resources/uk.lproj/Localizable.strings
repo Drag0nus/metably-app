@@ -48,7 +48,7 @@
 "settings.usesInsulin" = "Я використовую інсулін";
 "settings.nightCheck" = "Нічний замір (03:00)";
 "settings.debug" = "Для розробника";
-"settings.debug.loadSynthetic" = "Додати синтетичні заміри (14 днів)";
+"settings.debug.loadSyntheticAll" = "Додати синтетичні заміри та їжу (14 днів)";
 "settings.debug.footer" = "Лише у debug-збірках. Додає вигадані значення з позначкою «синтетичні».";
 "settings.disclaimer" = "Metably — інструмент особистого обліку. Він не ставить діагнозів, не призначає лікування і не замінює пораду лікаря.";
 
@@ -65,7 +65,6 @@
 
 /* Coming soon */
 "soon.title" = "Незабаром";
-"soon.meals" = "Їжа, вуглеводи в грамах і хлібних одиницях та зв'язок із замірами з'являться в наступному оновленні.";
 "soon.medications" = "Таблетки, розклад, нагадування та історія з'являться в наступному оновленні. Запис інсуліну лишається необов'язковим.";
 "soon.reports" = "День глікемічного профілю і звіти для лікаря (PDF, CSV, JSON) з'являться в одному з наступних оновлень.";
 
@@ -166,3 +165,72 @@
 "entry.info.modified" = "Змінено";
 "entry.info.footer" = "Після змін попередні значення зберігаються в історії заміру.";
 "journal.row.hint" = "Відкриває замір для перегляду чи редагування.";
+
+/* Meals */
+"meal.slot" = "Прийом їжі";
+"meal.slot.breakfast" = "Сніданок";
+"meal.slot.lunch" = "Обід";
+"meal.slot.dinner" = "Вечеря";
+"meal.slot.snack" = "Перекус";
+"meal.status" = "Статус";
+"meal.status.eaten" = "З'їдено";
+"meal.status.planned" = "Заплановано";
+"meal.time" = "Час";
+"meal.items" = "Продукти";
+"meal.items.footer" = "Вуглеводи в грамах, з етикетки або власної таблиці. Вага порції необов'язкова. Проведіть вліво, щоб прибрати продукт.";
+"meal.addItem" = "Додати продукт";
+"meal.item.name" = "Продукт";
+"meal.item.name.prompt" = "Продукт, напр. Гречка";
+"meal.item.amount" = "Порція";
+"meal.item.amount.prompt" = "необов'язково";
+"meal.item.carbs" = "Вуглеводи";
+"meal.item.carbs.prompt" = "0";
+"meal.total" = "Усього вуглеводів";
+"meal.carbs.withBreadUnits %@ %@" = "%1$@ г · %2$@ ХО";
+"meal.portion" = "Об'єм порції";
+"meal.portion.footer" = "Малий, середній або великий, як у паперовому щоденнику, якщо ви не зважували. Торкніться ще раз, щоб зняти. Хлібні одиниці (ХО) рахуються за коефіцієнтом із Налаштувань.";
+"meal.portion.small" = "Мала порція";
+"meal.portion.medium" = "Середня порція";
+"meal.portion.large" = "Велика порція";
+"meal.portion.short.small" = "М";
+"meal.portion.short.medium" = "С";
+"meal.portion.short.large" = "В";
+"meal.new.title" = "Прийом їжі";
+"meal.edit.title" = "Редагувати прийом їжі";
+"meal.delete" = "Видалити прийом їжі";
+"meal.delete.confirm" = "Видалити цей прийом їжі? Він зникне зі щоденника; історія змін залишиться на цьому пристрої.";
+"meal.error.noItems" = "Додайте хоча б один продукт.";
+"meal.error.emptyName" = "Кожен продукт потребує назви.";
+"meal.error.carbs" = "Вуглеводи на продукт мають бути від 0 до 500 г.";
+"meal.error.amount" = "Вага порції має бути від 0 до 3000 г.";
+"meal.error.number" = "Вкажіть вуглеводи в грамах для кожного продукту (0, якщо немає).";
+"meal.error.storage" = "Не вдалося зберегти прийом їжі. Спробуйте ще раз.";
+
+"meals.carbs" = "З'їдено вуглеводів";
+"meals.breadUnits %@" = "%@ ХО";
+"meals.carbs.planned %@" = "Заплановано, ще не з'їдено: %@ г";
+"meals.goal.none" = "Денну ціль не задано. Її можна встановити в Налаштуваннях.";
+"meals.eaten" = "З'їдено";
+"meals.planned" = "Заплановано";
+"meals.markEaten" = "З'їв як заплановано";
+"meals.row.hint" = "Відкриває прийом їжі для перегляду чи редагування.";
+"meals.add" = "Додати прийом їжі";
+"meals.add.eaten" = "Записати прийом їжі";
+"meals.add.planned" = "Запланувати прийом їжі";
+"meals.empty.title" = "Цього дня їжі немає";
+"meals.empty.message" = "Запишіть, що ви з'їли, з вуглеводами, або заплануйте прийом їжі наперед.";
+"meals.loadFailed" = "Не вдалося завантажити прийоми їжі.";
+"meals.day.previous" = "Попередній день";
+"meals.day.next" = "Наступний день";
+"meals.day.today" = "До сьогодні";
+
+/* Nutrition goals */
+"settings.goals" = "Денні цілі";
+"settings.goals.carbs" = "Ціль вуглеводів";
+"settings.goals.carbs.value" = "На день";
+"settings.goals.footer" = "Ваш власний план, узгоджений з лікарем чи дієтологом. Застосунок лише порівнює з ним те, що ви записали.";
+
+/* About */
+"settings.about" = "Про цю збірку";
+"settings.about.version" = "Версія (збірка)";
+"settings.about.built" = "Зібрано";

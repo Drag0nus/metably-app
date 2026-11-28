@@ -48,7 +48,7 @@
 "settings.usesInsulin" = "I use insulin";
 "settings.nightCheck" = "Night check (03:00)";
 "settings.debug" = "Developer";
-"settings.debug.loadSynthetic" = "Add synthetic readings (14 days)";
+"settings.debug.loadSyntheticAll" = "Add synthetic readings and meals (14 days)";
 "settings.debug.footer" = "Debug builds only. Adds invented values marked as synthetic.";
 "settings.disclaimer" = "Metably is a personal tracking tool. It does not diagnose, recommend treatment or replace advice from your doctor.";
 
@@ -65,7 +65,6 @@
 
 /* Coming soon */
 "soon.title" = "Coming soon";
-"soon.meals" = "Meals, carbohydrates in grams and bread units, and links to your readings arrive in the next update.";
 "soon.medications" = "Tablets, schedules, reminders and history arrive in the next update. Insulin logging stays optional.";
 "soon.reports" = "The Glucose Profile Day and reports for your doctor (PDF, CSV, JSON) arrive in a later update.";
 
@@ -166,3 +165,72 @@
 "entry.info.modified" = "Last changed";
 "entry.info.footer" = "Changes keep the previous values in the reading's history.";
 "journal.row.hint" = "Opens the reading to view or edit it.";
+
+/* Meals */
+"meal.slot" = "Meal";
+"meal.slot.breakfast" = "Breakfast";
+"meal.slot.lunch" = "Lunch";
+"meal.slot.dinner" = "Dinner";
+"meal.slot.snack" = "Snack";
+"meal.status" = "Status";
+"meal.status.eaten" = "Eaten";
+"meal.status.planned" = "Planned";
+"meal.time" = "Time";
+"meal.items" = "Foods";
+"meal.items.footer" = "Carbohydrates in grams, from the label or your own table. Portion weight is optional. Swipe left to remove a food.";
+"meal.addItem" = "Add food";
+"meal.item.name" = "Food";
+"meal.item.name.prompt" = "Food, e.g. Buckwheat";
+"meal.item.amount" = "Portion";
+"meal.item.amount.prompt" = "optional";
+"meal.item.carbs" = "Carbohydrates";
+"meal.item.carbs.prompt" = "0";
+"meal.total" = "Total carbohydrates";
+"meal.carbs.withBreadUnits %@ %@" = "%1$@ g · %2$@ BU";
+"meal.portion" = "Portion size";
+"meal.portion.footer" = "Small, medium or large, as in the paper diary, for meals you did not weigh. Tap again to clear. Bread units (BU) follow the factor in Settings.";
+"meal.portion.small" = "Small portion";
+"meal.portion.medium" = "Medium portion";
+"meal.portion.large" = "Large portion";
+"meal.portion.short.small" = "S";
+"meal.portion.short.medium" = "M";
+"meal.portion.short.large" = "L";
+"meal.new.title" = "Meal";
+"meal.edit.title" = "Edit meal";
+"meal.delete" = "Delete meal";
+"meal.delete.confirm" = "Delete this meal? It disappears from the diary; its history is kept on this device.";
+"meal.error.noItems" = "Add at least one food.";
+"meal.error.emptyName" = "Each food needs a name.";
+"meal.error.carbs" = "Carbohydrates per food must be between 0 and 500 g.";
+"meal.error.amount" = "Portion weight must be between 0 and 3000 g.";
+"meal.error.number" = "Enter carbohydrates in grams for each food (0 if none).";
+"meal.error.storage" = "The meal could not be saved. Please try again.";
+
+"meals.carbs" = "Carbohydrates eaten";
+"meals.breadUnits %@" = "%@ BU";
+"meals.carbs.planned %@" = "Planned, not yet eaten: %@ g";
+"meals.goal.none" = "No daily goal set. You can set your own in Settings.";
+"meals.eaten" = "Eaten";
+"meals.planned" = "Planned";
+"meals.markEaten" = "Eaten as planned";
+"meals.row.hint" = "Opens the meal to view or edit it.";
+"meals.add" = "Add meal";
+"meals.add.eaten" = "Record a meal";
+"meals.add.planned" = "Plan a meal";
+"meals.empty.title" = "No meals on this day";
+"meals.empty.message" = "Record what you ate with its carbohydrates, or plan a meal ahead.";
+"meals.loadFailed" = "Meals could not be loaded.";
+"meals.day.previous" = "Previous day";
+"meals.day.next" = "Next day";
+"meals.day.today" = "Back to today";
+
+/* Nutrition goals */
+"settings.goals" = "Daily goals";
+"settings.goals.carbs" = "Carbohydrate goal";
+"settings.goals.carbs.value" = "Per day";
+"settings.goals.footer" = "Your own plan, agreed with your doctor or dietitian. The app only compares what you recorded with it.";
+
+/* About */
+"settings.about" = "About this build";
+"settings.about.version" = "Version (build)";
+"settings.about.built" = "Built";

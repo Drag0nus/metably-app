@@ -9,6 +9,7 @@ import SwiftData
 @MainActor
 public final class AppDependencies {
     public let glucoseRepository: any GlucoseRepository
+    public let mealRepository: any MealRepository
     public let preferences: UserPreferencesStore
     public let dateProvider: any DateProvider
     public let reminders: any RecheckReminderScheduling
@@ -17,6 +18,7 @@ public final class AppDependencies {
 
     public init(
         glucoseRepository: any GlucoseRepository,
+        mealRepository: (any MealRepository)? = nil,
         preferences: UserPreferencesStore,
         dateProvider: any DateProvider = SystemDateProvider(),
         reminders: any RecheckReminderScheduling = NoopRecheckReminder(),
@@ -24,6 +26,7 @@ public final class AppDependencies {
     ) {
         self.reminders = reminders
         self.glucoseRepository = glucoseRepository
+        self.mealRepository = mealRepository ?? InMemoryMealRepository()
         self.preferences = preferences
         self.dateProvider = dateProvider
         self.modelContainer = modelContainer
@@ -45,17 +48,32 @@ public final class AppDependencies {
         )
     }
 
+    /// A meal sheet model: a new meal (eaten or planned) or editing an existing one.
+    public func makeMealEntryModel(status: MealStatus = .eaten, editing: Meal? = nil) -> MealEntryModel {
+        MealEntryModel(
+            repository: mealRepository,
+            dateProvider: dateProvider,
+            schedule: preferences.dailySchedule,
+            breadUnits: preferences.breadUnitConverter,
+            status: status,
+            editing: editing
+        )
+    }
+
     /// The real on-device store.
     public static func live() throws -> AppDependencies {
         let container = try MetablyModelContainer.make()
         let dateProvider = SystemDateProvider()
+        let deviceID = DeviceIdentity.current()
         let repository = SwiftDataGlucoseRepository(
             context: container.mainContext,
-            deviceID: DeviceIdentity.current(),
+            deviceID: deviceID,
             dateProvider: dateProvider
         )
+        let meals = SwiftDataMealRepository(context: container.mainContext, deviceID: deviceID, dateProvider: dateProvider)
         return AppDependencies(
             glucoseRepository: repository,
+            mealRepository: meals,
             preferences: UserPreferencesStore(),
             dateProvider: dateProvider,
             reminders: NotificationRecheckReminder(),
@@ -63,16 +81,19 @@ public final class AppDependencies {
         )
     }
 
-    /// In-memory dependencies with two weeks of synthetic readings, for SwiftUI previews.
+    /// In-memory dependencies with two weeks of synthetic readings and meals, for SwiftUI previews.
     public static func preview(days: Int = 14) -> AppDependencies {
         let timeZone = TimeZone.current
         let today = LocalDay(instant: Date(), timeZone: timeZone)
         let readings = SyntheticGlucoseGenerator()
             .makeReadings(days: days, endingOn: today, timeZone: timeZone)
             .filter { $0.measuredAt <= Date() }
+        let meals = SyntheticMealGenerator()
+            .makeMeals(days: days, endingOn: today, timeZone: timeZone, now: Date())
         let defaults = UserDefaults(suiteName: "app.metably.preview") ?? .standard
         return AppDependencies(
             glucoseRepository: InMemoryGlucoseRepository(readings: readings),
+            mealRepository: InMemoryMealRepository(meals: meals),
             preferences: UserPreferencesStore(defaults: defaults)
         )
     }

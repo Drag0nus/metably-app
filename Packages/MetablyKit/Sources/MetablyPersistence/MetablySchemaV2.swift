@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-/// Version 2 of the on-device schema: adds `GlucoseReadingRecord.activityLevel`.
+/// Version 2 of the on-device schema (frozen): adds `GlucoseReadingRecord.activityLevel`.
 ///
 /// SwiftData note: every version keeps its own copy of all models, so V1 stays exactly as it
 /// shipped and the migration plan can map V1 stores to V2. Adding an optional attribute is a
@@ -18,20 +18,6 @@ public enum MetablySchemaV2: VersionedSchema {
         ]
     }
 }
-
-public enum MetablyMigrationPlan: SchemaMigrationPlan {
-    public static var schemas: [any VersionedSchema.Type] { [MetablySchemaV1.self, MetablySchemaV2.self] }
-    public static var stages: [MigrationStage] {
-        [.lightweight(fromVersion: MetablySchemaV1.self, toVersion: MetablySchemaV2.self)]
-    }
-}
-
-/// The current models. Code outside this folder only ever uses these aliases.
-public typealias MetablyCurrentSchema = MetablySchemaV2
-public typealias TimelineEventRecord = MetablySchemaV2.TimelineEventRecord
-public typealias GlucoseReadingRecord = MetablySchemaV2.GlucoseReadingRecord
-public typealias RecordRevisionRecord = MetablySchemaV2.RecordRevisionRecord
-public typealias OutboxEntryRecord = MetablySchemaV2.OutboxEntryRecord
 
 extension MetablySchemaV2 {
     /// Header of every timeline row: when, what kind, where it came from, plus sync metadata.

@@ -72,3 +72,34 @@ struct MealLinkSuggesterTests {
         ).isEmpty)
     }
 }
+
+@Suite("Meals")
+struct MealTests {
+    let now = Date(timeIntervalSince1970: 1_800_000_000)
+
+    func meal(_ items: [MealItem]) -> Meal {
+        Meal(slot: .lunch, status: .eaten, startedAt: now, timeZone: .gmt, items: items, createdAt: now)
+    }
+
+    @Test("Totals sum carbohydrates; an unknown nutrient stays unknown, not zero")
+    func totals() {
+        let lunch = meal([
+            MealItem(name: "Rice", carbohydrateGrams: 28, fatGrams: 1),
+            MealItem(name: "Salad", carbohydrateGrams: 4),
+        ])
+        #expect(lunch.totalCarbohydrateGrams == 32)
+        #expect(lunch.total(\.fatGrams) == 1)
+        #expect(lunch.total(\.proteinGrams) == nil)
+    }
+
+    @Test("Validator catches missing foods, names and implausible grams")
+    func validation() {
+        let validator = MealValidator()
+        #expect(validator.validate(meal([])) == .noItems)
+        #expect(validator.validate(meal([MealItem(name: " ", carbohydrateGrams: 5)])) == .emptyName)
+        #expect(validator.validate(meal([MealItem(name: "Cake", carbohydrateGrams: 501)])) == .carbohydratesOutOfRange)
+        #expect(validator.validate(meal([MealItem(name: "Cake", carbohydrateGrams: -1)])) == .carbohydratesOutOfRange)
+        #expect(validator.validate(meal([MealItem(name: "Soup", amountGrams: 3001, carbohydrateGrams: 10)])) == .amountOutOfRange)
+        #expect(validator.validate(meal([MealItem(name: "Tea", carbohydrateGrams: 0)])) == nil)
+    }
+}

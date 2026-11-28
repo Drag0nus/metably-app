@@ -9,16 +9,18 @@ optional and come in a later milestone.
 
 ## Status
 
-Milestone 0.1, the app foundation. **Implemented:**
+Milestone 0.2, MVP screens, in progress. **Implemented:**
 
 - Modular Swift package `MetablyKit` (domain, persistence, HealthKit contracts, synthetic data, features).
 - Domain model for glucose readings with lossless units, local diary day and provenance.
 - Vendor-neutral `GlucoseDataProvider` abstraction with the manual provider.
-- SwiftData schema V2 with migration from V1 (timeline header + glucose detail, revision history, sync outbox), CloudKit off.
-- Manual glucose entry and a glucose diary grouped by day, in English and Ukrainian.
+- SwiftData schema V3 with migrations from V1 and V2 (timeline header + glucose and meal details, revision history, sync outbox), CloudKit off.
+- Five-tab shell with Today, the Journal (list and paper-diary table) and Meals, in English and Ukrainian.
+- Manual glucose entry and editing, targets, diary slots and activity level.
+- Meals with foods, carbohydrate grams and bread units, planned or eaten, and a daily carbohydrate goal.
 - Synthetic data generator (Debug only) and unit tests with Swift Testing.
 
-**Planned** (not implemented yet): meals and nutrition, medications, body measurements, labs,
+**Planned** (not implemented yet): reading-to-meal links, medications, body measurements, labs,
 HealthKit import/export, Apple Watch app, widgets, reports, backend and web. See
 [docs/roadmap.md](docs/roadmap.md).
 

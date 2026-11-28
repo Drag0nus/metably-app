@@ -22,12 +22,14 @@ struct MainTabView: View {
     @State private var selection: AppTab = .today
     @State private var todayModel: TodayModel
     @State private var logModel: GlucoseLogModel
+    @State private var mealsModel: MealsModel
     @State private var entryModel: GlucoseEntryModel?
 
     init(dependencies: AppDependencies) {
         self.dependencies = dependencies
         _todayModel = State(initialValue: TodayModel(dependencies: dependencies))
         _logModel = State(initialValue: GlucoseLogModel(dependencies: dependencies))
+        _mealsModel = State(initialValue: MealsModel(dependencies: dependencies))
     }
 
     var body: some View {
@@ -55,7 +57,7 @@ struct MainTabView: View {
 
             Tab(value: AppTab.meals) {
                 NavigationStack {
-                    ComingSoonView(titleKey: "tab.meals", systemImage: "fork.knife", messageKey: "soon.meals")
+                    MealsView(model: mealsModel)
                 }
             } label: {
                 TabLabel(titleKey: "tab.meals", systemImage: "fork.knife")

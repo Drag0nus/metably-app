@@ -16,6 +16,7 @@ public final class UserPreferencesStore {
         static let nightCheckEnabled = "prefs.nightCheckEnabled"
         static let glucoseTargets = "prefs.glucoseTargets"
         static let lastActivityLevel = "prefs.lastActivityLevel"
+        static let dailyCarbohydrateGoalGrams = "prefs.dailyCarbohydrateGoalGrams"
     }
 
     @ObservationIgnored private let defaults: UserDefaults
@@ -56,6 +57,15 @@ public final class UserPreferencesStore {
         didSet { defaults.set(lastActivityLevel?.rawValue ?? 0, forKey: Keys.lastActivityLevel) }
     }
 
+    /// The user's own daily carbohydrate goal in grams. Nil until the user sets one:
+    /// the app does not invent a dietary target.
+    public var dailyCarbohydrateGoalGrams: Double? {
+        didSet { defaults.set(dailyCarbohydrateGoalGrams ?? 0, forKey: Keys.dailyCarbohydrateGoalGrams) }
+    }
+
+    /// Allowed range for the carbohydrate goal setting (catches typos only).
+    public static let carbohydrateGoalRange: ClosedRange<Double> = 20...500
+
     /// Usual meal and bed times. Not editable yet; see `DailySchedule`.
     public var dailySchedule: DailySchedule { .default }
 
@@ -69,6 +79,8 @@ public final class UserPreferencesStore {
             : BreadUnitConverter.defaultCarbsPerBreadUnit
         usesInsulin = defaults.bool(forKey: Keys.usesInsulin)
         nightCheckEnabled = defaults.bool(forKey: Keys.nightCheckEnabled)
+        let storedGoal = defaults.double(forKey: Keys.dailyCarbohydrateGoalGrams)
+        dailyCarbohydrateGoalGrams = Self.carbohydrateGoalRange.contains(storedGoal) ? storedGoal : nil
         lastActivityLevel = ActivityLevel(rawValue: defaults.integer(forKey: Keys.lastActivityLevel))
         glucoseTargets = defaults.data(forKey: Keys.glucoseTargets)
             .flatMap { try? JSONDecoder().decode(GlucoseTargets.self, from: $0) }

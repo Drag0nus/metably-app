@@ -1,4 +1,4 @@
-# Data dictionary (schema V1)
+# Data dictionary (schema V3)
 
 Implemented entities only. The full model, including planned entities, is in the
 [data model document](https://claude.ai/artifact/6aKcmbXqPNhsDwwVPnbyfR).
@@ -28,6 +28,7 @@ Implemented entities only. The full model, including planned entities, is in the
 | isHealthKitDerived | Bool | Upload requires separate consent (planned) |
 | schemaVersion | Int | Payload shape version |
 | glucose | GlucoseReadingRecord? | Detail, cascade delete |
+| meal | MealRecord? | V3. Detail, cascade delete |
 
 Indexes: startDate, localDay, kindRaw, externalID.
 
@@ -45,6 +46,29 @@ Indexes: startDate, localDay, kindRaw, externalID.
 | deviceName | String? | Meter name |
 | deviceSerialHash | String? | Hashed serial, never raw |
 | activityLevel | Int? | V2. Self-reported activity 1–5 (paper diary scale); nil when not recorded or created before V2 |
+
+## MealRecord (V3)
+
+| Field | Type | Notes |
+|---|---|---|
+| slotRaw | String | `MealSlot`: breakfast, lunch, dinner, snack |
+| statusRaw | String | `MealStatus`: planned, eaten |
+| portionSizeRaw | String? | `PortionSize`: small, medium, large (paper diary М / С / В); nil when not recorded |
+| items | [MealItemRecord] | Cascade delete |
+
+The event's `startDate` is when the meal starts (or is planned to). Bread units are not stored.
+
+## MealItemRecord (V3)
+
+| Field | Type | Notes |
+|---|---|---|
+| id | UUID, unique | |
+| position | Int | Order within the meal |
+| name | String | Food name as typed |
+| amountGrams | Double? | Portion weight (ml counted as g) |
+| carbohydrateGrams | Double | Required; 0–500 per food |
+| sugarsGrams, fiberGrams, proteinGrams, fatGrams | Double? | Optional; dietary sugars, never blood glucose |
+| energyKilocalories | Double? | Optional |
 
 ## RecordRevisionRecord
 
