@@ -26,6 +26,8 @@ struct MainTabView: View {
     @State private var entryModel: GlucoseEntryModel?
     /// Set by pushed screens such as Settings that should show without "Record reading".
     @State private var recordAccessoryHidden = false
+    /// First launch: profile, then reminders. Shown until the user finishes or skips.
+    @State private var onboarding: OnboardingModel?
 
     init(dependencies: AppDependencies) {
         self.dependencies = dependencies
@@ -43,7 +45,9 @@ struct MainTabView: View {
                         preferences: dependencies.preferences,
                         logModel: logModel,
                         onRecordReading: recordReading,
-                        recordAccessoryHidden: $recordAccessoryHidden
+                        recordAccessoryHidden: $recordAccessoryHidden,
+                        profileStore: dependencies.profileStore,
+                        reminderCoordinator: dependencies.reminderCoordinator
                     )
                 }
             } label: {
@@ -92,6 +96,26 @@ struct MainTabView: View {
                 todayModel.reload()
                 logModel.reload()
             }
+        }
+        .sheet(item: $onboarding) { model in
+            OnboardingView(model: model, preferences: dependencies.preferences, reminders: dependencies.reminderCoordinator) {
+                dependencies.profileStore.completeOnboarding()
+                onboarding = nil
+            }
+            .interactiveDismissDisabled()
+        }
+        .task {
+            if !dependencies.profileStore.hasCompletedOnboarding {
+                onboarding = OnboardingModel(
+                    editor: ProfileEditorModel(
+                        profileStore: dependencies.profileStore,
+                        preferences: dependencies.preferences,
+                        reminders: dependencies.reminderCoordinator
+                    )
+                )
+            }
+            // Keep the daily plan in step with the profile and the clock.
+            await dependencies.reminderCoordinator.applyIfAllowed()
         }
     }
 

@@ -76,6 +76,9 @@ public final class MealsModel {
         }
         do {
             try dependencies.mealRepository.update(updated)
+            let coordinator = dependencies.reminderCoordinator
+            let saved = updated
+            Task { await coordinator.mealSaved(saved) }
         } catch {
             loadFailed = true
         }

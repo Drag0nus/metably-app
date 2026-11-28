@@ -7,9 +7,42 @@ struct SettingsView: View {
 
     /// Hides the tab view's "Record reading" accessory while this screen is shown.
     var recordAccessoryHidden: Binding<Bool> = .constant(false)
+    /// The profile and reminders; nil in previews that only show units and targets.
+    var profileStore: ProfileStore?
+    var reminderCoordinator: ReminderCoordinator?
 
     var body: some View {
         Form {
+            if let profileStore, let reminderCoordinator {
+                Section {
+                    NavigationLink {
+                        ProfileEditorScreen(
+                            profileStore: profileStore,
+                            preferences: preferences,
+                            reminders: reminderCoordinator
+                        )
+                    } label: {
+                        Label {
+                            Text("settings.profile", bundle: .module)
+                        } icon: {
+                            Image(systemName: "person.crop.circle")
+                        }
+                    }
+                    NavigationLink {
+                        RemindersView(preferences: preferences, coordinator: reminderCoordinator)
+                            .modifier(HidesTabBar())
+                    } label: {
+                        Label {
+                            Text("settings.reminders", bundle: .module)
+                        } icon: {
+                            Image(systemName: "bell")
+                        }
+                    }
+                } header: {
+                    Text("settings.personal", bundle: .module)
+                }
+            }
+
             Section {
                 Picker(selection: $preferences.displayGlucoseUnit) {
                     ForEach(GlucoseUnit.allCases, id: \.self) { unit in
@@ -73,8 +106,40 @@ struct SettingsView: View {
         // the tab bar leaves it on screen; the TabView hides it while this flag is set.
         .toolbarVisibility(.hidden, for: .tabBar)
         #endif
+        // Set here and cleared when Today shows again, so screens pushed from Settings
+        // (profile, reminders) keep the accessory hidden too.
         .onAppear { recordAccessoryHidden.wrappedValue = true }
-        .onDisappear { recordAccessoryHidden.wrappedValue = false }
+    }
+}
+
+/// Screens pushed from Settings keep the tab bar hidden, like Settings itself.
+struct HidesTabBar: ViewModifier {
+    func body(content: Content) -> some View {
+        #if os(iOS)
+        content.toolbarVisibility(.hidden, for: .tabBar)
+        #else
+        content
+        #endif
+    }
+}
+
+/// Owns the profile draft for as long as the screen is shown, so a half-edited profile
+/// is discarded when the user goes back without saving.
+private struct ProfileEditorScreen: View {
+    @State private var model: ProfileEditorModel
+    @Environment(\.dismiss) private var dismiss
+
+    init(profileStore: ProfileStore, preferences: UserPreferencesStore, reminders: ReminderCoordinator) {
+        _model = State(initialValue: ProfileEditorModel(
+            profileStore: profileStore,
+            preferences: preferences,
+            reminders: reminders
+        ))
+    }
+
+    var body: some View {
+        ProfileView(model: model, onSaved: { dismiss() })
+            .modifier(HidesTabBar())
     }
 }
 

@@ -16,6 +16,10 @@ public final class AppDependencies {
     public let reminders: any RecheckReminderScheduling
     /// The offline food list for meal entry.
     public let foodCatalog: FoodCatalog
+    /// The user's profile (health data, kept in a protected file).
+    public let profileStore: ProfileStore
+    /// Daily and post-meal reminders.
+    public let reminderCoordinator: ReminderCoordinator
     /// Kept alive for the lifetime of the app; repositories use its main context.
     private let modelContainer: ModelContainer?
 
@@ -27,9 +31,19 @@ public final class AppDependencies {
         dateProvider: any DateProvider = SystemDateProvider(),
         reminders: any RecheckReminderScheduling = NoopRecheckReminder(),
         foodCatalog: FoodCatalog? = nil,
+        profileStore: ProfileStore? = nil,
+        reminderScheduler: (any ReminderScheduling)? = nil,
         modelContainer: ModelContainer? = nil
     ) {
         self.foodCatalog = foodCatalog ?? BundledFoodCatalog.shared
+        let profileStore = profileStore ?? ProfileStore(directory: nil, defaults: UserDefaults(suiteName: "app.metably.inmemory.\(UUID().uuidString)") ?? .standard)
+        self.profileStore = profileStore
+        reminderCoordinator = ReminderCoordinator(
+            preferences: preferences,
+            profileStore: profileStore,
+            scheduler: reminderScheduler ?? RecordingReminderScheduler(),
+            dateProvider: dateProvider
+        )
         self.reminders = reminders
         self.glucoseRepository = glucoseRepository
         self.mealRepository = mealRepository ?? InMemoryMealRepository()
@@ -59,7 +73,7 @@ public final class AppDependencies {
 
     /// A meal sheet model: a new meal (eaten or planned) or editing an existing one.
     public func makeMealEntryModel(status: MealStatus = .eaten, editing: Meal? = nil) -> MealEntryModel {
-        MealEntryModel(
+        let model = MealEntryModel(
             repository: mealRepository,
             dateProvider: dateProvider,
             schedule: preferences.dailySchedule,
@@ -69,6 +83,10 @@ public final class AppDependencies {
             status: status,
             editing: editing
         )
+        let coordinator = reminderCoordinator
+        model.didSave = { meal in Task { await coordinator.mealSaved(meal) } }
+        model.didDelete = { id in Task { await coordinator.mealDeleted(id: id) } }
+        return model
     }
 
     /// The real on-device store.
@@ -90,6 +108,8 @@ public final class AppDependencies {
             preferences: UserPreferencesStore(),
             dateProvider: dateProvider,
             reminders: NotificationRecheckReminder(),
+            profileStore: ProfileStore(directory: ProfileStore.defaultDirectory()),
+            reminderScheduler: NotificationReminderScheduler(),
             modelContainer: container
         )
     }

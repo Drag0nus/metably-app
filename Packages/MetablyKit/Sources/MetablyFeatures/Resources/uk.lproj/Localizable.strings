@@ -285,3 +285,101 @@
 "meals.sugars.subtitle" = "Грами цукру в їжі, не глюкоза крові.";
 "meals.sugars.total" = "Цукри загалом";
 "meals.sugars.missing %lld" = "Немає даних для продуктів: %lld";
+
+/* Common */
+"common.done" = "Готово";
+
+/* Profile */
+"profile.title" = "Профіль";
+"profile.diabetesType" = "Тип діабету";
+"profile.private.footer" = "Профіль зберігається лише на цьому пристрої і нікуди не передається, доки ви самі його не експортуєте.";
+"profile.body" = "Тіло";
+"profile.height" = "Зріст";
+"profile.weight" = "Вага";
+"profile.unit.cm" = "см";
+"profile.unit.kg" = "кг";
+"profile.optional" = "Необов'язково";
+"profile.bmi" = "Індекс маси тіла";
+"profile.bmi.footer" = "ІМТ — це вага в кілограмах, поділена на квадрат зросту в метрах. Це приблизне число, яке саме по собі нічого не каже про ваше здоров'я.";
+"profile.medicines" = "Ліки та інсулін";
+"profile.medicines.footer" = "Записуйте дози так, як призначив лікар. Metably лише нагадує і ніколи не розраховує й не змінює дози.";
+"profile.medicine.name" = "Назва";
+"profile.medicine.name.prompt" = "Наприклад, Метформін";
+"profile.medicine.kind" = "Вид";
+"profile.medicine.dose" = "Доза";
+"profile.medicine.dose.prompt" = "Наприклад, 500 мг або 10 од.";
+"profile.medicine.time %lld" = "Час %lld";
+"profile.medicine.time.add" = "Додати час";
+"profile.medicine.time.remove" = "Прибрати час";
+"profile.medicine.add" = "Додати ліки";
+"profile.medicine.remove" = "Видалити ці ліки";
+"profile.routine" = "Мій день";
+"profile.routine.wake" = "Підйом";
+"profile.routine.bed" = "Сон";
+"profile.routine.time" = "Час";
+"profile.routine.snack %lld" = "Перекус %lld";
+"profile.routine.snack.add" = "Додати перекус";
+"profile.routine.snack.remove" = "Прибрати перекус";
+"profile.routine.footer %lld" = "Трапез на день: %lld. Нагадування підлаштовуються під цей час.";
+"profile.error.height" = "Вкажіть зріст від 50 до 250 см або залиште поле порожнім.";
+"profile.error.weight" = "Вкажіть вагу від 20 до 350 кг або залиште поле порожнім.";
+"profile.error.medicineName" = "Вкажіть назву для кожних ліків.";
+"profile.error.storage" = "Не вдалося зберегти профіль. Спробуйте ще раз.";
+
+"diabetes.type1" = "1 тип";
+"diabetes.type2" = "2 тип";
+"diabetes.prediabetes" = "Предіабет";
+"diabetes.gestational" = "Гестаційний";
+"diabetes.other" = "Інший";
+"diabetes.notSpecified" = "Не вказано";
+
+"medicine.kind.tablet" = "Таблетки";
+"medicine.kind.basalInsulin" = "Базальний інсулін";
+"medicine.kind.bolusInsulin" = "Інсулін до їжі";
+"medicine.kind.injectionOther" = "Інша ін'єкція";
+"medicine.kind.other" = "Інше";
+
+/* Reminders screen */
+"reminders.title" = "Нагадування";
+"reminders.permission.ask" = "Дозволити сповіщення";
+"reminders.permission.allowed" = "Сповіщення дозволені";
+"reminders.permission.denied" = "Сповіщення для Metably вимкнені. Їх можна дозволити в Параметрах.";
+"reminders.privacy.footer" = "Сповіщення ніколи не показують значення глюкози, дози чи назви ліків, тож екран блокування лишається приватним.";
+"reminders.groups" = "Про що нагадувати";
+"reminders.group.checks" = "Заміри глюкози";
+"reminders.group.meals" = "Трапези";
+"reminders.group.medications" = "Ліки";
+"reminders.group.water" = "Вода";
+"reminders.water.interval" = "Кожні";
+"reminders.postMeal" = "Замір після їжі";
+"reminders.postMeal.after" = "Через";
+"reminders.postMeal.footer" = "Коли ви записуєте з'їдену трапезу, Metably нагадає виміряти глюкозу через цей час.";
+"reminders.plan" = "План на день";
+"reminders.plan.empty" = "Нагадувань немає. Увімкніть групу вище.";
+"reminders.plan.footer" = "Складено з вашого дня і ліків у профілі. Вимкніть будь-яке нагадування, яке вам не потрібне.";
+
+/* Daily reminder notifications (never contain values, doses or names) */
+"reminder.fasting.title" = "Ранковий замір глюкози";
+"reminder.preMeal.breakfast.title" = "Замір перед сніданком";
+"reminder.preMeal.lunch.title" = "Замір перед обідом";
+"reminder.preMeal.dinner.title" = "Замір перед вечерею";
+"reminder.preMeal.snack.title" = "Замір перед перекусом";
+"reminder.bedtime.title" = "Замір перед сном";
+"reminder.medication.title" = "Час для ліків";
+"reminder.water.title" = "Склянка води";
+"reminder.check.body" = "Короткий замір з пальця, якщо це у вашому плані.";
+"reminder.meal.body" = "Наближається час вашої трапези.";
+"reminder.medication.body" = "Відкрийте Metably, щоб побачити, що заплановано зараз.";
+"reminder.water.body" = "Гарний момент випити води.";
+"reminder.postMeal.title" = "Замір після їжі";
+"reminder.postMeal.body %@" = "Від початку трапези минуло %@.";
+
+/* Settings rows */
+"settings.personal" = "Я";
+"settings.profile" = "Профіль";
+"settings.reminders" = "Нагадування";
+
+/* Onboarding */
+"onboarding.intro" = "Розкажіть трохи про себе, щоб налаштувати нагадування. Усе тут необов'язкове, і його можна змінити пізніше в Налаштуваннях.";
+"onboarding.next" = "Далі";
+"onboarding.skip" = "Пропустити";

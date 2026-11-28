@@ -285,3 +285,101 @@
 "meals.sugars.subtitle" = "Grams of sugar in food, not blood glucose.";
 "meals.sugars.total" = "Total sugars";
 "meals.sugars.missing %lld" = "No data for %lld foods";
+
+/* Common */
+"common.done" = "Done";
+
+/* Profile */
+"profile.title" = "Profile";
+"profile.diabetesType" = "Diabetes type";
+"profile.private.footer" = "Your profile stays on this device and is never shared unless you export it yourself.";
+"profile.body" = "Body";
+"profile.height" = "Height";
+"profile.weight" = "Weight";
+"profile.unit.cm" = "cm";
+"profile.unit.kg" = "kg";
+"profile.optional" = "Optional";
+"profile.bmi" = "Body mass index";
+"profile.bmi.footer" = "BMI is weight in kilograms divided by height in metres squared. It is a rough number and says nothing about your health on its own.";
+"profile.medicines" = "Medicines and insulin";
+"profile.medicines.footer" = "Write doses as your doctor prescribed them. Metably only reminds you; it never calculates or changes doses.";
+"profile.medicine.name" = "Name";
+"profile.medicine.name.prompt" = "For example, Metformin";
+"profile.medicine.kind" = "Kind";
+"profile.medicine.dose" = "Dose";
+"profile.medicine.dose.prompt" = "For example, 500 mg or 10 units";
+"profile.medicine.time %lld" = "Time %lld";
+"profile.medicine.time.add" = "Add a time";
+"profile.medicine.time.remove" = "Remove time";
+"profile.medicine.add" = "Add a medicine";
+"profile.medicine.remove" = "Remove this medicine";
+"profile.routine" = "My day";
+"profile.routine.wake" = "Wake up";
+"profile.routine.bed" = "Bedtime";
+"profile.routine.time" = "Time";
+"profile.routine.snack %lld" = "Snack %lld";
+"profile.routine.snack.add" = "Add a snack";
+"profile.routine.snack.remove" = "Remove snack";
+"profile.routine.footer %lld" = "Meals a day: %lld. Reminders follow these times.";
+"profile.error.height" = "Enter height between 50 and 250 cm, or leave it empty.";
+"profile.error.weight" = "Enter weight between 20 and 350 kg, or leave it empty.";
+"profile.error.medicineName" = "Give each medicine a name.";
+"profile.error.storage" = "The profile could not be saved. Try again.";
+
+"diabetes.type1" = "Type 1";
+"diabetes.type2" = "Type 2";
+"diabetes.prediabetes" = "Prediabetes";
+"diabetes.gestational" = "Gestational";
+"diabetes.other" = "Other";
+"diabetes.notSpecified" = "Not specified";
+
+"medicine.kind.tablet" = "Tablet";
+"medicine.kind.basalInsulin" = "Basal insulin";
+"medicine.kind.bolusInsulin" = "Mealtime insulin";
+"medicine.kind.injectionOther" = "Other injection";
+"medicine.kind.other" = "Other";
+
+/* Reminders screen */
+"reminders.title" = "Reminders";
+"reminders.permission.ask" = "Allow notifications";
+"reminders.permission.allowed" = "Notifications are allowed";
+"reminders.permission.denied" = "Notifications are off for Metably. You can allow them in the Settings app.";
+"reminders.privacy.footer" = "Notifications never show glucose values, doses or medicine names, so the lock screen stays private.";
+"reminders.groups" = "What to remind about";
+"reminders.group.checks" = "Glucose checks";
+"reminders.group.meals" = "Meals";
+"reminders.group.medications" = "Medicines";
+"reminders.group.water" = "Water";
+"reminders.water.interval" = "Every";
+"reminders.postMeal" = "Check after a meal";
+"reminders.postMeal.after" = "After";
+"reminders.postMeal.footer" = "When you log an eaten meal, Metably reminds you to check glucose after this time.";
+"reminders.plan" = "Daily plan";
+"reminders.plan.empty" = "No reminders. Switch on a group above.";
+"reminders.plan.footer" = "Built from your day and medicines in the profile. Switch off any reminder you don't need.";
+
+/* Daily reminder notifications (never contain values, doses or names) */
+"reminder.fasting.title" = "Morning glucose check";
+"reminder.preMeal.breakfast.title" = "Check before breakfast";
+"reminder.preMeal.lunch.title" = "Check before lunch";
+"reminder.preMeal.dinner.title" = "Check before dinner";
+"reminder.preMeal.snack.title" = "Check before a snack";
+"reminder.bedtime.title" = "Bedtime glucose check";
+"reminder.medication.title" = "Time for your medicine";
+"reminder.water.title" = "A glass of water";
+"reminder.check.body" = "A quick fingerstick check, if it fits your plan.";
+"reminder.meal.body" = "It's about time for your meal.";
+"reminder.medication.body" = "Open Metably to see what is planned now.";
+"reminder.water.body" = "A good moment to drink some water.";
+"reminder.postMeal.title" = "Check after your meal";
+"reminder.postMeal.body %@" = "%@ since your meal started.";
+
+/* Settings rows */
+"settings.personal" = "Me";
+"settings.profile" = "Profile";
+"settings.reminders" = "Reminders";
+
+/* Onboarding */
+"onboarding.intro" = "Tell Metably a little about yourself to set up reminders. Everything here is optional and can be changed later in Settings.";
+"onboarding.next" = "Next";
+"onboarding.skip" = "Skip";

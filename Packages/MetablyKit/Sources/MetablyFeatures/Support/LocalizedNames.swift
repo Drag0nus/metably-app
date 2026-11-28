@@ -242,3 +242,39 @@ extension Food {
 extension Food.Portion {
     var localizedName: String { CatalogLanguage.isUkrainian ? nameUK : nameEN }
 }
+
+extension DiabetesType {
+    public var localizedName: String {
+        switch self {
+        case .type1: String(localized: "diabetes.type1", bundle: .module)
+        case .type2: String(localized: "diabetes.type2", bundle: .module)
+        case .prediabetes: String(localized: "diabetes.prediabetes", bundle: .module)
+        case .gestational: String(localized: "diabetes.gestational", bundle: .module)
+        case .other: String(localized: "diabetes.other", bundle: .module)
+        case .notSpecified: String(localized: "diabetes.notSpecified", bundle: .module)
+        }
+    }
+}
+
+extension MedicineKind {
+    public var localizedName: String {
+        switch self {
+        case .tablet: String(localized: "medicine.kind.tablet", bundle: .module)
+        case .basalInsulin: String(localized: "medicine.kind.basalInsulin", bundle: .module)
+        case .bolusInsulin: String(localized: "medicine.kind.bolusInsulin", bundle: .module)
+        case .injectionOther: String(localized: "medicine.kind.injectionOther", bundle: .module)
+        case .other: String(localized: "medicine.kind.other", bundle: .module)
+        }
+    }
+}
+
+extension ProfileEditorModel.SaveError {
+    public var localizedMessage: String {
+        switch self {
+        case .height: String(localized: "profile.error.height", bundle: .module)
+        case .weight: String(localized: "profile.error.weight", bundle: .module)
+        case .medicineName: String(localized: "profile.error.medicineName", bundle: .module)
+        case .storage: String(localized: "profile.error.storage", bundle: .module)
+        }
+    }
+}
