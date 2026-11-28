@@ -153,3 +153,16 @@
 "entry.activity" = "Activity level";
 "entry.activity.footer" = "1 minimal … 5 high, as in the paper diary. Remembers your last choice. Tap again to clear.";
 "entry.activity.level %lld" = "Activity %lld of 5";
+
+/* Edit reading */
+"entry.edit.title" = "Reading";
+"entry.delete" = "Delete reading";
+"entry.delete.confirm" = "Delete this reading? It disappears from the diary and reports; its history is kept on this device.";
+"entry.meter" = "Meter showed";
+"entry.meter.value" = "Number";
+"entry.meter.hint" = "Choose LO or HI when the meter could not show a number.";
+"entry.info.source" = "Source";
+"entry.info.created" = "Recorded";
+"entry.info.modified" = "Last changed";
+"entry.info.footer" = "Changes keep the previous values in the reading's history.";
+"journal.row.hint" = "Opens the reading to view or edit it.";

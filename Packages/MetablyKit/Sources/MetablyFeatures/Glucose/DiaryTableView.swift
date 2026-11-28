@@ -11,6 +11,8 @@ struct DiaryTableView: View {
     let slots: [DiarySlot]
     let displayUnit: GlucoseUnit
     let targets: GlucoseTargets
+    /// Opens the newest reading of a tapped cell.
+    var onSelect: (GlucoseReading) -> Void = { _ in }
 
     @ScaledMetric(relativeTo: .body) private var cellWidth: CGFloat = 52
     @ScaledMetric(relativeTo: .body) private var dateWidth: CGFloat = 64
@@ -36,12 +38,19 @@ struct DiaryTableView: View {
                                 .font(.caption.monospacedDigit())
                                 .frame(width: dateWidth, alignment: .leading)
                             ForEach(slots) { slot in
-                                DiaryTableCell(
-                                    slot: slot,
-                                    readings: row.cells[slot] ?? [],
-                                    displayUnit: displayUnit,
-                                    targets: targets
-                                )
+                                let readings = row.cells[slot] ?? []
+                                Button {
+                                    if let latest = readings.first { onSelect(latest) }
+                                } label: {
+                                    DiaryTableCell(
+                                        slot: slot,
+                                        readings: readings,
+                                        displayUnit: displayUnit,
+                                        targets: targets
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                                .disabled(readings.isEmpty)
                                 .frame(width: cellWidth)
                             }
                         }

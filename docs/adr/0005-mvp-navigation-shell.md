@@ -17,7 +17,9 @@ reading must take under five seconds from anywhere in the app.
 - On iOS 26 the "Record reading" button lives in `.tabViewBottomAccessory`, so it stays one tap
   away on every tab. The entry sheet is owned by `MainTabView` and shared with the Today screen's
   first-reading card.
-- Settings opens from the gear on Today (pushed, not a tab).
+- Settings opens from the gear on Today (pushed, not a tab). Pushed secondary screens hide the tab
+  bar and its accessory (`.toolbarVisibility(.hidden, for: .tabBar)`), so "Record reading" shows
+  only on the tab root screens (Pavlo, 28 Nov 2026).
 - Body measurements get no tab: they will open from Today's weight card, the Journal filter and the
   iPad sidebar (decided by Pavlo, 27 Nov 2026).
 - Tabs whose screens are not built yet show an honest "Coming soon" placeholder, never mock data.

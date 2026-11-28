@@ -153,3 +153,16 @@
 "entry.activity" = "Рівень активності";
 "entry.activity.footer" = "1 незначна … 5 висока, як у щоденнику. Запам'ятовує останній вибір. Натисніть ще раз, щоб прибрати.";
 "entry.activity.level %lld" = "Активність %lld з 5";
+
+/* Edit reading */
+"entry.edit.title" = "Замір";
+"entry.delete" = "Видалити замір";
+"entry.delete.confirm" = "Видалити цей замір? Він зникне зі щоденника і звітів; історія змін лишиться на пристрої.";
+"entry.meter" = "Глюкометр показав";
+"entry.meter.value" = "Число";
+"entry.meter.hint" = "Оберіть LO або HI, якщо глюкометр не показав число.";
+"entry.info.source" = "Джерело";
+"entry.info.created" = "Записано";
+"entry.info.modified" = "Змінено";
+"entry.info.footer" = "Після змін попередні значення зберігаються в історії заміру.";
+"journal.row.hint" = "Відкриває замір для перегляду чи редагування.";

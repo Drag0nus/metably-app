@@ -29,8 +29,9 @@ public final class AppDependencies {
         self.modelContainer = modelContainer
     }
 
-    /// A fresh entry sheet model with the user's unit, targets and schedule.
-    public func makeGlucoseEntryModel() -> GlucoseEntryModel {
+    /// An entry sheet model with the user's unit, targets and schedule. Pass `editing` to
+    /// edit an existing reading instead of adding one.
+    public func makeGlucoseEntryModel(editing: GlucoseReading? = nil) -> GlucoseEntryModel {
         GlucoseEntryModel(
             repository: glucoseRepository,
             unit: preferences.displayGlucoseUnit,
@@ -39,7 +40,8 @@ public final class AppDependencies {
             schedule: preferences.dailySchedule,
             nightCheckEnabled: preferences.nightCheckEnabled,
             activityLevel: preferences.lastActivityLevel,
-            reminders: reminders
+            reminders: reminders,
+            editing: editing
         )
     }
 

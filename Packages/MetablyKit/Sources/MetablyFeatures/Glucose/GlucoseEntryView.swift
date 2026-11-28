@@ -1,23 +1,24 @@
 import MetablyDomain
 import SwiftUI
 
-/// Quick manual entry of a fingerstick glucose reading.
+/// Quick manual entry of a fingerstick glucose reading, or editing a saved one.
 ///
-/// Opens with the keypad up and the diary slot suggested from the time of day, so a typical
-/// entry is: type the value, tap Save.
+/// A new entry opens with the keypad up and the diary slot suggested from the time of day,
+/// so a typical entry is: type the value, tap Save. Editing shows the source and a delete action.
 struct GlucoseEntryView: View {
     @Bindable var model: GlucoseEntryModel
     var onSaved: () -> Void
 
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isValueFocused: Bool
+    @State private var confirmsDelete = false
 
     var body: some View {
         NavigationStack {
             Form {
                 valueSection
 
-                if model.showsLowGlucoseGuidance {
+                if model.showsLowGlucoseGuidance && !model.isEditing {
                     LowGlucoseGuidanceSection(model: model)
                 }
 
@@ -56,6 +57,17 @@ struct GlucoseEntryView: View {
                     .lineLimit(1...4)
                 }
 
+                if let original = model.editing {
+                    RecordInfoSection(reading: original)
+                    Section {
+                        Button(role: .destructive) {
+                            confirmsDelete = true
+                        } label: {
+                            Text("entry.delete", bundle: .module)
+                        }
+                    }
+                }
+
                 if let saveError = model.saveError {
                     Section {
                         Label {
@@ -66,7 +78,21 @@ struct GlucoseEntryView: View {
                     }
                 }
             }
-            .navigationTitle(Text("entry.title", bundle: .module))
+            .navigationTitle(Text(model.isEditing ? "entry.edit.title" : "entry.title", bundle: .module))
+            .confirmationDialog(
+                Text("entry.delete.confirm", bundle: .module),
+                isPresented: $confirmsDelete,
+                titleVisibility: .visible
+            ) {
+                Button(role: .destructive) {
+                    if model.deleteEditedReading() {
+                        onSaved()
+                        dismiss()
+                    }
+                } label: {
+                    Text("entry.delete", bundle: .module)
+                }
+            }
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
@@ -105,7 +131,7 @@ struct GlucoseEntryView: View {
             } message: { existing in
                 Text("entry.duplicate.message \(Self.time(of: existing))", bundle: .module)
             }
-            .onAppear { isValueFocused = true }
+            .onAppear { isValueFocused = !model.isEditing }
         }
     }
 
@@ -131,6 +157,15 @@ struct GlucoseEntryView: View {
                 .pickerStyle(.segmented)
                 .fixedSize()
             }
+            Picker(selection: $model.meterDisplay) {
+                Text("entry.meter.value", bundle: .module).tag(MeterDisplay.value)
+                Text(verbatim: "LO").tag(MeterDisplay.low)
+                Text(verbatim: "HI").tag(MeterDisplay.high)
+            } label: {
+                Text("entry.meter", bundle: .module)
+            }
+            .pickerStyle(.segmented)
+            .accessibilityHint(Text("entry.meter.hint", bundle: .module))
             if let status = model.previewStatus {
                 GlucoseStatusBadge(status: status)
             }
@@ -167,6 +202,35 @@ struct GlucoseEntryView: View {
         case .invalid(let entryError): entryError.localizedMessage
         case .duplicate: String(localized: "entry.error.duplicate", bundle: .module)
         case .storage: String(localized: "entry.error.storage", bundle: .module)
+        }
+    }
+}
+
+/// Where a saved reading came from and when it was recorded. Facts only.
+private struct RecordInfoSection: View {
+    let reading: GlucoseReading
+
+    var body: some View {
+        Section {
+            LabeledContent {
+                Text(reading.provenance.source.localizedName)
+            } label: {
+                Text("entry.info.source", bundle: .module)
+            }
+            LabeledContent {
+                Text(reading.createdAt.formatted(date: .abbreviated, time: .shortened))
+            } label: {
+                Text("entry.info.created", bundle: .module)
+            }
+            if reading.version > 1 {
+                LabeledContent {
+                    Text(reading.modifiedAt.formatted(date: .abbreviated, time: .shortened))
+                } label: {
+                    Text("entry.info.modified", bundle: .module)
+                }
+            }
+        } footer: {
+            Text("entry.info.footer", bundle: .module)
         }
     }
 }
