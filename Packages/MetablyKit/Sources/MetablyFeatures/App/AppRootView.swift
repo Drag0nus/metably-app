@@ -5,7 +5,7 @@ import SwiftUI
 /// or a calm error screen if the local store cannot be opened.
 public struct AppRootView: View {
     private enum LaunchState {
-        case ready(AppDependencies, GlucoseLogModel)
+        case ready(AppDependencies)
         case failed
     }
 
@@ -14,7 +14,7 @@ public struct AppRootView: View {
     public init() {
         do {
             let dependencies = try AppDependencies.live()
-            _launchState = State(initialValue: .ready(dependencies, GlucoseLogModel(dependencies: dependencies)))
+            _launchState = State(initialValue: .ready(dependencies))
         } catch {
             _launchState = State(initialValue: .failed)
         }
@@ -22,8 +22,8 @@ public struct AppRootView: View {
 
     public var body: some View {
         switch launchState {
-        case let .ready(dependencies, logModel):
-            MainTabView(dependencies: dependencies, logModel: logModel)
+        case let .ready(dependencies):
+            MainTabView(dependencies: dependencies)
         case .failed:
             ContentUnavailableView {
                 Label {
@@ -36,40 +36,4 @@ public struct AppRootView: View {
             }
         }
     }
-}
-
-struct MainTabView: View {
-    let dependencies: AppDependencies
-    let logModel: GlucoseLogModel
-
-    var body: some View {
-        TabView {
-            NavigationStack {
-                GlucoseLogView(model: logModel, preferences: dependencies.preferences)
-            }
-            .tabItem {
-                Label {
-                    Text("tab.diary", bundle: .module)
-                } icon: {
-                    Image(systemName: "list.bullet.rectangle")
-                }
-            }
-
-            NavigationStack {
-                SettingsView(preferences: dependencies.preferences, logModel: logModel)
-            }
-            .tabItem {
-                Label {
-                    Text("tab.settings", bundle: .module)
-                } icon: {
-                    Image(systemName: "gearshape")
-                }
-            }
-        }
-    }
-}
-
-#Preview {
-    let dependencies = AppDependencies.preview()
-    MainTabView(dependencies: dependencies, logModel: GlucoseLogModel(dependencies: dependencies))
 }

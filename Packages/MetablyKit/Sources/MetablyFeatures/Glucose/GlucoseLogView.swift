@@ -13,7 +13,11 @@ struct GlucoseLogView: View {
             ForEach(model.sections) { section in
                 Section {
                     ForEach(section.readings) { reading in
-                        GlucoseRowView(reading: reading, displayUnit: preferences.displayGlucoseUnit)
+                        GlucoseRowView(
+                            reading: reading,
+                            displayUnit: preferences.displayGlucoseUnit,
+                            targets: preferences.glucoseTargets
+                        )
                     }
                     .onDelete { offsets in
                         for index in offsets {
@@ -38,7 +42,8 @@ struct GlucoseLogView: View {
                 }
             }
         }
-        .navigationTitle(Text("log.title", bundle: .module))
+        .navigationTitle(Text("tab.journal", bundle: .module))
+        #if !os(iOS)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -55,7 +60,8 @@ struct GlucoseLogView: View {
         .sheet(item: $entryModel) { entry in
             GlucoseEntryView(model: entry) { model.reload() }
         }
-        .task { model.reload() }
+        #endif
+        .onAppear { model.reload() }
     }
 
     /// Diary days are calendar dates; format them without shifting through the device zone.
@@ -68,11 +74,12 @@ struct GlucoseLogView: View {
 struct GlucoseRowView: View {
     let reading: GlucoseReading
     let displayUnit: GlucoseUnit
+    let targets: GlucoseTargets
 
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(reading.context.localizedName)
+                Text(reading.diarySlot().localizedName)
                     .font(.headline)
                 HStack(spacing: 4) {
                     Text(timeText)
@@ -94,14 +101,24 @@ struct GlucoseRowView: View {
                 }
             }
             Spacer()
+            if let status {
+                // Out-of-target values are bold with an arrow, never marked by colour alone.
+                Image(systemName: status.symbolName)
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(status.tint)
+                    .accessibilityLabel(Text(status.localizedName))
+            }
             Text(reading.concentration.formattedValue(in: displayUnit))
-                .font(.system(.title2, design: .rounded).monospacedDigit().weight(.semibold))
+                .font(.system(.title2, design: .rounded).monospacedDigit().weight(isOutside ? .bold : .medium))
             Text(verbatim: displayUnit.symbol)
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
         .accessibilityElement(children: .combine)
     }
+
+    private var status: GlucoseTargetStatus? { reading.targetStatus(using: targets) }
+    private var isOutside: Bool { status == .below || status == .above }
 
     /// Local time where the reading was taken, so 07:30 stays 07:30 after travel.
     private var timeText: String {

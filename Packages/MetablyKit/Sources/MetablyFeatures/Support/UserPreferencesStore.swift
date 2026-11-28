@@ -14,6 +14,7 @@ public final class UserPreferencesStore {
         static let carbsPerBreadUnit = "prefs.carbsPerBreadUnit"
         static let usesInsulin = "prefs.usesInsulin"
         static let nightCheckEnabled = "prefs.nightCheckEnabled"
+        static let glucoseTargets = "prefs.glucoseTargets"
     }
 
     @ObservationIgnored private let defaults: UserDefaults
@@ -37,6 +38,20 @@ public final class UserPreferencesStore {
         didSet { defaults.set(nightCheckEnabled, forKey: Keys.nightCheckEnabled) }
     }
 
+    /// The user's glucose targets. Defaults to the ADA values. Invalid targets are never
+    /// persisted (the settings screen only offers valid ones).
+    public var glucoseTargets: GlucoseTargets {
+        didSet {
+            guard glucoseTargets.isValid else { return }
+            if let data = try? JSONEncoder().encode(glucoseTargets) {
+                defaults.set(data, forKey: Keys.glucoseTargets)
+            }
+        }
+    }
+
+    /// Usual meal and bed times. Not editable yet; see `DailySchedule`.
+    public var dailySchedule: DailySchedule { .default }
+
     public init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         displayGlucoseUnit = defaults.string(forKey: Keys.displayGlucoseUnit)
@@ -47,6 +62,9 @@ public final class UserPreferencesStore {
             : BreadUnitConverter.defaultCarbsPerBreadUnit
         usesInsulin = defaults.bool(forKey: Keys.usesInsulin)
         nightCheckEnabled = defaults.bool(forKey: Keys.nightCheckEnabled)
+        glucoseTargets = defaults.data(forKey: Keys.glucoseTargets)
+            .flatMap { try? JSONDecoder().decode(GlucoseTargets.self, from: $0) }
+            .flatMap { $0.isValid ? $0 : nil } ?? .adaDefaults
     }
 
     public var breadUnitConverter: BreadUnitConverter {

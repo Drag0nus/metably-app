@@ -35,7 +35,7 @@ struct GlucoseEntryModelTests {
         let repository = InMemoryGlucoseRepository()
         let model = makeModel(repository: repository)
         model.valueText = "6,4"
-        model.context = .fasting
+        model.slot = .fasting
         model.note = "synthetic note"
         model.measuredAt = now.addingTimeInterval(-15 * 60)
 

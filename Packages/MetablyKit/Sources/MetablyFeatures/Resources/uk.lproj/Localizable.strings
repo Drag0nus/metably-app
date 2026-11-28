@@ -1,5 +1,4 @@
 /* Tabs */
-"tab.diary" = "Щоденник";
 "tab.settings" = "Налаштування";
 
 /* Common */
@@ -11,10 +10,9 @@
 "launch.error.message" = "Не вдалося відкрити базу даних на пристрої. Ваші дані не видалено. Спробуйте перезапустити застосунок.";
 
 /* Glucose log */
-"log.title" = "Глюкоза";
 "log.add" = "Додати замір";
 "log.empty.title" = "Поки що немає замірів";
-"log.empty.message" = "Натисніть +, щоб записати перший замір глюкози.";
+"log.empty.message" = "Натисніть «Записати замір», щоб додати перший замір глюкози.";
 "log.synthetic" = "Синтетичні дані";
 
 /* Glucose entry */
@@ -53,3 +51,93 @@
 "settings.debug.loadSynthetic" = "Додати синтетичні заміри (14 днів)";
 "settings.debug.footer" = "Лише у debug-збірках. Додає вигадані значення з позначкою «синтетичні».";
 "settings.disclaimer" = "Metably — інструмент особистого обліку. Він не ставить діагнозів, не призначає лікування і не замінює пораду лікаря.";
+
+/* Tabs */
+"tab.today" = "Сьогодні";
+"tab.journal" = "Журнал";
+"tab.meals" = "Їжа";
+"tab.medications" = "Ліки";
+"tab.reports" = "Звіти";
+
+/* Actions */
+"action.recordReading" = "Записати замір";
+"action.recordReading.hint" = "Відкриває новий замір глюкози з готовою клавіатурою.";
+
+/* Coming soon */
+"soon.title" = "Незабаром";
+"soon.meals" = "Їжа, вуглеводи в грамах і хлібних одиницях та зв'язок із замірами з'являться в наступному оновленні.";
+"soon.medications" = "Таблетки, розклад, нагадування та історія з'являться в наступному оновленні. Запис інсуліну лишається необов'язковим.";
+"soon.reports" = "День глікемічного профілю і звіти для лікаря (PDF, CSV, JSON) з'являться в одному з наступних оновлень.";
+
+/* Today */
+"today.latest" = "Остання глюкоза";
+"today.latest.stale" = "Давніше ніж 8 годин тому";
+"today.yesterdayAt %@" = "вчора о %@";
+"today.first.title" = "Додайте перший замір";
+"today.first.message" = "Введіть значення з глюкометра. Час і пункт щоденника заповняться самі.";
+"today.profile" = "Заміри за день";
+"today.profile.count %lld %lld" = "%1$lld з %2$lld";
+"today.slot.empty" = "не виміряно";
+"today.timeline" = "Хронологія";
+"today.loadFailed" = "Не вдалося завантажити частину замірів.";
+
+/* Diary slots */
+"slot.fasting" = "Натще";
+"slot.afterBreakfast" = "Після сніданку";
+"slot.beforeLunch" = "Перед обідом";
+"slot.afterLunch" = "Після обіду";
+"slot.beforeDinner" = "Перед вечерею";
+"slot.afterDinner" = "Після вечері";
+"slot.bedtime" = "Перед сном";
+"slot.night" = "Вночі (03:00)";
+"slot.other" = "Інший час";
+"slot.short.fasting" = "Натще";
+"slot.short.afterBreakfast" = "С+2г";
+"slot.short.beforeLunch" = "О";
+"slot.short.afterLunch" = "О+2г";
+"slot.short.beforeDinner" = "В";
+"slot.short.afterDinner" = "В+2г";
+"slot.short.bedtime" = "Сон";
+"slot.short.night" = "03:00";
+"slot.short.other" = "Інше";
+
+/* Target status */
+"status.below" = "Нижче цілі";
+"status.inRange" = "У цілі";
+"status.above" = "Вище цілі";
+
+/* Sources */
+"source.manual" = "вручну";
+"source.watch" = "Apple Watch";
+"source.healthKit" = "Apple Health";
+"source.bluetoothMeter" = "глюкометр";
+"source.cgm" = "сенсор";
+"source.csvImport" = "імпорт";
+"source.vendorAPI" = "сервіс";
+"source.synthetic" = "синтетичні";
+
+/* Entry additions */
+"entry.context.footer" = "Визначено за часом доби. Натисніть, щоб змінити.";
+"entry.duplicate.title" = "Схожий замір";
+"entry.duplicate.message %@" = "Замір з таким самим значенням уже є о %@. Зберегти ще один?";
+"entry.duplicate.saveAnother" = "Зберегти ще один";
+
+/* Low glucose */
+"low.title" = "Низька глюкоза";
+"low.plan" = "Дійте за планом, узгодженим з лікарем.";
+"low.rule" = "Загальне правило: 15 г швидких вуглеводів і повторний замір через 15 хв (ADA Standards of Care).";
+"low.remind" = "Нагадати за 15 хв";
+"low.reminded %@" = "Нагадаю о %@";
+"low.reminderUnavailable" = "Сповіщення для Metably вимкнені. Їх можна дозволити в Параметрах.";
+
+/* Recheck reminder notification (never contains a value) */
+"reminder.recheck.title" = "Час перевірити глюкозу";
+"reminder.recheck.body" = "Ви просили нагадати про повторний замір.";
+
+/* Targets */
+"settings.targets" = "Мої цілі";
+"settings.targets.preMealLower" = "До їжі, від";
+"settings.targets.preMealUpper" = "До їжі, до";
+"settings.targets.postMealUpper" = "Після їжі, до";
+"settings.targets.reset" = "Відновити типові";
+"settings.targets.footer" = "Типові значення за ADA Standards of Care для дорослих. Узгодьте власні цілі з лікарем. Для замірів перед сном і вночі типової цілі немає.";

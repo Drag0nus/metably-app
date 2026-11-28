@@ -13,12 +13,17 @@ backend built incrementally after the threat model.
 
 ## 0.2 MVP UX
 
-- [ ] Unified timeline screen and navigation (per the UX MVP thread)
+- [x] Navigation shell: 5 tabs, Record reading accessory, iPad sidebar
+- [x] Today screen: latest reading, 7-point strip, timeline
+- [ ] Journal: paper-diary table view, filters, entry detail
+- [ ] Activity level 1–5 on every reading (needs schema V2)
+- [ ] Body screen (weight, waist, blood pressure, pulse) from Today and Journal
 - [ ] Meals: entry, items, carbs in grams, bread units display
 - [ ] Reading-to-meal link suggestions with user confirmation (`MealLinkSuggester` exists)
 - [ ] Medications: tablets, schedules, reminders, history (taken / missed / postponed)
 - [ ] Manual basal/bolus insulin record, hidden unless enabled (no calculator, no IOB)
-- [ ] User-configured glucose targets per context
+- [x] User-configured glucose targets (ADA defaults, editable)
+- [ ] Editable meal and bed times (`DailySchedule`)
 - [ ] Meter "LO"/"HI" entry
 - [ ] Edit reading screen (repository `update` exists)
 

@@ -11,6 +11,7 @@ public final class AppDependencies {
     public let glucoseRepository: any GlucoseRepository
     public let preferences: UserPreferencesStore
     public let dateProvider: any DateProvider
+    public let reminders: any RecheckReminderScheduling
     /// Kept alive for the lifetime of the app; repositories use its main context.
     private let modelContainer: ModelContainer?
 
@@ -18,12 +19,27 @@ public final class AppDependencies {
         glucoseRepository: any GlucoseRepository,
         preferences: UserPreferencesStore,
         dateProvider: any DateProvider = SystemDateProvider(),
+        reminders: any RecheckReminderScheduling = NoopRecheckReminder(),
         modelContainer: ModelContainer? = nil
     ) {
+        self.reminders = reminders
         self.glucoseRepository = glucoseRepository
         self.preferences = preferences
         self.dateProvider = dateProvider
         self.modelContainer = modelContainer
+    }
+
+    /// A fresh entry sheet model with the user's unit, targets and schedule.
+    public func makeGlucoseEntryModel() -> GlucoseEntryModel {
+        GlucoseEntryModel(
+            repository: glucoseRepository,
+            unit: preferences.displayGlucoseUnit,
+            dateProvider: dateProvider,
+            targets: preferences.glucoseTargets,
+            schedule: preferences.dailySchedule,
+            nightCheckEnabled: preferences.nightCheckEnabled,
+            reminders: reminders
+        )
     }
 
     /// The real on-device store.
@@ -39,6 +55,7 @@ public final class AppDependencies {
             glucoseRepository: repository,
             preferences: UserPreferencesStore(),
             dateProvider: dateProvider,
+            reminders: NotificationRecheckReminder(),
             modelContainer: container
         )
     }
