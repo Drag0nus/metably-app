@@ -121,7 +121,7 @@ public final class GlucoseEntryModel: Identifiable {
             nightCheckEnabled: nightCheckEnabled
         )
         if let reading = editing {
-            unit = reading.enteredUnit
+            self.unit = reading.enteredUnit
             slot = reading.diarySlot(schedule: schedule)
             measuredAt = reading.measuredAt
             note = reading.note ?? ""
