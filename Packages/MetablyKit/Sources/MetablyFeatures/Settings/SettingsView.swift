@@ -5,6 +5,9 @@ struct SettingsView: View {
     @Bindable var preferences: UserPreferencesStore
     let logModel: GlucoseLogModel
 
+    /// Hides the tab view's "Record reading" accessory while this screen is shown.
+    var recordAccessoryHidden: Binding<Bool> = .constant(false)
+
     var body: some View {
         Form {
             Section {
@@ -65,10 +68,13 @@ struct SettingsView: View {
         }
         .navigationTitle(Text("tab.settings", bundle: .module))
         #if os(iOS)
-        // A pushed secondary screen: hide the tab bar and its "Record reading" accessory,
-        // like `hidesBottomBarWhenPushed` in UIKit. They return on the tab's root screen.
+        // A pushed secondary screen: hide the tab bar, like `hidesBottomBarWhenPushed` in UIKit.
+        // The "Record reading" accessory belongs to the TabView, not to this screen, so hiding
+        // the tab bar leaves it on screen; the TabView hides it while this flag is set.
         .toolbarVisibility(.hidden, for: .tabBar)
         #endif
+        .onAppear { recordAccessoryHidden.wrappedValue = true }
+        .onDisappear { recordAccessoryHidden.wrappedValue = false }
     }
 }
 

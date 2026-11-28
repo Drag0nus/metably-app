@@ -8,6 +8,8 @@ struct TodayView: View {
     let logModel: GlucoseLogModel
     /// Opens the glucose entry sheet (owned by the tab view, shared with the accessory button).
     var onRecordReading: () -> Void
+    /// Passed on to Settings, which hides the "Record reading" accessory while it is shown.
+    var recordAccessoryHidden: Binding<Bool> = .constant(false)
 
     @State private var editModel: GlucoseEntryModel?
 
@@ -65,7 +67,7 @@ struct TodayView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 NavigationLink {
-                    SettingsView(preferences: preferences, logModel: logModel)
+                    SettingsView(preferences: preferences, logModel: logModel, recordAccessoryHidden: recordAccessoryHidden)
                 } label: {
                     Label {
                         Text("tab.settings", bundle: .module)

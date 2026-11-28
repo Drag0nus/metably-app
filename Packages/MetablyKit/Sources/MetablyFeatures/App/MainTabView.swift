@@ -24,6 +24,8 @@ struct MainTabView: View {
     @State private var logModel: GlucoseLogModel
     @State private var mealsModel: MealsModel
     @State private var entryModel: GlucoseEntryModel?
+    /// Set by pushed screens such as Settings that should show without "Record reading".
+    @State private var recordAccessoryHidden = false
 
     init(dependencies: AppDependencies) {
         self.dependencies = dependencies
@@ -40,7 +42,8 @@ struct MainTabView: View {
                         model: todayModel,
                         preferences: dependencies.preferences,
                         logModel: logModel,
-                        onRecordReading: recordReading
+                        onRecordReading: recordReading,
+                        recordAccessoryHidden: $recordAccessoryHidden
                     )
                 }
             } label: {
@@ -81,18 +84,7 @@ struct MainTabView: View {
         }
         .tabViewStyle(.sidebarAdaptable)
         #if os(iOS)
-        .tabViewBottomAccessory {
-            Button(action: recordReading) {
-                Label {
-                    Text("action.recordReading", bundle: .module)
-                } icon: {
-                    Image(systemName: "plus.circle.fill")
-                }
-                .font(.headline)
-                .frame(maxWidth: .infinity)
-            }
-            .accessibilityHint(Text("action.recordReading.hint", bundle: .module))
-        }
+        .modifier(RecordReadingAccessory(isHidden: recordAccessoryHidden, action: recordReading))
         #endif
         .sheet(item: $entryModel) { entry in
             GlucoseEntryView(model: entry) {
@@ -107,6 +99,39 @@ struct MainTabView: View {
         entryModel = dependencies.makeGlucoseEntryModel()
     }
 }
+
+#if os(iOS)
+/// "Record reading" as the TabView's bottom accessory.
+///
+/// `.toolbarVisibility(.hidden, for: .tabBar)` on a pushed screen hides the tab bar but not the
+/// accessory, so the accessory is switched off explicitly with `isEnabled` (iOS 26.1 and later).
+/// The `#available` branch is fixed for a device, so the TabView keeps its identity and state.
+private struct RecordReadingAccessory: ViewModifier {
+    let isHidden: Bool
+    let action: () -> Void
+
+    func body(content: Content) -> some View {
+        if #available(iOS 26.1, *) {
+            content.tabViewBottomAccessory(isEnabled: !isHidden) { button }
+        } else {
+            content.tabViewBottomAccessory { button }
+        }
+    }
+
+    private var button: some View {
+        Button(action: action) {
+            Label {
+                Text("action.recordReading", bundle: .module)
+            } icon: {
+                Image(systemName: "plus.circle.fill")
+            }
+            .font(.headline)
+            .frame(maxWidth: .infinity)
+        }
+        .accessibilityHint(Text("action.recordReading.hint", bundle: .module))
+    }
+}
+#endif
 
 private struct TabLabel: View {
     let titleKey: LocalizedStringKey
