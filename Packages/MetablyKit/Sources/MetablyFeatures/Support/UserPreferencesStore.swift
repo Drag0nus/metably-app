@@ -17,6 +17,7 @@ public final class UserPreferencesStore {
         static let glucoseTargets = "prefs.glucoseTargets"
         static let lastActivityLevel = "prefs.lastActivityLevel"
         static let dailyCarbohydrateGoalGrams = "prefs.dailyCarbohydrateGoalGrams"
+        static let nutrientGoals = "prefs.nutrientGoals"
     }
 
     @ObservationIgnored private let defaults: UserDefaults
@@ -63,6 +64,30 @@ public final class UserPreferencesStore {
         didSet { defaults.set(dailyCarbohydrateGoalGrams ?? 0, forKey: Keys.dailyCarbohydrateGoalGrams) }
     }
 
+    /// The user's own daily goals for other nutrients (grams, kilocalories for energy).
+    /// A nutrient without a goal is not tracked: its fields stay hidden on the meal sheet.
+    public private(set) var nutrientGoals: [Nutrient: Double] {
+        didSet {
+            let stored = Dictionary(uniqueKeysWithValues: nutrientGoals.map { ($0.key.rawValue, $0.value) })
+            defaults.set(try? JSONEncoder().encode(stored), forKey: Keys.nutrientGoals)
+        }
+    }
+
+    public func goal(for nutrient: Nutrient) -> Double? { nutrientGoals[nutrient] }
+
+    /// Sets or clears a goal; a value outside the nutrient's range is ignored.
+    public func setGoal(_ value: Double?, for nutrient: Nutrient) {
+        guard let value else {
+            nutrientGoals[nutrient] = nil
+            return
+        }
+        guard nutrient.goalRange.contains(value) else { return }
+        nutrientGoals[nutrient] = value
+    }
+
+    /// Nutrients with a goal, in a fixed order.
+    public var trackedNutrients: [Nutrient] { Nutrient.allCases.filter { nutrientGoals[$0] != nil } }
+
     /// Allowed range for the carbohydrate goal setting (catches typos only).
     public static let carbohydrateGoalRange: ClosedRange<Double> = 20...500
 
@@ -81,6 +106,13 @@ public final class UserPreferencesStore {
         nightCheckEnabled = defaults.bool(forKey: Keys.nightCheckEnabled)
         let storedGoal = defaults.double(forKey: Keys.dailyCarbohydrateGoalGrams)
         dailyCarbohydrateGoalGrams = Self.carbohydrateGoalRange.contains(storedGoal) ? storedGoal : nil
+        let storedGoals = defaults.data(forKey: Keys.nutrientGoals)
+            .flatMap { try? JSONDecoder().decode([String: Double].self, from: $0) } ?? [:]
+        var goals: [Nutrient: Double] = [:]
+        for (key, value) in storedGoals {
+            if let nutrient = Nutrient(rawValue: key), nutrient.goalRange.contains(value) { goals[nutrient] = value }
+        }
+        nutrientGoals = goals
         lastActivityLevel = ActivityLevel(rawValue: defaults.integer(forKey: Keys.lastActivityLevel))
         glucoseTargets = defaults.data(forKey: Keys.glucoseTargets)
             .flatMap { try? JSONDecoder().decode(GlucoseTargets.self, from: $0) }

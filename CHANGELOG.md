@@ -9,6 +9,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The "Record reading" accessory and the tab bar no longer show on the pushed Settings screen.
 
 ### Added
+- Reading-to-meal links: the entry sheet suggests the nearby meal ("Link to lunch at 13:10, 2 h 5 min
+  after lunch") as a switch that starts off; only confirmed links are saved. Editing shows and can
+  remove the link. Journal and Today show "2 h 5 min after lunch" on linked readings.
+- SwiftData schema V4 with a lightweight migration from V3: `EventLinkRecord` (ADR 0009). Sync payload
+  schema version 4.
+- Today shows a carbohydrates card (eaten vs your goal, planned apart) once there is a meal or a goal.
+- Daily goals for protein, fat, fibre and energy in Settings, each off until set. A tracked nutrient
+  gets a field per food on the meal sheet and a progress row on the Meals tab that counts foods
+  without a value. Version 0.6.0 (6).
 - Meals tab: one diary day with previous/next, carbohydrates eaten (grams and bread units) against the
   user's own daily goal, eaten and planned meals apart, "Eaten as planned" in one tap, tap to edit.
 - Meal entry: breakfast/lunch/dinner/snack suggested from the time, eaten or planned, foods with

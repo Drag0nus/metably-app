@@ -20,6 +20,12 @@ struct MealsView: View {
                     breadUnits: model.breadUnits
                 )
 
+                if !model.nutrientProgress.isEmpty {
+                    NutrientsCard(rows: model.nutrientProgress.map {
+                        NutrientsCard.Row(nutrient: $0.nutrient, total: $0.total, goal: $0.goal)
+                    })
+                }
+
                 if model.eaten.isEmpty && model.planned.isEmpty {
                     EmptyMealsCard { entryModel = model.makeEntryModel(status: .eaten) }
                 }
@@ -157,11 +163,11 @@ struct CarbohydrateCard: View {
                 Text(verbatim: NutritionFormat.grams(eatenGrams))
                     .font(.system(size: 44, weight: .semibold, design: .rounded).monospacedDigit())
                 if let goalGrams {
-                    Text(verbatim: "/ \(NutritionFormat.grams(goalGrams)) g")
+                    Text(verbatim: "/ \(NutritionFormat.grams(goalGrams)) \(NutritionFormat.gramsUnit)")
                         .font(.title3)
                         .foregroundStyle(.secondary)
                 } else {
-                    Text(verbatim: "g")
+                    Text(verbatim: NutritionFormat.gramsUnit)
                         .font(.title3)
                         .foregroundStyle(.secondary)
                 }
@@ -190,6 +196,48 @@ struct CarbohydrateCard: View {
         }
         .card()
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// Other nutrients against the user's own goals. Foods without a value are counted, so a
+/// low total is not mistaken for a low intake.
+struct NutrientsCard: View {
+    struct Row: Identifiable {
+        let nutrient: Nutrient
+        let total: NutrientTotal
+        let goal: Double
+        var id: Nutrient { nutrient }
+    }
+
+    let rows: [Row]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("meals.nutrients", bundle: .module)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+            ForEach(rows) { row in
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(row.nutrient.localizedName)
+                        Spacer()
+                        Text(verbatim: "\(NutritionFormat.grams(row.total.value)) / \(NutritionFormat.grams(row.goal)) \(row.nutrient.unitSymbol)")
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                    }
+                    ProgressView(value: min(row.total.value, row.goal), total: row.goal)
+                        .tint(Color.accentColor)
+                        .accessibilityHidden(true)
+                    if row.total.foodsWithoutValue > 0 {
+                        Text("meals.nutrients.missing \(row.total.foodsWithoutValue)", bundle: .module)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .accessibilityElement(children: .combine)
+            }
+        }
+        .card()
     }
 }
 
@@ -313,7 +361,7 @@ struct MealRowView: View {
             }
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 2) {
-                Text(verbatim: "\(NutritionFormat.grams(meal.totalCarbohydrateGrams)) g")
+                Text(verbatim: "\(NutritionFormat.grams(meal.totalCarbohydrateGrams)) \(NutritionFormat.gramsUnit)")
                     .font(.body.monospacedDigit().weight(.semibold))
                 Text("meals.breadUnits \(NutritionFormat.breadUnits(breadUnits.breadUnits(forCarbohydrateGrams: meal.totalCarbohydrateGrams)))", bundle: .module)
                     .font(.caption.monospacedDigit())

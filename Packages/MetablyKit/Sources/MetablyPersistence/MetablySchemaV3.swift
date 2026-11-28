@@ -19,28 +19,6 @@ public enum MetablySchemaV3: VersionedSchema {
     }
 }
 
-public enum MetablyMigrationPlan: SchemaMigrationPlan {
-    public static var schemas: [any VersionedSchema.Type] {
-        [MetablySchemaV1.self, MetablySchemaV2.self, MetablySchemaV3.self]
-    }
-
-    public static var stages: [MigrationStage] {
-        [
-            .lightweight(fromVersion: MetablySchemaV1.self, toVersion: MetablySchemaV2.self),
-            .lightweight(fromVersion: MetablySchemaV2.self, toVersion: MetablySchemaV3.self),
-        ]
-    }
-}
-
-/// The current models. Code outside this folder only ever uses these aliases.
-public typealias MetablyCurrentSchema = MetablySchemaV3
-public typealias TimelineEventRecord = MetablySchemaV3.TimelineEventRecord
-public typealias GlucoseReadingRecord = MetablySchemaV3.GlucoseReadingRecord
-public typealias MealRecord = MetablySchemaV3.MealRecord
-public typealias MealItemRecord = MetablySchemaV3.MealItemRecord
-public typealias RecordRevisionRecord = MetablySchemaV3.RecordRevisionRecord
-public typealias OutboxEntryRecord = MetablySchemaV3.OutboxEntryRecord
-
 extension MetablySchemaV3 {
     /// Header of every timeline row: when, what kind, where it came from, plus sync metadata.
     /// Exactly one detail record hangs off it (only glucose exists in V1).

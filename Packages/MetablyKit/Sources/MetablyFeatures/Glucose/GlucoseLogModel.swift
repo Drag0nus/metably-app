@@ -29,6 +29,8 @@ public final class GlucoseLogModel {
 
     public var layout: Layout = .list
     public private(set) var sections: [DaySection] = []
+    /// Confirmed meal links of the listed readings, as display text.
+    public private(set) var mealLinkTexts: [UUID: String] = [:]
     public private(set) var loadFailed = false
 
     @ObservationIgnored private let dependencies: AppDependencies
@@ -48,7 +50,9 @@ public final class GlucoseLogModel {
 
     public func reload() {
         do {
-            sections = Self.group(try dependencies.glucoseRepository.allReadings())
+            let readings = try dependencies.glucoseRepository.allReadings()
+            sections = Self.group(readings)
+            mealLinkTexts = dependencies.mealLinkTexts(for: readings)
             loadFailed = false
         } catch {
             loadFailed = true

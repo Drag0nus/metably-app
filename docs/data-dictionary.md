@@ -1,4 +1,4 @@
-# Data dictionary (schema V3)
+# Data dictionary (schema V4)
 
 Implemented entities only. The full model, including planned entities, is in the
 [data model document](https://claude.ai/artifact/6aKcmbXqPNhsDwwVPnbyfR).
@@ -69,6 +69,22 @@ The event's `startDate` is when the meal starts (or is planned to). Bread units 
 | carbohydrateGrams | Double | Required; 0–500 per food |
 | sugarsGrams, fiberGrams, proteinGrams, fatGrams | Double? | Optional; dietary sugars, never blood glucose |
 | energyKilocalories | Double? | Optional |
+
+## EventLinkRecord (V4)
+
+| Field | Type | Notes |
+|---|---|---|
+| id | UUID, unique | |
+| fromID | UUID | The glucose reading (indexed) |
+| toID | UUID | The meal (indexed) |
+| relationRaw | String | `EventLinkRelation`: preMeal, postMeal (doseForMeal, correction, symptomAt, treatedBy reserved) |
+| minutesFromMealStart | Int? | Signed minutes at the time of linking; display uses current times |
+| createdAt / modifiedAt / deletedAt | Date | Soft delete when the user unlinks |
+| version / serverVersion | Int / Int64? | As on the timeline header |
+| originDeviceID / lastModifiedDeviceID | UUID | |
+| schemaVersion | Int | Payload shape version |
+
+Only links the user confirmed are stored.
 
 ## RecordRevisionRecord
 

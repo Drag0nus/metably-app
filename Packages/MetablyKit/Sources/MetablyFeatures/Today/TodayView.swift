@@ -27,9 +27,19 @@ struct TodayView: View {
 
                 DaySlotStripCard(cells: model.slotCells, targets: model.targets, displayUnit: model.displayUnit)
 
+                if model.showsCarbohydrateCard {
+                    CarbohydrateCard(
+                        eatenGrams: model.eatenCarbohydrateGrams,
+                        plannedGrams: model.plannedCarbohydrateGrams,
+                        goalGrams: model.carbohydrateGoalGrams,
+                        breadUnits: model.breadUnits
+                    )
+                }
+
                 if !model.todayReadings.isEmpty {
                     TodayTimelineCard(
                         readings: model.todayReadings,
+                        mealLinkTexts: model.mealLinkTexts,
                         targets: model.targets,
                         displayUnit: model.displayUnit,
                         onSelect: { editModel = model.makeEntryModel(editing: $0) }
@@ -318,6 +328,7 @@ struct SlotCellView: View {
 /// Today's readings, newest first.
 struct TodayTimelineCard: View {
     let readings: [GlucoseReading]
+    let mealLinkTexts: [UUID: String]
     let targets: GlucoseTargets
     let displayUnit: GlucoseUnit
     var onSelect: (GlucoseReading) -> Void
@@ -331,7 +342,12 @@ struct TodayTimelineCard: View {
                 Button {
                     onSelect(reading)
                 } label: {
-                    GlucoseRowView(reading: reading, displayUnit: displayUnit, targets: targets)
+                    GlucoseRowView(
+                        reading: reading,
+                        displayUnit: displayUnit,
+                        targets: targets,
+                        mealLinkText: mealLinkTexts[reading.id]
+                    )
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)

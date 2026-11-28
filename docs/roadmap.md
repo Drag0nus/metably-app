@@ -21,9 +21,10 @@ backend built incrementally after the threat model.
 - [ ] Body screen (weight, waist, blood pressure, pulse) from Today and Journal
 - [x] Meals: entry, items, carbs in grams, bread units display, planned/eaten, portion М/С/В (schema V3)
 - [x] Daily carbohydrate goal (off until set)
-- [ ] Other nutrient goals (protein, fat, energy, fibre) and carbs card on Today
+- [x] Other nutrient goals (protein, fat, energy, fibre) and carbs card on Today
+- [ ] Built-in offline food database (USDA FoodData Central, uk/en names, household portions)
 - [x] Version, build number and build time in Settings
-- [ ] Reading-to-meal link suggestions with user confirmation (`MealLinkSuggester` exists)
+- [x] Reading-to-meal link suggestions with user confirmation (schema V4)
 - [ ] Medications: tablets, schedules, reminders, history (taken / missed / postponed)
 - [ ] Manual basal/bolus insulin record, hidden unless enabled (no calculator, no IOB)
 - [x] User-configured glucose targets (ADA defaults, editable)

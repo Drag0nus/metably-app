@@ -122,4 +122,50 @@ struct SchemaMigrationTests {
         try meals.insert(meal)
         #expect(try meals.meal(id: meal.id)?.totalCarbohydrateGrams == 28)
     }
+
+    @Test("A V3 store opens as V4; meals survive and links can be added")
+    func v3ToV4() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appending(path: "metably-migration-\(UUID().uuidString)", directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let url = directory.appending(path: "Metably.store")
+        let mealID = UUID()
+
+        do {
+            let schema = Schema(versionedSchema: MetablySchemaV3.self)
+            let configuration = ModelConfiguration("Metably", schema: schema, url: url, cloudKitDatabase: .none)
+            let container = try ModelContainer(for: schema, configurations: [configuration])
+            let context = ModelContext(container)
+            let event = MetablySchemaV3.TimelineEventRecord(
+                id: mealID, kindRaw: EventKind.meal.rawValue, startDate: now, endDate: now,
+                timeZoneID: "Europe/Kyiv", timeZoneIsInferred: false, localDay: "2027-01-15",
+                sourceRaw: EventSource.manual.rawValue, providerID: "manual", sourceDetail: nil,
+                externalID: nil, isUserVerified: true, note: nil, createdAt: now, modifiedAt: now,
+                deletedAt: nil, version: 1, serverVersion: nil, originDeviceID: UUID(),
+                lastModifiedDeviceID: UUID(), syncCategoryRaw: SyncCategory.nutrition.rawValue,
+                isHealthKitDerived: false, schemaVersion: 3
+            )
+            let detail = MetablySchemaV3.MealRecord(slotRaw: MealSlot.lunch.rawValue, statusRaw: MealStatus.eaten.rawValue, portionSizeRaw: nil)
+            let item = MetablySchemaV3.MealItemRecord(
+                id: UUID(), position: 0, name: "Rice", amountGrams: 100, carbohydrateGrams: 28,
+                sugarsGrams: nil, fiberGrams: nil, proteinGrams: nil, fatGrams: nil, energyKilocalories: nil
+            )
+            context.insert(event)
+            context.insert(detail)
+            context.insert(item)
+            detail.items = [item]
+            event.meal = detail
+            try context.save()
+        }
+
+        let container = try MetablyModelContainer.make(url: url)
+        let meals = SwiftDataMealRepository(context: container.mainContext, deviceID: UUID())
+        #expect(try meals.meal(id: mealID)?.totalCarbohydrateGrams == 28)
+
+        let links = SwiftDataEventLinkRepository(context: container.mainContext, deviceID: UUID(), dateProvider: FixedDateProvider(now))
+        let readingID = UUID()
+        try links.insert(EventLink(fromID: readingID, toID: mealID, relation: .postMeal, minutesFromMealStart: 120, createdAt: now))
+        #expect(try links.links(fromIDs: [readingID]).map(\.toID) == [mealID])
+    }
 }

@@ -40,7 +40,7 @@ struct MealEntryView: View {
 
                 Section {
                     ForEach($model.items) { $item in
-                        MealItemRow(item: $item)
+                        MealItemRow(item: $item, trackedNutrients: model.trackedNutrients)
                     }
                     .onDelete { model.removeItems(at: $0) }
 
@@ -183,6 +183,7 @@ struct MealEntryView: View {
 /// One food: name on its own line, then portion and carbohydrate grams side by side.
 private struct MealItemRow: View {
     @Binding var item: MealEntryModel.ItemDraft
+    let trackedNutrients: [Nutrient]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -195,24 +196,61 @@ private struct MealItemRow: View {
                 gramsField(text: $item.amountText, label: "meal.item.amount", prompt: "meal.item.amount.prompt")
                 gramsField(text: $item.carbsText, label: "meal.item.carbs", prompt: "meal.item.carbs.prompt")
             }
+            if !trackedNutrients.isEmpty {
+                // Two per row so the fields stay wide enough at large text sizes.
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 8) {
+                    ForEach(trackedNutrients) { nutrient in
+                        NumberField(
+                            text: nutrientBinding(nutrient),
+                            label: Text(nutrient.localizedName),
+                            prompt: Text("meal.item.optional", bundle: .module),
+                            unit: nutrient.unitSymbol
+                        )
+                    }
+                }
+            }
         }
         .padding(.vertical, 4)
     }
 
     private func gramsField(text: Binding<String>, label: LocalizedStringKey, prompt: LocalizedStringKey) -> some View {
+        NumberField(
+            text: text,
+            label: Text(label, bundle: .module),
+            prompt: Text(prompt, bundle: .module),
+            unit: NutritionFormat.gramsUnit
+        )
+    }
+
+    private func nutrientBinding(_ nutrient: Nutrient) -> Binding<String> {
+        Binding(
+            get: { item.nutrientTexts[nutrient] ?? "" },
+            set: { item.nutrientTexts[nutrient] = $0 }
+        )
+    }
+}
+
+/// A small labelled decimal field with its unit, e.g. "Carbohydrates [ 30 ] g".
+private struct NumberField: View {
+    @Binding var text: String
+    let label: Text
+    let prompt: Text
+    let unit: String
+
+    var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(label, bundle: .module)
+            label
                 .font(.caption)
                 .foregroundStyle(.secondary)
             HStack(spacing: 4) {
-                TextField(text: text, prompt: Text(prompt, bundle: .module)) {
-                    Text(label, bundle: .module)
+                TextField(text: $text, prompt: prompt) {
+                    label
                 }
                 .monospacedDigit()
                 #if os(iOS)
                 .keyboardType(.decimalPad)
                 #endif
-                Text(verbatim: "g")
+                Text(verbatim: unit)
                     .foregroundStyle(.secondary)
                     .accessibilityHidden(true)
             }

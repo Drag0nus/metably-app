@@ -1,9 +1,10 @@
 # Known limitations (0.2 in progress)
 
 - Glucose readings and meals exist; other domains are modelled in the design doc but not implemented.
-- Meals have no food database yet: names and carbohydrate grams are typed. Only the carbohydrate
-  goal can be set; other nutrient goals come later.
-- Readings are not yet linked to meals, and Today has no carbs card yet.
+- Meals have no food database yet: names and nutrients are typed (planned next).
+- Nutrient fields other than carbohydrates appear only for nutrients with a goal; sugars are stored
+  but not editable yet.
+- One meal link per reading; the meal screen does not list its linked readings yet.
 - The revision history of an edited reading is stored but not shown in the app yet.
 - Targets default to the ADA values; bedtime and night readings have no default target.
 - Meal and bed times used to suggest diary slots are fixed defaults (08:00, 13:00, 19:00, 22:30)

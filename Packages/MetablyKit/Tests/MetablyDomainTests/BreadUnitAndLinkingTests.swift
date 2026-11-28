@@ -103,3 +103,26 @@ struct MealTests {
         #expect(validator.validate(meal([MealItem(name: "Tea", carbohydrateGrams: 0)])) == nil)
     }
 }
+
+@Suite("Nutrients")
+struct NutrientTests {
+    @Test("A day total counts foods without a value instead of treating them as zero")
+    func totals() {
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        let meal = Meal(slot: .lunch, status: .eaten, startedAt: now, timeZone: .gmt, items: [
+            MealItem(name: "Egg", carbohydrateGrams: 0, proteinGrams: 6),
+            MealItem(name: "Bread", carbohydrateGrams: 15),
+        ], createdAt: now)
+        let total = NutrientTotal(of: .protein, in: [meal])
+        #expect(total.value == 6)
+        #expect(total.foodsWithoutValue == 1)
+    }
+
+    @Test("Implausible nutrient values are caught per food")
+    func validation() {
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        let meal = Meal(slot: .lunch, status: .eaten, startedAt: now, timeZone: .gmt,
+                        items: [MealItem(name: "Cake", carbohydrateGrams: 50, energyKilocalories: 9000)], createdAt: now)
+        #expect(MealValidator().validate(meal) == .nutrientOutOfRange(.energy))
+    }
+}

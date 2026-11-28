@@ -234,3 +234,31 @@
 "settings.about" = "Про цю збірку";
 "settings.about.version" = "Версія (збірка)";
 "settings.about.built" = "Зібрано";
+
+/* Units */
+"unit.grams" = "г";
+"unit.kcal" = "ккал";
+
+/* Meal links */
+"entry.mealLink" = "Прийом їжі";
+"entry.mealLink.title %@ %@" = "Зв'язати: %1$@ о %2$@";
+"entry.mealLink.footer" = "Запропоновано за часом. Замір буде зв'язано, лише якщо ви це ввімкнете; змінити можна пізніше.";
+"meal.link.after.breakfast %@" = "%@ після сніданку";
+"meal.link.after.lunch %@" = "%@ після обіду";
+"meal.link.after.dinner %@" = "%@ після вечері";
+"meal.link.after.snack %@" = "%@ після перекусу";
+"meal.link.before.breakfast %@" = "за %@ до сніданку";
+"meal.link.before.lunch %@" = "за %@ до обіду";
+"meal.link.before.dinner %@" = "за %@ до вечері";
+"meal.link.before.snack %@" = "за %@ до перекусу";
+
+/* Nutrients */
+"nutrient.protein" = "Білки";
+"nutrient.fat" = "Жири";
+"nutrient.fiber" = "Клітковина";
+"nutrient.energy" = "Енергія";
+"meal.item.optional" = "необов'язково";
+"meal.error.nutrient %@" = "%@ на продукт виглядає завеликим. Перевірте число.";
+"meals.nutrients" = "Інше з'їдене";
+"meals.nutrients.missing %lld" = "Не вказано для продуктів: %lld";
+"settings.goals.nutrient %@" = "Ціль: %@";

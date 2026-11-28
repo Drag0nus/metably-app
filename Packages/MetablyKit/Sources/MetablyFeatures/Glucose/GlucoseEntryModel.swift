@@ -35,6 +35,15 @@ public enum MeterDisplay: String, Sendable, Hashable, CaseIterable {
     }
 }
 
+/// A meal the reading could be linked to, suggested from the times. Stored only if the user
+/// switches the link on.
+public struct MealLinkCandidate: Sendable, Hashable {
+    public let meal: Meal
+    public let relation: EventLinkRelation
+    /// Signed minutes from meal start to the reading.
+    public let minutesFromMealStart: Int
+}
+
 public enum GlucoseEntrySaveError: Error, Sendable, Hashable {
     case invalid(GlucoseEntryError)
     case duplicate
@@ -52,8 +61,16 @@ public final class GlucoseEntryModel: Identifiable {
     public var valueText = ""
     public var unit: GlucoseUnit
     /// Diary column of the reading. Suggested from the time of day; the user can change it.
-    public var slot: DiarySlot
-    public var measuredAt: Date
+    public var slot: DiarySlot {
+        didSet { if slot != oldValue { refreshMealCandidate() } }
+    }
+    public var measuredAt: Date {
+        didSet { if measuredAt != oldValue { refreshMealCandidate() } }
+    }
+    /// The nearby meal suggested for a link, if any.
+    public private(set) var mealCandidate: MealLinkCandidate?
+    /// The user's confirmation of the link. Off for a suggestion until the user switches it on.
+    public var linksToMeal = false
     public var note = ""
     /// "LO"/"HI" when the meter could not show a number. Switching prefills the meter limit.
     public var meterDisplay: MeterDisplay = .value {
@@ -87,6 +104,10 @@ public final class GlucoseEntryModel: Identifiable {
     @ObservationIgnored private let duplicateDetector = DuplicateReadingDetector()
     @ObservationIgnored private var duplicateConfirmed = false
     @ObservationIgnored private let reminders: any RecheckReminderScheduling
+    @ObservationIgnored private let meals: (any MealRepository)?
+    @ObservationIgnored private let links: (any EventLinkRepository)?
+    @ObservationIgnored private var existingLink: EventLink?
+    @ObservationIgnored private let linkSuggester = MealLinkSuggester()
 
     /// General rule for re-checking after a low reading (ADA Standards of Care, section 6).
     public static let recheckInterval: TimeInterval = 15 * 60
@@ -101,9 +122,13 @@ public final class GlucoseEntryModel: Identifiable {
         nightCheckEnabled: Bool = false,
         activityLevel: ActivityLevel? = nil,
         reminders: any RecheckReminderScheduling = NoopRecheckReminder(),
+        meals: (any MealRepository)? = nil,
+        links: (any EventLinkRepository)? = nil,
         editing: GlucoseReading? = nil
     ) {
         self.editing = editing
+        self.meals = meals
+        self.links = links
         self.repository = repository
         self.reminders = reminders
         self.unit = unit
@@ -133,6 +158,67 @@ public final class GlucoseEntryModel: Identifiable {
             }
             // Set after `meterDisplay`, whose didSet prefills the typical meter limit.
             valueText = Self.text(for: reading.enteredValue, unit: reading.enteredUnit)
+            existingLink = (try? links?.links(fromIDs: [reading.id]))?
+                .first { $0.relation == .preMeal || $0.relation == .postMeal }
+            linksToMeal = existingLink != nil
+        }
+        // Property observers do not run during init.
+        refreshMealCandidate()
+    }
+
+    // MARK: - Meal link
+
+    /// Finds the meal to offer: the already linked meal when editing, otherwise the best
+    /// suggestion for the reading's time and slot.
+    private func refreshMealCandidate() {
+        guard let meals else { return }
+        let previousMealID = mealCandidate?.meal.id
+        if let link = existingLink, let meal = try? meals.meal(id: link.toID), !meal.isDeleted {
+            mealCandidate = Self.candidate(meal: meal, readingAt: measuredAt)
+            return
+        }
+        let nearby = (try? meals.meals(
+            from: measuredAt.addingTimeInterval(-4 * 60 * 60),
+            to: measuredAt.addingTimeInterval(2 * 60 * 60)
+        )) ?? []
+        // A reading after a meal needs an eaten meal; one before a meal may precede a planned one.
+        let byID = Dictionary(nearby.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        mealCandidate = linkSuggester
+            .suggestions(readingAt: measuredAt, context: context, meals: nearby.map(\.timeReference))
+            .lazy
+            .compactMap { suggestion -> MealLinkCandidate? in
+                guard let meal = byID[suggestion.mealID],
+                      suggestion.relation == .preMeal || meal.status == .eaten
+                else { return nil }
+                return MealLinkCandidate(meal: meal, relation: suggestion.relation, minutesFromMealStart: suggestion.minutesFromMealStart)
+            }
+            .first
+        // A confirmation is for one meal: a different suggestion starts unconfirmed.
+        if mealCandidate?.meal.id != previousMealID { linksToMeal = false }
+    }
+
+    static func candidate(meal: Meal, readingAt: Date) -> MealLinkCandidate {
+        let minutes = Int((readingAt.timeIntervalSince(meal.startedAt) / 60).rounded())
+        return MealLinkCandidate(meal: meal, relation: minutes < 0 ? .preMeal : .postMeal, minutesFromMealStart: minutes)
+    }
+
+    /// Writes the user's link choice for a saved reading. A failed link never fails the reading.
+    private func applyMealLink(to reading: GlucoseReading) {
+        guard let links else { return }
+        let wanted = linksToMeal ? mealCandidate : nil
+        if let existing = existingLink, existing.toID != wanted?.meal.id {
+            try? links.softDelete(id: existing.id)
+            existingLink = nil
+        }
+        if let wanted, existingLink == nil {
+            let link = EventLink(
+                fromID: reading.id,
+                toID: wanted.meal.id,
+                relation: wanted.relation,
+                minutesFromMealStart: wanted.minutesFromMealStart,
+                createdAt: dateProvider.now()
+            )
+            if (try? links.insert(link)) != nil { existingLink = link }
         }
     }
 
@@ -236,6 +322,7 @@ public final class GlucoseEntryModel: Identifiable {
             )
             reading.activityLevel = activityLevel
             try repository.insert(reading)
+            applyMealLink(to: reading)
             return reading
         } catch let error as GlucoseEntryError {
             saveError = .invalid(error)
@@ -268,6 +355,7 @@ public final class GlucoseEntryModel: Identifiable {
         updated.isUserVerified = true
         do {
             try repository.update(updated)
+            applyMealLink(to: updated)
             return try repository.reading(id: original.id) ?? updated
         } catch {
             saveError = .storage

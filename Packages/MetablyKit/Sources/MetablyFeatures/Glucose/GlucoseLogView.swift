@@ -85,7 +85,8 @@ struct GlucoseLogView: View {
                             GlucoseRowView(
                                 reading: reading,
                                 displayUnit: preferences.displayGlucoseUnit,
-                                targets: preferences.glucoseTargets
+                                targets: preferences.glucoseTargets,
+                                mealLinkText: model.mealLinkTexts[reading.id]
                             )
                         }
                         .buttonStyle(.plain)
@@ -118,6 +119,8 @@ struct GlucoseRowView: View {
     let reading: GlucoseReading
     let displayUnit: GlucoseUnit
     let targets: GlucoseTargets
+    /// "2 h 5 min after lunch" when the user linked the reading to a meal.
+    var mealLinkText: String? = nil
 
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
@@ -145,6 +148,15 @@ struct GlucoseRowView: View {
                 }
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+                if let mealLinkText {
+                    Label {
+                        Text(mealLinkText)
+                    } icon: {
+                        Image(systemName: "fork.knife")
+                    }
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
                 if let note = reading.note {
                     Text(note)
                         .font(.footnote)
