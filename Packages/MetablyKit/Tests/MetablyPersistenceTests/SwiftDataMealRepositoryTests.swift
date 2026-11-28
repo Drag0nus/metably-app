@@ -10,10 +10,17 @@ struct SwiftDataMealRepositoryTests {
     let now = Date(timeIntervalSince1970: 1_800_000_000)
     let kyiv = TimeZone(identifier: "Europe/Kyiv")!
 
-    func makeRepository() throws -> (SwiftDataMealRepository, ModelContainer) {
-        let container = try MetablyModelContainer.make(inMemory: true)
-        let repository = SwiftDataMealRepository(context: container.mainContext, deviceID: UUID(), dateProvider: FixedDateProvider(now))
-        return (repository, container)
+    /// The suite keeps the container alive for the whole test: a context whose container is
+    /// released traps on the next fetch.
+    let container: ModelContainer
+    let repository: SwiftDataMealRepository
+
+    init() throws {
+        container = try MetablyModelContainer.make(inMemory: true)
+        repository = SwiftDataMealRepository(
+            context: container.mainContext, deviceID: UUID(),
+            dateProvider: FixedDateProvider(Date(timeIntervalSince1970: 1_800_000_000))
+        )
     }
 
     func makeMeal(minutesAgo: Double = 30) -> Meal {
@@ -30,7 +37,6 @@ struct SwiftDataMealRepositoryTests {
 
     @Test("A meal round-trips with its items in order")
     func roundTrip() throws {
-        let (repository, _) = try makeRepository()
         let meal = makeMeal()
         try repository.insert(meal)
         let loaded = try #require(try repository.meal(id: meal.id))
@@ -43,7 +49,6 @@ struct SwiftDataMealRepositoryTests {
 
     @Test("Update replaces the items, bumps the version and keeps a revision")
     func update() throws {
-        let (repository, container) = try makeRepository()
         let meal = makeMeal()
         try repository.insert(meal)
         var edited = meal
@@ -61,7 +66,6 @@ struct SwiftDataMealRepositoryTests {
 
     @Test("Soft delete hides the meal from day queries")
     func softDelete() throws {
-        let (repository, _) = try makeRepository()
         let meal = makeMeal()
         try repository.insert(meal)
         try repository.softDelete(id: meal.id)
@@ -71,7 +75,6 @@ struct SwiftDataMealRepositoryTests {
 
     @Test("Writes queue one coalesced outbox entry per meal")
     func outbox() throws {
-        let (repository, container) = try makeRepository()
         let meal = makeMeal()
         try repository.insert(meal)
         var edited = meal
@@ -86,7 +89,6 @@ struct SwiftDataMealRepositoryTests {
 
     @Test("Day query returns meals earliest first and excludes other days")
     func dayQuery() throws {
-        let (repository, _) = try makeRepository()
         let later = makeMeal(minutesAgo: 10)
         let earlier = makeMeal(minutesAgo: 120)
         let yesterday = makeMeal(minutesAgo: 60 * 30)
