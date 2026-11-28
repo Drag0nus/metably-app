@@ -41,11 +41,7 @@ public final class GlucoseLogModel {
     }
 
     public func makeEntryModel() -> GlucoseEntryModel {
-        GlucoseEntryModel(
-            repository: dependencies.glucoseRepository,
-            unit: dependencies.preferences.displayGlucoseUnit,
-            dateProvider: dependencies.dateProvider
-        )
+        dependencies.makeGlucoseEntryModel()
     }
 
     #if DEBUG

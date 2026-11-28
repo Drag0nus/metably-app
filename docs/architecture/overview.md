@@ -77,4 +77,5 @@ identical for all sources.
 
 - No measurement values, notes or ids in logs (`OSLog` messages log error types only).
 - Synthetic data only in previews, tests and the Debug data loader; it is marked `source = synthetic`.
-- The app does not show target-range colours until the user configures their own targets.
+- Target status uses the user's own targets, which default to the ADA values (ADR 0006). Status is
+  never shown by colour alone.

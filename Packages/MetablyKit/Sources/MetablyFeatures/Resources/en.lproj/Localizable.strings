@@ -1,5 +1,4 @@
 /* Tabs */
-"tab.diary" = "Diary";
 "tab.settings" = "Settings";
 
 /* Common */
@@ -11,10 +10,9 @@
 "launch.error.message" = "The on-device database could not be opened. Your data has not been deleted. Try restarting the app.";
 
 /* Glucose log */
-"log.title" = "Glucose";
 "log.add" = "Add reading";
 "log.empty.title" = "No readings yet";
-"log.empty.message" = "Tap + to record your first glucose reading.";
+"log.empty.message" = "Tap Record reading to add your first glucose reading.";
 "log.synthetic" = "Synthetic data";
 
 /* Glucose entry */
@@ -53,3 +51,93 @@
 "settings.debug.loadSynthetic" = "Add synthetic readings (14 days)";
 "settings.debug.footer" = "Debug builds only. Adds invented values marked as synthetic.";
 "settings.disclaimer" = "Metably is a personal tracking tool. It does not diagnose, recommend treatment or replace advice from your doctor.";
+
+/* Tabs */
+"tab.today" = "Today";
+"tab.journal" = "Journal";
+"tab.meals" = "Meals";
+"tab.medications" = "Medications";
+"tab.reports" = "Reports";
+
+/* Actions */
+"action.recordReading" = "Record reading";
+"action.recordReading.hint" = "Opens a new glucose reading with the keypad ready.";
+
+/* Coming soon */
+"soon.title" = "Coming soon";
+"soon.meals" = "Meals, carbohydrates in grams and bread units, and links to your readings arrive in the next update.";
+"soon.medications" = "Tablets, schedules, reminders and history arrive in the next update. Insulin logging stays optional.";
+"soon.reports" = "The Glucose Profile Day and reports for your doctor (PDF, CSV, JSON) arrive in a later update.";
+
+/* Today */
+"today.latest" = "Latest glucose";
+"today.latest.stale" = "Older than 8 hours";
+"today.yesterdayAt %@" = "yesterday at %@";
+"today.first.title" = "Add your first reading";
+"today.first.message" = "Type the value from your meter. The time and the diary slot are filled in for you.";
+"today.profile" = "Readings today";
+"today.profile.count %lld %lld" = "%1$lld of %2$lld";
+"today.slot.empty" = "not measured";
+"today.timeline" = "Timeline";
+"today.loadFailed" = "Some readings could not be loaded.";
+
+/* Diary slots */
+"slot.fasting" = "Fasting";
+"slot.afterBreakfast" = "After breakfast";
+"slot.beforeLunch" = "Before lunch";
+"slot.afterLunch" = "After lunch";
+"slot.beforeDinner" = "Before dinner";
+"slot.afterDinner" = "After dinner";
+"slot.bedtime" = "Bedtime";
+"slot.night" = "Night (03:00)";
+"slot.other" = "Other time";
+"slot.short.fasting" = "Fast";
+"slot.short.afterBreakfast" = "B+2h";
+"slot.short.beforeLunch" = "L";
+"slot.short.afterLunch" = "L+2h";
+"slot.short.beforeDinner" = "D";
+"slot.short.afterDinner" = "D+2h";
+"slot.short.bedtime" = "Bed";
+"slot.short.night" = "03:00";
+"slot.short.other" = "Other";
+
+/* Target status */
+"status.below" = "Below target";
+"status.inRange" = "In target";
+"status.above" = "Above target";
+
+/* Sources */
+"source.manual" = "manual";
+"source.watch" = "Apple Watch";
+"source.healthKit" = "Apple Health";
+"source.bluetoothMeter" = "meter";
+"source.cgm" = "sensor";
+"source.csvImport" = "import";
+"source.vendorAPI" = "service";
+"source.synthetic" = "synthetic";
+
+/* Entry additions */
+"entry.context.footer" = "Suggested from the time of day. Tap to change.";
+"entry.duplicate.title" = "Similar reading";
+"entry.duplicate.message %@" = "A reading with the same value is already saved at %@. Save another one?";
+"entry.duplicate.saveAnother" = "Save another";
+
+/* Low glucose */
+"low.title" = "Low glucose";
+"low.plan" = "Follow the plan agreed with your doctor.";
+"low.rule" = "General rule: 15 g of fast-acting carbohydrate, then check again in 15 minutes (ADA Standards of Care).";
+"low.remind" = "Remind me in 15 minutes";
+"low.reminded %@" = "Reminder set for %@";
+"low.reminderUnavailable" = "Notifications are off for Metably. You can allow them in Settings.";
+
+/* Recheck reminder notification (never contains a value) */
+"reminder.recheck.title" = "Time to check your glucose";
+"reminder.recheck.body" = "You asked to be reminded to check again.";
+
+/* Targets */
+"settings.targets" = "My targets";
+"settings.targets.preMealLower" = "Before meals, from";
+"settings.targets.preMealUpper" = "Before meals, up to";
+"settings.targets.postMealUpper" = "After meals, up to";
+"settings.targets.reset" = "Restore defaults";
+"settings.targets.footer" = "Defaults follow the ADA Standards of Care for adults. Agree your own targets with your doctor. Bedtime and night readings have no default target.";
