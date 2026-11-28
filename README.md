@@ -14,7 +14,7 @@ Milestone 0.1, the app foundation. **Implemented:**
 - Modular Swift package `MetablyKit` (domain, persistence, HealthKit contracts, synthetic data, features).
 - Domain model for glucose readings with lossless units, local diary day and provenance.
 - Vendor-neutral `GlucoseDataProvider` abstraction with the manual provider.
-- SwiftData schema V1 (timeline header + glucose detail, revision history, sync outbox), CloudKit off.
+- SwiftData schema V2 with migration from V1 (timeline header + glucose detail, revision history, sync outbox), CloudKit off.
 - Manual glucose entry and a glucose diary grouped by day, in English and Ukrainian.
 - Synthetic data generator (Debug only) and unit tests with Swift Testing.
 

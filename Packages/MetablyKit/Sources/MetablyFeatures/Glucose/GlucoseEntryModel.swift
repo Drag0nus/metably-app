@@ -28,6 +28,8 @@ public final class GlucoseEntryModel: Identifiable {
     public var slot: DiarySlot
     public var measuredAt: Date
     public var note = ""
+    /// Activity 1–5 at the time of the check. Preset to the user's last choice; tap again to clear.
+    public var activityLevel: ActivityLevel?
     public private(set) var saveError: GlucoseEntrySaveError?
     /// Set when the value looks like a double entry; the view asks before saving again.
     public private(set) var likelyDuplicate: GlucoseReading?
@@ -60,6 +62,7 @@ public final class GlucoseEntryModel: Identifiable {
         targets: GlucoseTargets = .adaDefaults,
         schedule: DailySchedule = .default,
         nightCheckEnabled: Bool = false,
+        activityLevel: ActivityLevel? = nil,
         reminders: any RecheckReminderScheduling = NoopRecheckReminder()
     ) {
         self.repository = repository
@@ -68,6 +71,7 @@ public final class GlucoseEntryModel: Identifiable {
         self.dateProvider = dateProvider
         self.timeZone = timeZone
         self.targets = targets
+        self.activityLevel = activityLevel
         let now = dateProvider.now()
         self.measuredAt = now
         self.latestAllowedDate = now
@@ -147,12 +151,13 @@ public final class GlucoseEntryModel: Identifiable {
             return nil
         }
         do {
-            let reading = try ingestor.makeReading(
+            var reading = try ingestor.makeReading(
                 from: sample,
                 providerID: ManualGlucoseProvider.providerID,
                 providerKind: .manual,
                 now: dateProvider.now()
             )
+            reading.activityLevel = activityLevel
             try repository.insert(reading)
             return reading
         } catch let error as GlucoseEntryError {

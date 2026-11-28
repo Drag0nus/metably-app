@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-/// Version 1 of the on-device schema.
+/// Version 1 of the on-device schema (frozen: never edit these models; add a new version).
 ///
 /// Models live inside the versioned schema enum so that future versions (V2, V3...) can keep
 /// their own copies and `MetablyMigrationPlan` can migrate between them. Enum-typed fields are
@@ -18,16 +18,6 @@ public enum MetablySchemaV1: VersionedSchema {
         ]
     }
 }
-
-public enum MetablyMigrationPlan: SchemaMigrationPlan {
-    public static var schemas: [any VersionedSchema.Type] { [MetablySchemaV1.self] }
-    public static var stages: [MigrationStage] { [] }
-}
-
-public typealias TimelineEventRecord = MetablySchemaV1.TimelineEventRecord
-public typealias GlucoseReadingRecord = MetablySchemaV1.GlucoseReadingRecord
-public typealias RecordRevisionRecord = MetablySchemaV1.RecordRevisionRecord
-public typealias OutboxEntryRecord = MetablySchemaV1.OutboxEntryRecord
 
 extension MetablySchemaV1 {
     /// Header of every timeline row: when, what kind, where it came from, plus sync metadata.

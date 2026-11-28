@@ -196,3 +196,59 @@ struct PreferencesTargetTests {
         #expect(UserPreferencesStore(defaults: defaults).glucoseTargets == edited)
     }
 }
+
+@MainActor
+@Suite("Activity and diary table")
+struct ActivityAndTableTests {
+    let kyiv = TimeZone(identifier: "Europe/Kyiv")!
+    let day = LocalDay(year: 2026, month: 11, day: 27)
+
+    func instant(_ day: LocalDay, _ hour: Int, _ minute: Int = 0) -> Date { day.instant(hour: hour, minute: minute, in: kyiv)! }
+
+    @Test("The entry saves the chosen activity level, preset from the last choice")
+    func activitySaved() throws {
+        let repository = InMemoryGlucoseRepository()
+        let model = GlucoseEntryModel(
+            repository: repository, unit: .millimolesPerLiter,
+            dateProvider: FixedDateProvider(instant(day, 13, 5)), timeZone: kyiv,
+            activityLevel: ActivityLevel(rawValue: 3)
+        )
+        #expect(model.activityLevel == ActivityLevel(rawValue: 3))
+        model.activityLevel = ActivityLevel(rawValue: 4)
+        model.valueText = "6,5"
+        let saved = try #require(model.save())
+        #expect(saved.activityLevel == ActivityLevel(rawValue: 4))
+    }
+
+    @Test("Last activity level persists in preferences; cleared stays cleared")
+    func lastActivity() {
+        let defaults = UserDefaults(suiteName: "test.activity.\(UUID().uuidString)")!
+        let store = UserPreferencesStore(defaults: defaults)
+        #expect(store.lastActivityLevel == nil)
+        store.lastActivityLevel = ActivityLevel(rawValue: 2)
+        #expect(UserPreferencesStore(defaults: defaults).lastActivityLevel == ActivityLevel(rawValue: 2))
+        store.lastActivityLevel = nil
+        #expect(UserPreferencesStore(defaults: defaults).lastActivityLevel == nil)
+    }
+
+    @Test("Diary table rows place readings in slot columns, newest first per slot")
+    func tableRows() {
+        func reading(_ value: Double, _ context: GlucoseMeasurementContext, _ date: Date) -> GlucoseReading {
+            GlucoseReading(enteredValue: value, enteredUnit: .millimolesPerLiter, context: context,
+                           measuredAt: date, timeZone: kyiv, provenance: .manual, createdAt: date)
+        }
+        let readings = [
+            reading(6.1, .fasting, instant(day, 7, 0)),
+            reading(6.3, .fasting, instant(day, 7, 30)),
+            reading(9.2, .afterMeal, instant(day, 15, 0)),
+            reading(5.8, .random, instant(day, 16, 0)),
+            reading(7.0, .bedtime, instant(day.adding(days: -1), 22, 30)),
+        ]
+        let rows = GlucoseLogModel.rows(from: GlucoseLogModel.group(readings), schedule: .default)
+        #expect(rows.map(\.day) == [day, day.adding(days: -1)])
+        #expect(rows[0].cells[.fasting]?.map(\.enteredValue) == [6.3, 6.1])
+        #expect(rows[0].cells[.afterLunch]?.first?.enteredValue == 9.2)
+        #expect(rows[0].cells[.other]?.count == 1)
+        #expect(rows[1].cells[.bedtime]?.first?.enteredValue == 7.0)
+    }
+}

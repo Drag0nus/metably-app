@@ -94,6 +94,7 @@ struct MainTabView: View {
         #endif
         .sheet(item: $entryModel) { entry in
             GlucoseEntryView(model: entry) {
+                dependencies.preferences.lastActivityLevel = entry.activityLevel
                 todayModel.reload()
                 logModel.reload()
             }

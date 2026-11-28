@@ -21,7 +21,8 @@ public enum RevisionChangeKind: String, Sendable, Hashable, Codable {
 /// The engine never needs domain knowledge, and the payload can later be encrypted
 /// end-to-end without changing this shape.
 public struct SyncEnvelope: Sendable, Hashable, Codable {
-    public static let currentSchemaVersion = 1
+    /// Payload schema version. 2 adds the optional glucose `activityLevel`.
+    public static let currentSchemaVersion = 2
 
     public var recordID: UUID
     public var entityType: String

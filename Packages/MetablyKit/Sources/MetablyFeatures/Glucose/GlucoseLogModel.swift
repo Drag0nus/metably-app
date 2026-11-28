@@ -3,7 +3,8 @@ import MetablyDomain
 import MetablySyntheticData
 import Observation
 
-/// The glucose diary list: readings grouped by diary day, newest first.
+/// The Journal: readings grouped by diary day, newest first, as a list or as the
+/// paper-diary table (one row per day, one column per slot).
 @Observable
 @MainActor
 public final class GlucoseLogModel {
@@ -13,6 +14,20 @@ public final class GlucoseLogModel {
         public var id: LocalDay { day }
     }
 
+    /// One row of the diary table.
+    public struct DiaryRow: Identifiable, Hashable, Sendable {
+        public let day: LocalDay
+        /// Readings per slot, newest first.
+        public let cells: [DiarySlot: [GlucoseReading]]
+        public var id: LocalDay { day }
+    }
+
+    public enum Layout: String, Hashable, CaseIterable, Sendable {
+        case list
+        case table
+    }
+
+    public var layout: Layout = .list
     public private(set) var sections: [DaySection] = []
     public private(set) var loadFailed = false
 
@@ -20,6 +35,15 @@ public final class GlucoseLogModel {
 
     public init(dependencies: AppDependencies) {
         self.dependencies = dependencies
+    }
+
+    /// Columns of the diary table: the 7-point profile, the night check when enabled, and other.
+    public var tableSlots: [DiarySlot] {
+        DiarySlot.profileSlots(includingNight: dependencies.preferences.nightCheckEnabled) + [.other]
+    }
+
+    public var diaryRows: [DiaryRow] {
+        Self.rows(from: sections, schedule: dependencies.preferences.dailySchedule)
     }
 
     public func reload() {
@@ -58,6 +82,15 @@ public final class GlucoseLogModel {
         reload()
     }
     #endif
+
+    static func rows(from sections: [DaySection], schedule: DailySchedule) -> [DiaryRow] {
+        sections.map { section in
+            DiaryRow(
+                day: section.day,
+                cells: Dictionary(grouping: section.readings) { $0.diarySlot(schedule: schedule) }
+            )
+        }
+    }
 
     static func group(_ readings: [GlucoseReading]) -> [DaySection] {
         Dictionary(grouping: readings, by: \.localDay)

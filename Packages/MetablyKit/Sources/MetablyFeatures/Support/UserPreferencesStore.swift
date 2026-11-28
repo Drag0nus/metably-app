@@ -15,6 +15,7 @@ public final class UserPreferencesStore {
         static let usesInsulin = "prefs.usesInsulin"
         static let nightCheckEnabled = "prefs.nightCheckEnabled"
         static let glucoseTargets = "prefs.glucoseTargets"
+        static let lastActivityLevel = "prefs.lastActivityLevel"
     }
 
     @ObservationIgnored private let defaults: UserDefaults
@@ -49,6 +50,12 @@ public final class UserPreferencesStore {
         }
     }
 
+    /// The activity level chosen on the last reading, used to preset the next one.
+    /// A UI convenience only; the reading itself stores its own level.
+    public var lastActivityLevel: ActivityLevel? {
+        didSet { defaults.set(lastActivityLevel?.rawValue ?? 0, forKey: Keys.lastActivityLevel) }
+    }
+
     /// Usual meal and bed times. Not editable yet; see `DailySchedule`.
     public var dailySchedule: DailySchedule { .default }
 
@@ -62,6 +69,7 @@ public final class UserPreferencesStore {
             : BreadUnitConverter.defaultCarbsPerBreadUnit
         usesInsulin = defaults.bool(forKey: Keys.usesInsulin)
         nightCheckEnabled = defaults.bool(forKey: Keys.nightCheckEnabled)
+        lastActivityLevel = ActivityLevel(rawValue: defaults.integer(forKey: Keys.lastActivityLevel))
         glucoseTargets = defaults.data(forKey: Keys.glucoseTargets)
             .flatMap { try? JSONDecoder().decode(GlucoseTargets.self, from: $0) }
             .flatMap { $0.isValid ? $0 : nil } ?? .adaDefaults

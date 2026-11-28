@@ -44,6 +44,7 @@ Indexes: startDate, localDay, kindRaw, externalID.
 | minutesAfterMeal | Int? | When linked to a meal |
 | deviceName | String? | Meter name |
 | deviceSerialHash | String? | Hashed serial, never raw |
+| activityLevel | Int? | V2. Self-reported activity 1–5 (paper diary scale); nil when not recorded or created before V2 |
 
 ## RecordRevisionRecord
 
@@ -57,11 +58,18 @@ id, recordID, entityType, operationRaw (upsert, delete), baseVersion (server ver
 is based on), envelope (JSON `SyncEnvelope`), createdAt, attempts, nextAttemptAt, lastError.
 At most one pending entry per record.
 
+## Derived values (not stored)
+
+- Diary slot (fasting, after breakfast, … bedtime, night, other): from `contextRaw`, local time and
+  the user's meal times. See ADR 0006.
+- Target status (below / in target / above): from the value and the user's targets.
+
 ## Validation rules
 
 - Glucose input accepts `6,4` and `6.4`; ASCII digits only.
 - Plausibility bounds 0.5–35.0 mmol/L (9–631 mg/dL) catch typos. They are **not** clinical
   targets. Meter "LO"/"HI" readings are stored with flags and bypass the bounds.
+- Activity level: 1–5 only; any other stored number is read as "not recorded".
 - Measurement time may not be more than 5 minutes in the future.
 - Bread units: grams stored; XE = grams ÷ factor; factor 12 g default, 10 g selectable,
   allowed 5–20 g.

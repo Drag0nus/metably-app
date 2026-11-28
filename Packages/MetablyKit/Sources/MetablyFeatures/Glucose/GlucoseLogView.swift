@@ -1,7 +1,8 @@
 import MetablyDomain
 import SwiftUI
 
-/// Glucose diary: readings grouped by diary day, with quick add and swipe to delete.
+/// Journal: readings grouped by diary day, as a list (swipe to delete) or as the
+/// paper-diary table.
 struct GlucoseLogView: View {
     @Bindable var model: GlucoseLogModel
     let preferences: UserPreferencesStore
@@ -9,6 +10,70 @@ struct GlucoseLogView: View {
     @State private var entryModel: GlucoseEntryModel?
 
     var body: some View {
+        content
+            .safeAreaInset(edge: .top) {
+                Picker(selection: $model.layout) {
+                    Text("journal.layout.list", bundle: .module).tag(GlucoseLogModel.Layout.list)
+                    Text("journal.layout.table", bundle: .module).tag(GlucoseLogModel.Layout.table)
+                } label: {
+                    Text("journal.layout", bundle: .module)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .background(.regularMaterial)
+            }
+            .overlay {
+                if model.sections.isEmpty {
+                    ContentUnavailableView {
+                        Label {
+                            Text("log.empty.title", bundle: .module)
+                        } icon: {
+                            Image(systemName: "drop")
+                        }
+                    } description: {
+                        Text("log.empty.message", bundle: .module)
+                    }
+                }
+            }
+            .navigationTitle(Text("tab.journal", bundle: .module))
+            #if !os(iOS)
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        entryModel = model.makeEntryModel()
+                    } label: {
+                        Label {
+                            Text("log.add", bundle: .module)
+                        } icon: {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
+            }
+            .sheet(item: $entryModel) { entry in
+                GlucoseEntryView(model: entry) { model.reload() }
+            }
+            #endif
+            .onAppear { model.reload() }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch model.layout {
+        case .list:
+            listView
+        case .table:
+            DiaryTableView(
+                rows: model.diaryRows,
+                slots: model.tableSlots,
+                displayUnit: preferences.displayGlucoseUnit,
+                targets: preferences.glucoseTargets
+            )
+        }
+    }
+
+    private var listView: some View {
         List {
             ForEach(model.sections) { section in
                 Section {
@@ -29,39 +94,6 @@ struct GlucoseLogView: View {
                 }
             }
         }
-        .overlay {
-            if model.sections.isEmpty {
-                ContentUnavailableView {
-                    Label {
-                        Text("log.empty.title", bundle: .module)
-                    } icon: {
-                        Image(systemName: "drop")
-                    }
-                } description: {
-                    Text("log.empty.message", bundle: .module)
-                }
-            }
-        }
-        .navigationTitle(Text("tab.journal", bundle: .module))
-        #if !os(iOS)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    entryModel = model.makeEntryModel()
-                } label: {
-                    Label {
-                        Text("log.add", bundle: .module)
-                    } icon: {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
-        }
-        .sheet(item: $entryModel) { entry in
-            GlucoseEntryView(model: entry) { model.reload() }
-        }
-        #endif
-        .onAppear { model.reload() }
     }
 
     /// Diary days are calendar dates; format them without shifting through the device zone.
@@ -85,6 +117,15 @@ struct GlucoseRowView: View {
                     Text(timeText)
                     if showsZoneBadge {
                         Text(verbatim: reading.timeZone.abbreviation(for: reading.measuredAt) ?? reading.timeZoneID)
+                    }
+                    if let activity = reading.activityLevel {
+                        Label {
+                            Text(activity.rawValue, format: .number)
+                        } icon: {
+                            Image(systemName: "figure.walk")
+                        }
+                        .labelStyle(.titleAndIcon)
+                        .accessibilityLabel(Text("entry.activity.level \(activity.rawValue)", bundle: .module))
                     }
                     if reading.provenance.source == .synthetic {
                         Image(systemName: "testtube.2")
