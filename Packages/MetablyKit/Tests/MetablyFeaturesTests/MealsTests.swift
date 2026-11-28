@@ -144,6 +144,23 @@ struct MealsModelTests {
         return (MealsModel(dependencies: dependencies, timeZone: kyiv), repository)
     }
 
+    @Test("The day's sugars come from eaten meals only")
+    func sugars() {
+        let eaten = Meal(slot: .breakfast, status: .eaten, startedAt: instant(day, 8), timeZone: kyiv,
+                         items: [MealItem(name: "Milk", carbohydrateGrams: 12, sugarsGrams: 12.6, lactoseGrams: 12.6),
+                                 MealItem(name: "Bread", carbohydrateGrams: 15)],
+                         createdAt: instant(day, 8))
+        let planned = Meal(slot: .dinner, status: .planned, startedAt: instant(day, 19), timeZone: kyiv,
+                           items: [MealItem(name: "Juice", carbohydrateGrams: 20, sugarsGrams: 20, fructoseGrams: 10)],
+                           createdAt: instant(day, 8))
+        let (model, _) = makeModel(meals: [eaten, planned], now: instant(day, 15))
+        model.reload()
+        let sugars = model.sugarBreakdown
+        #expect(sugars.sugars.map(\.sugar) == [.lactose])
+        #expect(sugars.totalSugars.value == 12.6)
+        #expect(sugars.foodsWithoutBreakdown == 1)
+    }
+
     @Test("Eaten and planned meals are kept apart; planned carbs never count as eaten")
     func totals() {
         let meals = [

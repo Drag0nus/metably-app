@@ -5,6 +5,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- Built-in offline food list of about 250 foods (USDA FoodData Central SR Legacy, public domain) with
+  Ukrainian and English names and household measures; 58 measures follow the Ukrainian
+  self-control diary and carry its page number. Typing a food name on the meal sheet suggests foods;
+  picking one with a measure and quantity ("2 × шт.") computes weight, carbohydrates and tracked
+  nutrients, which stay editable (ADR 0010).
+- Individual dietary sugars (sucrose, glucose, fructose, lactose, maltose, galactose) saved per food
+  when known, and a "Sugars eaten" card on the Meals tab that says how many foods have no data.
+- SwiftData schema V5 with a lightweight migration from V4: catalog food id and sugars on meal items.
+  Sync payload schema version 5.
+- Settings › About credits the food data sources. Version 0.8.0 (8).
+
 ### Fixed
 - The "Record reading" accessory and the tab bar no longer show on the pushed Settings screen.
 

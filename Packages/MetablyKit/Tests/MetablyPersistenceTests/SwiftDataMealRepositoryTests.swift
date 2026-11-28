@@ -35,6 +35,24 @@ struct SwiftDataMealRepositoryTests {
         )
     }
 
+    @Test("Catalog link and individual sugars round-trip; unknown sugars stay nil")
+    func sugarsRoundTrip() throws {
+        let meal = Meal(
+            slot: .snack, status: .eaten, startedAt: now, timeZone: kyiv,
+            items: [
+                MealItem(name: "Apple", amountGrams: 150, carbohydrateGrams: 21, sugarsGrams: 15.6, foodID: "usda-sr-171688",
+                         sucroseGrams: 3.1, glucoseGrams: 3.6, fructoseGrams: 8.9, maltoseGrams: 0),
+                MealItem(name: "Bread", carbohydrateGrams: 15),
+            ],
+            createdAt: now
+        )
+        try repository.insert(meal)
+        let stored = try #require(try repository.meal(id: meal.id))
+        #expect(stored.items == meal.items)
+        #expect(stored.items[0].lactoseGrams == nil)
+        #expect(stored.items[1].foodID == nil)
+    }
+
     @Test("A meal round-trips with its items in order")
     func roundTrip() throws {
         let meal = makeMeal()

@@ -14,6 +14,8 @@ public final class AppDependencies {
     public let preferences: UserPreferencesStore
     public let dateProvider: any DateProvider
     public let reminders: any RecheckReminderScheduling
+    /// The offline food list for meal entry.
+    public let foodCatalog: FoodCatalog
     /// Kept alive for the lifetime of the app; repositories use its main context.
     private let modelContainer: ModelContainer?
 
@@ -24,8 +26,10 @@ public final class AppDependencies {
         preferences: UserPreferencesStore,
         dateProvider: any DateProvider = SystemDateProvider(),
         reminders: any RecheckReminderScheduling = NoopRecheckReminder(),
+        foodCatalog: FoodCatalog? = nil,
         modelContainer: ModelContainer? = nil
     ) {
+        self.foodCatalog = foodCatalog ?? BundledFoodCatalog.shared
         self.reminders = reminders
         self.glucoseRepository = glucoseRepository
         self.mealRepository = mealRepository ?? InMemoryMealRepository()
@@ -61,6 +65,7 @@ public final class AppDependencies {
             schedule: preferences.dailySchedule,
             breadUnits: preferences.breadUnitConverter,
             trackedNutrients: preferences.trackedNutrients,
+            catalog: foodCatalog,
             status: status,
             editing: editing
         )

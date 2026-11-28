@@ -241,6 +241,18 @@ private struct AboutSection: View {
                     Text("settings.about.built", bundle: .module)
                 }
             }
+            VStack(alignment: .leading, spacing: 4) {
+                Text("settings.about.foodData", bundle: .module)
+                Text("settings.about.foodData.detail", bundle: .module)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                if let url = URL(string: "https://fdc.nal.usda.gov/") {
+                    Link(destination: url) {
+                        Text(verbatim: "fdc.nal.usda.gov")
+                            .font(.footnote)
+                    }
+                }
+            }
         } header: {
             Text("settings.about", bundle: .module)
         }
