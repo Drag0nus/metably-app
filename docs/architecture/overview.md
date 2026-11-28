@@ -31,7 +31,7 @@ flowchart TD
 | Module | Responsibility | Depends on |
 |---|---|---|
 | MetablyDomain | Value types, validation, unit conversion, diary day, provider and repository protocols, sync contracts | Foundation |
-| MetablyPersistence | SwiftData models (schemas V1–V3), migration plan, `SwiftDataGlucoseRepository`, `SwiftDataMealRepository` | Domain, SwiftData |
+| MetablyPersistence | SwiftData models (schemas V1–V4), migration plan, `SwiftDataGlucoseRepository`, `SwiftDataMealRepository`, `SwiftDataEventLinkRepository` | Domain, SwiftData |
 | MetablyHealthKit | Protocols for authorization, anchored import, writing | Domain |
 | MetablySyntheticData | Seeded generator of invented diaries | Domain |
 | MetablyFeatures | Screens, view models, composition root (`AppDependencies`), localization | all of the above |
@@ -67,7 +67,7 @@ identical for all sources.
 
 ## Storage
 
-- SwiftData with `VersionedSchema` V1 and V2 (frozen) and V3 (current), and a `SchemaMigrationPlan` (ADR 0007, ADR 0008).
+- SwiftData with `VersionedSchema` V1–V3 (frozen) and V4 (current), and a `SchemaMigrationPlan` (ADR 0007–0009).
 - `cloudKitDatabase: .none`: health data never goes to iCloud. See ADR 0004.
 - Enum values are stored as raw strings so predicates and migrations stay simple.
 - Default iOS data protection applies to the store file. Choosing between `complete` and

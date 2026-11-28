@@ -30,6 +30,13 @@ public final class MealsModel {
     public var eatenCarbohydrateGrams: Double { eaten.reduce(0) { $0 + $1.totalCarbohydrateGrams } }
     public var plannedCarbohydrateGrams: Double { planned.reduce(0) { $0 + $1.totalCarbohydrateGrams } }
 
+    /// Nutrients the user set a goal for, with what was eaten and the goal.
+    public var nutrientProgress: [(nutrient: Nutrient, total: NutrientTotal, goal: Double)] {
+        dependencies.preferences.trackedNutrients.compactMap { nutrient in
+            dependencies.preferences.goal(for: nutrient).map { (nutrient, NutrientTotal(of: nutrient, in: eaten), $0) }
+        }
+    }
+
     public func reload() {
         guard let start = day.startInstant(in: timeZone),
               let end = day.adding(days: 1).startInstant(in: timeZone)

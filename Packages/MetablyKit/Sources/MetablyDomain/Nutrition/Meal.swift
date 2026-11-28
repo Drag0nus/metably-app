@@ -126,6 +126,7 @@ public enum MealValidationError: Error, Sendable, Hashable {
     case emptyName
     case carbohydratesOutOfRange
     case amountOutOfRange
+    case nutrientOutOfRange(Nutrient)
 }
 
 /// Plausibility checks to catch typos, not dietary advice.
@@ -142,6 +143,11 @@ public struct MealValidator: Sendable {
         }
         if let amount = item.amountGrams, !amount.isFinite || !Self.amountRangeGrams.contains(amount) {
             return .amountOutOfRange
+        }
+        for nutrient in Nutrient.allCases {
+            if let value = item[keyPath: nutrient.keyPath], !value.isFinite || !nutrient.itemRange.contains(value) {
+                return .nutrientOutOfRange(nutrient)
+            }
         }
         return nil
     }

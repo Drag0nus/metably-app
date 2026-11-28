@@ -130,7 +130,7 @@ private struct GlucoseTargetsSection: View {
     }
 }
 
-/// Daily nutrient goals. Only carbohydrates for now; the goal is off until the user sets one.
+/// Daily nutrient goals, each off until the user sets one: the app does not invent dietary targets.
 private struct NutritionGoalsSection: View {
     @Bindable var preferences: UserPreferencesStore
 
@@ -147,12 +147,15 @@ private struct NutritionGoalsSection: View {
                     HStack {
                         Text("settings.goals.carbs.value", bundle: .module)
                         Spacer()
-                        Text(verbatim: "\(NutritionFormat.grams(goal)) g")
+                        Text(verbatim: "\(NutritionFormat.grams(goal)) \(NutritionFormat.gramsUnit)")
                             .monospacedDigit()
                             .foregroundStyle(.secondary)
                     }
                 }
-                .accessibilityValue(Text(verbatim: "\(NutritionFormat.grams(goal)) g"))
+                .accessibilityValue(Text(verbatim: "\(NutritionFormat.grams(goal)) \(NutritionFormat.gramsUnit)"))
+            }
+            ForEach(Nutrient.allCases) { nutrient in
+                NutrientGoalRows(preferences: preferences, nutrient: nutrient)
             }
         } header: {
             Text("settings.goals", bundle: .module)
@@ -173,6 +176,47 @@ private struct NutritionGoalsSection: View {
             get: { preferences.dailyCarbohydrateGoalGrams ?? Self.initialGoalGrams },
             set: { preferences.dailyCarbohydrateGoalGrams = $0 }
         )
+    }
+}
+
+/// Toggle and stepper for one nutrient goal. Switching it on starts from a round number that
+/// the user then sets to their own plan.
+private struct NutrientGoalRows: View {
+    @Bindable var preferences: UserPreferencesStore
+    let nutrient: Nutrient
+
+    var body: some View {
+        Toggle(isOn: Binding(
+            get: { preferences.goal(for: nutrient) != nil },
+            set: { preferences.setGoal($0 ? initialGoal : nil, for: nutrient) }
+        )) {
+            Text("settings.goals.nutrient \(nutrient.localizedName)", bundle: .module)
+        }
+        if let goal = preferences.goal(for: nutrient) {
+            Stepper(
+                value: Binding(get: { goal }, set: { preferences.setGoal($0, for: nutrient) }),
+                in: nutrient.goalRange,
+                step: nutrient.goalStep
+            ) {
+                HStack {
+                    Text("settings.goals.carbs.value", bundle: .module)
+                    Spacer()
+                    Text(verbatim: "\(NutritionFormat.grams(goal)) \(nutrient.unitSymbol)")
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .accessibilityValue(Text(verbatim: "\(NutritionFormat.grams(goal)) \(nutrient.unitSymbol)"))
+        }
+    }
+
+    private var initialGoal: Double {
+        switch nutrient {
+        case .protein: 60
+        case .fat: 60
+        case .fiber: 25
+        case .energy: 2000
+        }
     }
 }
 

@@ -147,6 +147,8 @@ extension MealEntryModel.SaveError {
         case .invalid(.emptyName): String(localized: "meal.error.emptyName", bundle: .module)
         case .invalid(.carbohydratesOutOfRange): String(localized: "meal.error.carbs", bundle: .module)
         case .invalid(.amountOutOfRange): String(localized: "meal.error.amount", bundle: .module)
+        case .invalid(.nutrientOutOfRange(let nutrient)):
+            String(localized: "meal.error.nutrient \(nutrient.localizedName)", bundle: .module)
         case .unreadableNumber: String(localized: "meal.error.number", bundle: .module)
         case .storage: String(localized: "meal.error.storage", bundle: .module)
         }
@@ -159,7 +161,49 @@ enum NutritionFormat {
         value.formatted(.number.precision(.fractionLength(0)))
     }
 
+    /// "g" / "г".
+    static var gramsUnit: String { String(localized: "unit.grams", bundle: .module) }
+
     static func breadUnits(_ value: Double) -> String {
         value.formatted(.number.precision(.fractionLength(1)))
+    }
+}
+
+/// "2 h 5 min after lunch" / "20 min before dinner". Ukrainian needs the meal name in the
+/// genitive ("після обіду"), so each meal and direction has its own string.
+enum MealLinkText {
+    static func text(slot: MealSlot, minutes: Int) -> String {
+        let duration = Duration.seconds(abs(minutes) * 60)
+            .formatted(.units(allowed: [.hours, .minutes], width: .abbreviated))
+        if minutes < 0 {
+            switch slot {
+            case .breakfast: return String(localized: "meal.link.before.breakfast \(duration)", bundle: .module)
+            case .lunch: return String(localized: "meal.link.before.lunch \(duration)", bundle: .module)
+            case .dinner: return String(localized: "meal.link.before.dinner \(duration)", bundle: .module)
+            case .snack: return String(localized: "meal.link.before.snack \(duration)", bundle: .module)
+            }
+        }
+        switch slot {
+        case .breakfast: return String(localized: "meal.link.after.breakfast \(duration)", bundle: .module)
+        case .lunch: return String(localized: "meal.link.after.lunch \(duration)", bundle: .module)
+        case .dinner: return String(localized: "meal.link.after.dinner \(duration)", bundle: .module)
+        case .snack: return String(localized: "meal.link.after.snack \(duration)", bundle: .module)
+        }
+    }
+}
+
+extension Nutrient {
+    public var localizedName: String {
+        switch self {
+        case .protein: String(localized: "nutrient.protein", bundle: .module)
+        case .fat: String(localized: "nutrient.fat", bundle: .module)
+        case .fiber: String(localized: "nutrient.fiber", bundle: .module)
+        case .energy: String(localized: "nutrient.energy", bundle: .module)
+        }
+    }
+
+    /// "g" or "kcal", localized ("г", "ккал").
+    public var unitSymbol: String {
+        isEnergy ? String(localized: "unit.kcal", bundle: .module) : String(localized: "unit.grams", bundle: .module)
     }
 }

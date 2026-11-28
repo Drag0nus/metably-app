@@ -234,3 +234,31 @@
 "settings.about" = "About this build";
 "settings.about.version" = "Version (build)";
 "settings.about.built" = "Built";
+
+/* Units */
+"unit.grams" = "g";
+"unit.kcal" = "kcal";
+
+/* Meal links */
+"entry.mealLink" = "Meal";
+"entry.mealLink.title %@ %@" = "Link to %1$@ at %2$@";
+"entry.mealLink.footer" = "Suggested from the times. The reading is linked only if you switch this on; you can change it later.";
+"meal.link.after.breakfast %@" = "%@ after breakfast";
+"meal.link.after.lunch %@" = "%@ after lunch";
+"meal.link.after.dinner %@" = "%@ after dinner";
+"meal.link.after.snack %@" = "%@ after a snack";
+"meal.link.before.breakfast %@" = "%@ before breakfast";
+"meal.link.before.lunch %@" = "%@ before lunch";
+"meal.link.before.dinner %@" = "%@ before dinner";
+"meal.link.before.snack %@" = "%@ before a snack";
+
+/* Nutrients */
+"nutrient.protein" = "Protein";
+"nutrient.fat" = "Fat";
+"nutrient.fiber" = "Fibre";
+"nutrient.energy" = "Energy";
+"meal.item.optional" = "optional";
+"meal.error.nutrient %@" = "%@ per food looks too high. Please check the number.";
+"meals.nutrients" = "Other nutrients eaten";
+"meals.nutrients.missing %lld" = "Not recorded for %lld foods";
+"settings.goals.nutrient %@" = "%@ goal";

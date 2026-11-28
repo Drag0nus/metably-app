@@ -12,17 +12,30 @@ public final class MealEntryModel: Identifiable {
         public var name: String
         public var amountText: String
         public var carbsText: String
+        /// Typed values of the nutrients the user tracks (see `trackedNutrients`).
+        public var nutrientTexts: [Nutrient: String]
 
-        public init(id: UUID = UUID(), name: String = "", amountText: String = "", carbsText: String = "") {
+        public init(
+            id: UUID = UUID(),
+            name: String = "",
+            amountText: String = "",
+            carbsText: String = "",
+            nutrientTexts: [Nutrient: String] = [:]
+        ) {
             self.id = id
             self.name = name
             self.amountText = amountText
             self.carbsText = carbsText
+            self.nutrientTexts = nutrientTexts
         }
 
         var isBlank: Bool {
             name.trimmingCharacters(in: .whitespaces).isEmpty && amountText.isEmpty && carbsText.isEmpty
+                && nutrientTexts.values.allSatisfy { $0.trimmingCharacters(in: .whitespaces).isEmpty }
         }
+
+        /// Text binding helper for one nutrient field.
+        public func text(for nutrient: Nutrient) -> String { nutrientTexts[nutrient] ?? "" }
     }
 
     public enum SaveError: Error, Sendable, Hashable {
@@ -42,6 +55,8 @@ public final class MealEntryModel: Identifiable {
     public let editing: Meal?
     public var isEditing: Bool { editing != nil }
     public let breadUnits: BreadUnitConverter
+    /// Nutrients with a daily goal: the sheet shows a field for each, per food.
+    public let trackedNutrients: [Nutrient]
 
     @ObservationIgnored private let repository: any MealRepository
     @ObservationIgnored private let dateProvider: any DateProvider
@@ -54,6 +69,7 @@ public final class MealEntryModel: Identifiable {
         timeZone: TimeZone = .current,
         schedule: DailySchedule = .default,
         breadUnits: BreadUnitConverter = .standard,
+        trackedNutrients: [Nutrient] = [],
         status: MealStatus = .eaten,
         editing: Meal? = nil
     ) {
@@ -61,18 +77,24 @@ public final class MealEntryModel: Identifiable {
         self.dateProvider = dateProvider
         self.timeZone = timeZone
         self.breadUnits = breadUnits
+        self.trackedNutrients = trackedNutrients
         self.editing = editing
         let now = dateProvider.now()
         if let meal = editing {
             slot = meal.slot
             self.status = meal.status
             startedAt = meal.startedAt
-            items = meal.items.map {
-                ItemDraft(
-                    id: $0.id,
-                    name: $0.name,
-                    amountText: $0.amountGrams.map(Self.text) ?? "",
-                    carbsText: Self.text($0.carbohydrateGrams)
+            items = meal.items.map { item in
+                var texts: [Nutrient: String] = [:]
+                for nutrient in trackedNutrients {
+                    if let value = item[keyPath: nutrient.keyPath] { texts[nutrient] = Self.text(value) }
+                }
+                return ItemDraft(
+                    id: item.id,
+                    name: item.name,
+                    amountText: item.amountGrams.map(Self.text) ?? "",
+                    carbsText: Self.text(item.carbohydrateGrams),
+                    nutrientTexts: texts
                 )
             }
             portionSize = meal.portionSize
@@ -126,12 +148,22 @@ public final class MealEntryModel: Identifiable {
                 guard let parsed = DecimalInputParser.parse(amountText) else { return nil }
                 amount = parsed
             }
-            result.append(MealItem(
-                id: draft.id,
-                name: draft.name.trimmingCharacters(in: .whitespacesAndNewlines),
-                amountGrams: amount,
-                carbohydrateGrams: carbs
-            ))
+            // Start from the stored food so values of untracked nutrients are kept.
+            var item = editing?.items.first { $0.id == draft.id }
+                ?? MealItem(id: draft.id, name: "", carbohydrateGrams: 0)
+            item.name = draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
+            item.amountGrams = amount
+            item.carbohydrateGrams = carbs
+            for nutrient in trackedNutrients {
+                let text = draft.text(for: nutrient).trimmingCharacters(in: .whitespaces)
+                if text.isEmpty {
+                    item[keyPath: nutrient.keyPath] = nil
+                } else {
+                    guard let value = DecimalInputParser.parse(text) else { return nil }
+                    item[keyPath: nutrient.keyPath] = value
+                }
+            }
+            result.append(item)
         }
         return result
     }

@@ -46,6 +46,10 @@ struct GlucoseEntryView: View {
                     }
                 }
 
+                if let candidate = model.mealCandidate {
+                    MealLinkSection(candidate: candidate, isOn: $model.linksToMeal)
+                }
+
                 Section {
                     TextField(
                         text: $model.note,
@@ -232,6 +236,36 @@ private struct RecordInfoSection: View {
         } footer: {
             Text("entry.info.footer", bundle: .module)
         }
+    }
+}
+
+/// The suggested meal link. Off until the user switches it on: a suggestion is never saved
+/// on its own.
+private struct MealLinkSection: View {
+    let candidate: MealLinkCandidate
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Section {
+            Toggle(isOn: $isOn) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("entry.mealLink.title \(candidate.meal.slot.localizedName) \(time)", bundle: .module)
+                    Text(MealLinkText.text(slot: candidate.meal.slot, minutes: candidate.minutesFromMealStart))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        } header: {
+            Text("entry.mealLink", bundle: .module)
+        } footer: {
+            Text("entry.mealLink.footer", bundle: .module)
+        }
+    }
+
+    private var time: String {
+        candidate.meal.startedAt.formatted(
+            Date.FormatStyle(date: .omitted, time: .shortened, timeZone: candidate.meal.timeZone)
+        )
     }
 }
 

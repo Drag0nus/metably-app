@@ -10,6 +10,7 @@ import SwiftData
 public final class AppDependencies {
     public let glucoseRepository: any GlucoseRepository
     public let mealRepository: any MealRepository
+    public let linkRepository: any EventLinkRepository
     public let preferences: UserPreferencesStore
     public let dateProvider: any DateProvider
     public let reminders: any RecheckReminderScheduling
@@ -19,6 +20,7 @@ public final class AppDependencies {
     public init(
         glucoseRepository: any GlucoseRepository,
         mealRepository: (any MealRepository)? = nil,
+        linkRepository: (any EventLinkRepository)? = nil,
         preferences: UserPreferencesStore,
         dateProvider: any DateProvider = SystemDateProvider(),
         reminders: any RecheckReminderScheduling = NoopRecheckReminder(),
@@ -27,6 +29,7 @@ public final class AppDependencies {
         self.reminders = reminders
         self.glucoseRepository = glucoseRepository
         self.mealRepository = mealRepository ?? InMemoryMealRepository()
+        self.linkRepository = linkRepository ?? InMemoryEventLinkRepository()
         self.preferences = preferences
         self.dateProvider = dateProvider
         self.modelContainer = modelContainer
@@ -44,6 +47,8 @@ public final class AppDependencies {
             nightCheckEnabled: preferences.nightCheckEnabled,
             activityLevel: preferences.lastActivityLevel,
             reminders: reminders,
+            meals: mealRepository,
+            links: linkRepository,
             editing: editing
         )
     }
@@ -55,6 +60,7 @@ public final class AppDependencies {
             dateProvider: dateProvider,
             schedule: preferences.dailySchedule,
             breadUnits: preferences.breadUnitConverter,
+            trackedNutrients: preferences.trackedNutrients,
             status: status,
             editing: editing
         )
@@ -71,9 +77,11 @@ public final class AppDependencies {
             dateProvider: dateProvider
         )
         let meals = SwiftDataMealRepository(context: container.mainContext, deviceID: deviceID, dateProvider: dateProvider)
+        let links = SwiftDataEventLinkRepository(context: container.mainContext, deviceID: deviceID, dateProvider: dateProvider)
         return AppDependencies(
             glucoseRepository: repository,
             mealRepository: meals,
+            linkRepository: links,
             preferences: UserPreferencesStore(),
             dateProvider: dateProvider,
             reminders: NotificationRecheckReminder(),
@@ -96,5 +104,22 @@ public final class AppDependencies {
             mealRepository: InMemoryMealRepository(meals: meals),
             preferences: UserPreferencesStore(defaults: defaults)
         )
+    }
+
+    /// "2 h 5 min after lunch" for each reading that has a confirmed meal link.
+    /// Links to a meal that was deleted are left out.
+    public func mealLinkTexts(for readings: [GlucoseReading]) -> [UUID: String] {
+        guard let links = try? linkRepository.links(fromIDs: Set(readings.map(\.id))) else { return [:] }
+        let byID = Dictionary(readings.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        var texts: [UUID: String] = [:]
+        for link in links {
+            guard let reading = byID[link.fromID],
+                  let meal = try? mealRepository.meal(id: link.toID), !meal.isDeleted
+            else { continue }
+            // From the current times, so editing the reading's time keeps the text true.
+            let minutes = Int((reading.measuredAt.timeIntervalSince(meal.startedAt) / 60).rounded())
+            texts[link.fromID] = MealLinkText.text(slot: meal.slot, minutes: minutes)
+        }
+        return texts
     }
 }
