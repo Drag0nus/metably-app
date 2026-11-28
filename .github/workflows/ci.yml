@@ -21,6 +21,11 @@ jobs:
       - name: Test MetablyKit
         working-directory: Packages/MetablyKit
         run: swift test --parallel
+      - name: Re-run tests one by one to name a crashing test
+        if: failure()
+        working-directory: Packages/MetablyKit
+        # A crash in parallel mode hides which test trapped and why; serial output shows both.
+        run: swift test --skip-build --no-parallel 2>&1 | tail -120
 
   ios-build:
     name: iOS app build (simulator)
