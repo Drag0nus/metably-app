@@ -23,3 +23,7 @@
 - File protection uses the iOS default; the final level is open.
 - The bundle identifier `app.metably.Metably` is a placeholder.
 - The Debug synthetic data loader is the only way to populate test data.
+- Pregnancy is out of scope: the default targets are for non-pregnant adults (ADA section 6), and
+  pregnancy targets differ (ADA section 15).
+- Coverage of the self-control diary is tracked in `docs/diary-traceability.md`; its gap list is
+  not implemented yet.
